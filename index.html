@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACS Solutions | Sales Tracker Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy: #0a0f1e;
+            --dark-navy: #060b16;
+            --card-bg: #111827;
+            --card-bg-glass: rgba(17, 24, 39, 0.7);
+            --card-border: #1e2a45;
+            --blue: #007AFF;
+            --light-blue: #4DA8FF;
+            --orange: #F5820B;
+            --light-orange: #FF9F40;
+            --chrome: #C0C8D8;
+            --white: #FFFFFF;
+            --gray: #8892A8;
+            --light-gray: #B0B8C8;
+            --green: #00C97B;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--dark-navy);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* ─── ANIMATED BG GRID ─── */
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(30, 42, 69, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 42, 69, 0.3) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 70%);
+        }
+
+        /* ─── FLOATING ORBS ─── */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            pointer-events: none;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 600px; height: 600px;
+            background: rgba(0, 122, 255, 0.07);
+            top: -10%; left: -10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 500px; height: 500px;
+            background: rgba(245, 130, 11, 0.06);
+            bottom: -10%; right: -10%;
+            animation-delay: -7s;
+        }
+
+        .orb-3 {
+            width: 400px; height: 400px;
+            background: rgba(0, 201, 123, 0.04);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -14s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -40px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(40px, 30px) scale(1.02); }
+        }
+
+        /* ─── CONTENT WRAPPER ─── */
+        .content { position: relative; z-index: 1; }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(6, 11, 22, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(30, 42, 69, 0.5);
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .nav-logo { height: 50px; }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--light-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--white); }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--orange), var(--light-orange)) !important;
+            color: var(--white) !important;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600 !important;
+            transition: transform 0.2s, box-shadow 0.3s !important;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 25px rgba(245, 130, 11, 0.5);
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+        }
+
+        .hero-logo {
+            height: 130px;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 40px rgba(0, 122, 255, 0.2));
+            animation: fadeInScale 1s ease both;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+            animation: fadeInUp 0.8s ease 0.15s both;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--blue), var(--light-blue), #80c8ff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 6s ease infinite;
+        }
+
+        .hero h1 .orange-text {
+            background: linear-gradient(135deg, var(--orange), var(--light-orange), #ffc477);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 6s ease infinite reverse;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-sub {
+            font-size: 1.3rem;
+            color: var(--light-gray);
+            max-width: 650px;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            animation: fadeInUp 0.8s ease 0.45s both;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--orange), var(--light-orange));
+            color: var(--white);
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.3s;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before { left: 100%; }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(245, 130, 11, 0.45);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.03);
+            color: var(--white);
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--blue);
+            background: rgba(0, 122, 255, 0.08);
+            box-shadow: 0 0 30px rgba(0, 122, 255, 0.15);
+        }
+
+        /* ─── STATS BAR ─── */
+        .stats-bar {
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+            padding: 3rem 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 6rem;
+        }
+
+        .stat { text-align: center; }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--orange), var(--light-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        /* ─── SECTIONS ─── */
+        section {
+            padding: 7rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--orange);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 0.8rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .section-desc {
+            font-size: 1.15rem;
+            color: var(--light-gray);
+            max-width: 700px;
+            line-height: 1.7;
+            margin-bottom: 3.5rem;
+        }
+
+        /* ─── SCROLL REVEAL ─── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ─── FEATURES GRID ─── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 2.2rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--blue), var(--orange));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 122, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 122, 255, 0.08);
+        }
+
+        .feature-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1.2rem;
+            display: inline-block;
+            animation: iconPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* ─── HOW IT WORKS ─── */
+        .how-it-works {
+            background: rgba(17, 24, 39, 0.4);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .how-it-works .inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .steps-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            padding: 2rem 1rem;
+            border-radius: 16px;
+            transition: background 0.3s;
+        }
+
+        .step:hover {
+            background: rgba(0, 122, 255, 0.05);
+        }
+
+        .step-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--orange), var(--light-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.8;
+        }
+
+        .step h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+
+        .step p {
+            font-size: 0.9rem;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        .step-arrow {
+            position: absolute;
+            right: -1.2rem;
+            top: 3rem;
+            color: var(--orange);
+            font-size: 1.5rem;
+            opacity: 0.6;
+        }
+
+        /* ─── PRICING ─── */
+        .pricing-section { text-align: center; }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+            align-items: start;
+        }
+
+        .pricing-card {
+            background: var(--card-bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: left;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--orange);
+            background: linear-gradient(180deg, rgba(245, 130, 11, 0.1) 0%, var(--card-bg-glass) 35%);
+            box-shadow: 0 0 50px rgba(245, 130, 11, 0.1);
+        }
+
+        .pricing-card.featured:hover {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 60px rgba(245, 130, 11, 0.15);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -14px;
+            right: 2rem;
+            background: linear-gradient(135deg, var(--orange), var(--light-orange));
+            color: var(--white);
+            padding: 0.35rem 1.4rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(245, 130, 11, 0.4);
+        }
+
+        .pricing-card .plan-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+
+        .pricing-card .plan-desc {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-card .price {
+            font-size: 3.2rem;
+            font-weight: 900;
+        }
+
+        .pricing-card .price-period {
+            font-size: 1rem;
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        .pricing-card .price-note {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 0.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-card ul li {
+            padding: 0.45rem 0;
+            font-size: 0.9rem;
+            color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .pricing-card ul li .check {
+            color: var(--green);
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .pricing-card ul li.disabled {
+            color: var(--gray);
+            opacity: 0.4;
+        }
+
+        .pricing-card ul li.disabled .check {
+            color: var(--gray);
+        }
+
+        .pricing-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+            transition: left 0.5s;
+        }
+
+        .pricing-btn:hover::before { left: 100%; }
+
+        .pricing-btn:hover { transform: translateY(-2px); }
+
+        .pricing-btn.btn-blue {
+            background: var(--blue);
+            color: var(--white);
+        }
+
+        .pricing-btn.btn-blue:hover {
+            box-shadow: 0 8px 30px rgba(0, 122, 255, 0.45);
+        }
+
+        .pricing-btn.btn-orange {
+            background: linear-gradient(135deg, var(--orange), var(--light-orange));
+            color: var(--white);
+        }
+
+        .pricing-btn.btn-orange:hover {
+            box-shadow: 0 8px 30px rgba(245, 130, 11, 0.45);
+        }
+
+        .savings-tag {
+            display: inline-block;
+            background: var(--green);
+            color: #062e16;
+            padding: 0.25rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 0.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ─── TRUST BAR ─── */
+        .trust-bar {
+            text-align: center;
+            padding: 5rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .trust-bar p {
+            font-size: 0.95rem;
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        .trust-icons {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        .trust-icons span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            background: var(--card-bg-glass);
+            backdrop-filter: blur(10px);
+            transition: border-color 0.3s;
+        }
+
+        .trust-icons span:hover {
+            border-color: var(--blue);
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            background: var(--navy);
+            border-top: 1px solid var(--card-border);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            height: 45px;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        footer p {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ─── SMOOTH SCROLL ─── */
+        html { scroll-behavior: smooth; }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 900px) {
+            .hero h1 { font-size: 2.8rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .steps-row { grid-template-columns: 1fr 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; max-width: 450px; margin-left: auto; margin-right: auto; }
+            .stats-bar { flex-wrap: wrap; gap: 2rem; }
+            .step-arrow { display: none; }
+            .nav-links { display: none; }
+            .trust-icons { flex-direction: column; align-items: center; }
+            .section-title { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ANIMATED BACKGROUND -->
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="content">
+
+    <!-- NAV -->
+    <nav>
+        <img src="BRAND.png" alt="ACS Solutions" class="nav-logo">
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#pricing" class="nav-cta">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <img src="BRAND.png" alt="ACS Solutions" class="hero-logo">
+        <h1>
+            <span class="gradient-text">Sales Tracking</span> That<br>
+            <span class="orange-text">Actually Works</span>
+        </h1>
+        <p class="hero-sub">
+            A modern automated CRM that lives where your team already works.
+            Log sales in 2 seconds. Get automated reports on your phone. Zero training required.
+        </p>
+        <div class="hero-buttons">
+            <a href="#pricing" class="btn-primary">View Plans</a>
+            <a href="#features" class="btn-secondary">See Features</a>
+        </div>
+    </section>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+        <div class="stat">
+            <div class="stat-number">2 sec</div>
+            <div class="stat-label">To log a sale</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">48 hrs</div>
+            <div class="stat-label">Full deployment</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Training needed</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Automated tracking</div>
+        </div>
+    </div>
+
+    <!-- FEATURES -->
+    <section id="features">
+        <div class="reveal">
+            <div class="section-label">Features</div>
+            <h2 class="section-title">Everything Your Agency Needs</h2>
+            <p class="section-desc">
+                No bloat. No complexity. Just the tools that actually move the needle.
+            </p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card reveal">
+                <div class="feature-icon">&#x26A1;</div>
+                <h3>Instant Sale Logging</h3>
+                <p>Your agents type a dollar amount and they're done. No forms, no apps, no portals. 2 seconds flat.</p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">&#x1F3C6;</div>
+                <h3>Live Leaderboards</h3>
+                <p>Daily, weekly, and monthly rankings update in real time. Gold, silver, and bronze medals for top performers.</p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">&#x1F4F1;</div>
+                <h3>Automated SMS Reports</h3>
+                <p>Managers get daily, weekly, and monthly performance reports texted directly to their phone. No dashboards to check.</p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">&#x1F465;</div>
+                <h3>Multi-Team Tracking</h3>
+                <p>Track unlimited independent teams with their own leaderboards, rankings, and performance metrics.</p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">&#x1F512;</div>
+                <h3>Role-Based Access</h3>
+                <p>Three permission levels &#8212; Agent, Moderator, Admin. Everyone sees exactly what they need, nothing more.</p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">&#x1F4CA;</div>
+                <h3>Custom KPIs</h3>
+                <p>Track policy types, premium volume, close rates, and any metric your agency needs. Built to your specs.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="inner">
+            <div class="reveal">
+                <div class="section-label">How It Works</div>
+                <h2 class="section-title">From Sale to SMS in Seconds</h2>
+                <p class="section-desc">Four steps. Fully automated. Zero manual work.</p>
+            </div>
+            <div class="steps-row">
+                <div class="step reveal">
+                    <div class="step-number">01</div>
+                    <h3>Agent Closes Deal</h3>
+                    <p>Agent types "$500" &#8212; that's it. No forms, no training, no learning curve.</p>
+                    <span class="step-arrow">&#8594;</span>
+                </div>
+                <div class="step reveal">
+                    <div class="step-number">02</div>
+                    <h3>Instant Tracking</h3>
+                    <p>Sale is logged, totals update live, leaderboards refresh in real time.</p>
+                    <span class="step-arrow">&#8594;</span>
+                </div>
+                <div class="step reveal">
+                    <div class="step-number">03</div>
+                    <h3>Rankings Update</h3>
+                    <p>Daily, weekly, monthly rankings across all teams &#8212; zero manual work.</p>
+                    <span class="step-arrow">&#8594;</span>
+                </div>
+                <div class="step reveal">
+                    <div class="step-number">04</div>
+                    <h3>Managers Get Texted</h3>
+                    <p>SMS reports fire automatically. No dashboards. No spreadsheets. Just results.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="pricing-section" id="pricing">
+        <div class="reveal">
+            <div class="section-label">Pricing</div>
+            <h2 class="section-title">Choose Your Plan</h2>
+            <p class="section-desc" style="margin-left:auto;margin-right:auto;">
+                Flat-rate pricing. No per-user fees. No hidden costs. Cancel anytime.
+            </p>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- MODULAR -->
+            <div class="pricing-card reveal">
+                <div class="plan-name">Modular</div>
+                <div class="plan-desc">For teams up to 30 agents</div>
+                <div class="price">$997<span class="price-period">/mo</span></div>
+                <div class="price-note">Billed monthly</div>
+                <ul>
+                    <li><span class="check">&#x2713;</span> Core sales tracking</li>
+                    <li><span class="check">&#x2713;</span> Up to 3 team leaderboards</li>
+                    <li><span class="check">&#x2713;</span> Daily SMS reports</li>
+                    <li><span class="check">&#x2713;</span> Role-based permissions</li>
+                    <li><span class="check">&#x2713;</span> 2 hours/month support</li>
+                    <li><span class="check">&#x2713;</span> Bug fixes included</li>
+                    <li class="disabled"><span class="check">&#8212;</span> Custom KPIs</li>
+                    <li class="disabled"><span class="check">&#8212;</span> Custom feature development</li>
+                </ul>
+                <a href="https://buy.stripe.com/cNi7sL3eo3jpb990vbefC03" class="pricing-btn btn-blue">Get Started</a>
+            </div>
+
+            <!-- ENTERPRISE MONTHLY -->
+            <div class="pricing-card reveal">
+                <div class="plan-name">Enterprise</div>
+                <div class="plan-desc">Unlimited agents &#183; Monthly billing</div>
+                <div class="price">$1,797<span class="price-period">/mo</span></div>
+                <div class="price-note">Billed monthly &#183; Cancel anytime</div>
+                <ul>
+                    <li><span class="check">&#x2713;</span> Everything in Modular, plus:</li>
+                    <li><span class="check">&#x2713;</span> Unlimited agents</li>
+                    <li><span class="check">&#x2713;</span> Multi-team leaderboards</li>
+                    <li><span class="check">&#x2713;</span> Daily, weekly, & monthly SMS</li>
+                    <li><span class="check">&#x2713;</span> Custom KPIs & tracking</li>
+                    <li><span class="check">&#x2713;</span> Priority same-day support</li>
+                    <li><span class="check">&#x2713;</span> Full team onboarding</li>
+                    <li><span class="check">&#x2713;</span> Custom feature development</li>
+                    <li><span class="check">&#x2713;</span> Dedicated support channel</li>
+                    <li><span class="check">&#x2713;</span> Data exports & analytics</li>
+                    <li><span class="check">&#x2713;</span> Medal system & team comparisons</li>
+                    <li><span class="check">&#x2713;</span> Multi-manager SMS routing</li>
+                </ul>
+                <a href="https://buy.stripe.com/8x2fZh8yI07d2CDgu9efC01" class="pricing-btn btn-orange">Get Started</a>
+            </div>
+
+            <!-- ENTERPRISE QUARTERLY -->
+            <div class="pricing-card featured reveal">
+                <div class="pricing-badge">BEST VALUE</div>
+                <div class="plan-name">Enterprise Quarterly</div>
+                <div class="plan-desc">Unlimited agents &#183; Save $4,164/year</div>
+                <div class="price">$1,450<span class="price-period">/mo</span></div>
+                <div class="price-note">Billed $4,350 every 3 months</div>
+                <div class="savings-tag">Save $347/month vs monthly</div>
+                <ul>
+                    <li><span class="check">&#x2713;</span> Everything in Enterprise</li>
+                    <li><span class="check">&#x2713;</span> Unlimited agents</li>
+                    <li><span class="check">&#x2713;</span> Multi-team leaderboards</li>
+                    <li><span class="check">&#x2713;</span> Daily, weekly, & monthly SMS</li>
+                    <li><span class="check">&#x2713;</span> Custom KPIs & tracking</li>
+                    <li><span class="check">&#x2713;</span> Priority same-day support</li>
+                    <li><span class="check">&#x2713;</span> Full team onboarding</li>
+                    <li><span class="check">&#x2713;</span> Custom feature development</li>
+                    <li><span class="check">&#x2713;</span> Dedicated support channel</li>
+                    <li><span class="check">&#x2713;</span> Data exports & analytics</li>
+                    <li><span class="check">&#x2713;</span> Medal system & team comparisons</li>
+                    <li><span class="check">&#x2713;</span> Multi-manager SMS routing</li>
+                </ul>
+                <a href="https://buy.stripe.com/14AaEXg1a9HN5OPcdTefC04" class="pricing-btn btn-orange">Get Started &#8212; Best Value</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRUST -->
+    <div class="trust-bar reveal">
+        <p>All plans include 24/7 automated tracking, secure cloud hosting, and automatic updates. No setup fees. No per-user charges. No contracts &#8212; cancel anytime.</p>
+        <div class="trust-icons">
+            <span>&#x1F512; Secure Payments via Stripe</span>
+            <span>&#x1F4F1; Apple Pay & Card Accepted</span>
+            <span>&#x26A1; Live in 48 Hours</span>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <img src="BRAND.png" alt="ACS Solutions" class="footer-logo">
+        <p>&copy; 2026 ACS Solutions &#8212; Alberti Custom Software Solutions. All rights reserved.</p>
+    </footer>
+
+    </div><!-- end content -->
+
+    <!-- SCROLL REVEAL JS -->
+    <script>
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        reveals.forEach(el => observer.observe(el));
+
+        // Parallax orbs on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            document.querySelector('.orb-1').style.transform = `translate(${x * 30}px, ${y * 30}px)`;
+            document.querySelector('.orb-2').style.transform = `translate(${-x * 20}px, ${-y * 20}px)`;
+        });
+    </script>
+
+</body>
+</html>
