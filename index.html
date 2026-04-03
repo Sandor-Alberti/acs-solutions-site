@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACS Solutions | Sales Tracker Pro</title>
+    <title>ACS Solutions | Custom Software Solutions</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -448,173 +448,48 @@
             opacity: 0.6;
         }
 
-        /* ─── PRICING ─── */
-        .pricing-section { text-align: center; }
-
-        .pricing-grid {
+        /* ─── WHY ACS ─── */
+        .why-acs-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-            align-items: start;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2.5rem;
         }
 
-        .pricing-card {
+        .why-acs-card {
             background: var(--card-bg-glass);
             backdrop-filter: blur(10px);
             border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 2.5rem 2rem;
-            text-align: left;
-            position: relative;
+            border-radius: 16px;
+            padding: 2rem 2.2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        .pricing-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        .why-acs-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 122, 255, 0.3);
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.25), 0 0 30px rgba(0, 122, 255, 0.06);
         }
 
-        .pricing-card.featured {
-            border-color: var(--orange);
-            background: linear-gradient(180deg, rgba(245, 130, 11, 0.1) 0%, var(--card-bg-glass) 35%);
-            box-shadow: 0 0 50px rgba(245, 130, 11, 0.1);
-        }
-
-        .pricing-card.featured:hover {
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 60px rgba(245, 130, 11, 0.15);
-        }
-
-        .pricing-badge {
-            position: absolute;
-            top: -14px;
-            right: 2rem;
-            background: linear-gradient(135deg, var(--orange), var(--light-orange));
-            color: var(--white);
-            padding: 0.35rem 1.4rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(245, 130, 11, 0.4);
-        }
-
-        .pricing-card .plan-name {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 0.3rem;
-        }
-
-        .pricing-card .plan-desc {
-            font-size: 0.85rem;
-            color: var(--gray);
-            margin-bottom: 1.5rem;
-        }
-
-        .pricing-card .price {
-            font-size: 3.2rem;
-            font-weight: 900;
-        }
-
-        .pricing-card .price-period {
-            font-size: 1rem;
-            color: var(--gray);
-            font-weight: 400;
-        }
-
-        .pricing-card .price-note {
-            font-size: 0.85rem;
-            color: var(--gray);
-            margin-top: 0.3rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .pricing-card ul {
-            list-style: none;
-            margin-bottom: 2rem;
-        }
-
-        .pricing-card ul li {
-            padding: 0.45rem 0;
-            font-size: 0.9rem;
-            color: var(--light-gray);
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .pricing-card ul li .check {
-            color: var(--green);
-            font-weight: 700;
-            font-size: 1.1rem;
+        .why-acs-card .card-icon {
+            font-size: 1.8rem;
             flex-shrink: 0;
+            margin-top: 2px;
         }
 
-        .pricing-card ul li.disabled {
-            color: var(--gray);
-            opacity: 0.4;
-        }
-
-        .pricing-card ul li.disabled .check {
-            color: var(--gray);
-        }
-
-        .pricing-btn {
-            display: block;
-            width: 100%;
-            padding: 1rem;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 1rem;
+        .why-acs-card h3 {
+            font-size: 1.1rem;
             font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
+            margin-bottom: 0.4rem;
         }
 
-        .pricing-btn::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
-            transition: left 0.5s;
-        }
-
-        .pricing-btn:hover::before { left: 100%; }
-
-        .pricing-btn:hover { transform: translateY(-2px); }
-
-        .pricing-btn.btn-blue {
-            background: var(--blue);
-            color: var(--white);
-        }
-
-        .pricing-btn.btn-blue:hover {
-            box-shadow: 0 8px 30px rgba(0, 122, 255, 0.45);
-        }
-
-        .pricing-btn.btn-orange {
-            background: linear-gradient(135deg, var(--orange), var(--light-orange));
-            color: var(--white);
-        }
-
-        .pricing-btn.btn-orange:hover {
-            box-shadow: 0 8px 30px rgba(245, 130, 11, 0.45);
-        }
-
-        .savings-tag {
-            display: inline-block;
-            background: var(--green);
-            color: #062e16;
-            padding: 0.25rem 0.9rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-top: 0.3rem;
-            margin-bottom: 0.5rem;
+        .why-acs-card p {
+            font-size: 0.9rem;
+            color: var(--gray);
+            line-height: 1.6;
         }
 
         /* ─── TRUST BAR ─── */
@@ -694,7 +569,7 @@
             .hero h1 { font-size: 2.8rem; }
             .features-grid { grid-template-columns: 1fr; }
             .steps-row { grid-template-columns: 1fr 1fr; }
-            .pricing-grid { grid-template-columns: 1fr; max-width: 450px; margin-left: auto; margin-right: auto; }
+            .why-acs-grid { grid-template-columns: 1fr; }
             .stats-bar { flex-wrap: wrap; gap: 2rem; }
             .step-arrow { display: none; }
             .nav-links { display: none; }
@@ -717,10 +592,10 @@
     <nav>
         <img src="BRAND.png" alt="ACS Solutions" class="nav-logo">
         <div class="nav-links">
-            <a href="#features">Features</a>
+            <a href="#services">Services</a>
             <a href="#how-it-works">How It Works</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#pricing" class="nav-cta">Get Started</a>
+            <a href="#contact">Contact</a>
+            <a href="#contact" class="nav-cta">Get a Quote</a>
         </div>
     </nav>
 
@@ -728,78 +603,77 @@
     <section class="hero">
         <img src="BRAND.png" alt="ACS Solutions" class="hero-logo">
         <h1>
-            <span class="gradient-text">Sales Tracking</span> That<br>
-            <span class="orange-text">Actually Works</span>
+            <span class="gradient-text">Custom Software Solutions</span><br>
+            <span class="orange-text">That Scale Your Business</span>
         </h1>
         <p class="hero-sub">
-            A modern automated CRM that lives where your team already works.
-            Log sales in 2 seconds. Get automated reports on your phone. Zero training required.
+            We build automation, dashboards, integrations, and tools tailored to how your team operates. No templates. No compromises. Just software that works the way you do.
         </p>
         <div class="hero-buttons">
-            <a href="#pricing" class="btn-primary">View Plans</a>
-            <a href="#features" class="btn-secondary">See Features</a>
+            <a href="#contact" class="btn-primary">Get a Free Quote</a>
+            <a href="#services" class="btn-secondary">Our Services</a>
         </div>
     </section>
 
     <!-- STATS BAR -->
     <div class="stats-bar">
         <div class="stat">
-            <div class="stat-number">2 sec</div>
-            <div class="stat-label">To log a sale</div>
+            <div class="stat-number">Custom</div>
+            <div class="stat-label">Tailored to your workflow</div>
         </div>
         <div class="stat">
             <div class="stat-number">48 hrs</div>
-            <div class="stat-label">Full deployment</div>
-        </div>
-        <div class="stat">
-            <div class="stat-number">0</div>
-            <div class="stat-label">Training needed</div>
+            <div class="stat-label">Rapid deployment</div>
         </div>
         <div class="stat">
             <div class="stat-number">24/7</div>
-            <div class="stat-label">Automated tracking</div>
+            <div class="stat-label">Always-on systems</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Your vision, our code</div>
         </div>
     </div>
 
-    <!-- FEATURES -->
-    <section id="features">
+    <!-- SERVICES -->
+    <section id="services">
         <div class="reveal">
-            <div class="section-label">Features</div>
-            <h2 class="section-title">Everything Your Agency Needs</h2>
+            <div class="section-label">Services</div>
+            <h2 class="section-title">What We Build</h2>
             <p class="section-desc">
-                No bloat. No complexity. Just the tools that actually move the needle.
+                From internal tools to full-scale platforms, we deliver software that solves real business problems.
             </p>
         </div>
         <div class="features-grid">
             <div class="feature-card reveal">
-                <div class="feature-icon">&#x26A1;</div>
-                <h3>Instant Sale Logging</h3>
-                <p>Your agents type a dollar amount and they're done. No forms, no apps, no portals. 2 seconds flat.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">&#x1F3C6;</div>
-                <h3>Live Leaderboards</h3>
-                <p>Daily, weekly, and monthly rankings update in real time. Gold, silver, and bronze medals for top performers.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">&#x1F4F1;</div>
-                <h3>Automated SMS Reports</h3>
-                <p>Managers get daily, weekly, and monthly performance reports texted directly to their phone. No dashboards to check.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">&#x1F465;</div>
-                <h3>Multi-Team Tracking</h3>
-                <p>Track unlimited independent teams with their own leaderboards, rankings, and performance metrics.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">&#x1F512;</div>
-                <h3>Role-Based Access</h3>
-                <p>Three permission levels &#8212; Agent, Moderator, Admin. Everyone sees exactly what they need, nothing more.</p>
+                <div class="feature-icon">&#x1F4C8;</div>
+                <h3>Sales &amp; Performance Tracking</h3>
+                <p>Automated tracking, leaderboards, and real-time analytics designed for sales teams that need results at a glance.</p>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">&#x1F4CA;</div>
-                <h3>Custom KPIs</h3>
-                <p>Track policy types, premium volume, close rates, and any metric your agency needs. Built to your specs.</p>
+                <h3>Custom Dashboards</h3>
+                <p>Live web dashboards with charts, team breakdowns, and trend analysis &#8212; built around the metrics that matter to you.</p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">&#x2699;&#xFE0F;</div>
+                <h3>Business Automation</h3>
+                <p>Eliminate manual processes with intelligent automation that runs 24/7 so your team can focus on what they do best.</p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">&#x1F517;</div>
+                <h3>System Integrations</h3>
+                <p>Connect your existing tools and platforms into one seamless workflow. No more switching between apps or copy-pasting data.</p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">&#x1F4CB;</div>
+                <h3>Data Analytics &amp; Reporting</h3>
+                <p>Automated reports, KPI tracking, and actionable insights delivered on the schedule you choose.</p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">&#x1F4BB;</div>
+                <h3>Custom Software Development</h3>
+                <p>From concept to deployment, we build exactly what your business needs &#8212; no more paying for features you don't use.</p>
             </div>
         </div>
     </section>
@@ -809,124 +683,139 @@
         <div class="inner">
             <div class="reveal">
                 <div class="section-label">How It Works</div>
-                <h2 class="section-title">From Sale to SMS in Seconds</h2>
-                <p class="section-desc">Four steps. Fully automated. Zero manual work.</p>
+                <h2 class="section-title">From Idea to Launch</h2>
+                <p class="section-desc">A simple, transparent process designed to get your solution live fast.</p>
             </div>
             <div class="steps-row">
                 <div class="step reveal">
                     <div class="step-number">01</div>
-                    <h3>Agent Closes Deal</h3>
-                    <p>Agent types "$500" &#8212; that's it. No forms, no training, no learning curve.</p>
+                    <h3>Discovery Call</h3>
+                    <p>Tell us about your business, pain points, and goals. We'll figure out what you need together.</p>
                     <span class="step-arrow">&#8594;</span>
                 </div>
                 <div class="step reveal">
                     <div class="step-number">02</div>
-                    <h3>Instant Tracking</h3>
-                    <p>Sale is logged, totals update live, leaderboards refresh in real time.</p>
+                    <h3>Custom Blueprint</h3>
+                    <p>We design a solution tailored to your exact workflow &#8212; no generic templates, no bloated features.</p>
                     <span class="step-arrow">&#8594;</span>
                 </div>
                 <div class="step reveal">
                     <div class="step-number">03</div>
-                    <h3>Rankings Update</h3>
-                    <p>Daily, weekly, monthly rankings across all teams &#8212; zero manual work.</p>
+                    <h3>Build &amp; Deploy</h3>
+                    <p>We develop, test, and launch your system. Most projects go live within 48 hours.</p>
                     <span class="step-arrow">&#8594;</span>
                 </div>
                 <div class="step reveal">
                     <div class="step-number">04</div>
-                    <h3>Managers Get Texted</h3>
-                    <p>SMS reports fire automatically. No dashboards. No spreadsheets. Just results.</p>
+                    <h3>Ongoing Support</h3>
+                    <p>We're here when you need us with flexible support plans, updates, and enhancements.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- PRICING -->
-    <section class="pricing-section" id="pricing">
+    <!-- WHY ACS -->
+    <section id="why-acs">
         <div class="reveal">
-            <div class="section-label">Pricing</div>
-            <h2 class="section-title">Choose Your Plan</h2>
-            <p class="section-desc" style="margin-left:auto;margin-right:auto;">
-                Flat-rate pricing. No per-user fees. No hidden costs. Cancel anytime.
+            <div class="section-label">Why ACS</div>
+            <h2 class="section-title">Why Businesses Choose Us</h2>
+            <p class="section-desc">
+                We're not a SaaS platform. We're engineers who build software around how your business actually runs.
             </p>
         </div>
-
-        <div class="pricing-grid">
-            <!-- MODULAR -->
-            <div class="pricing-card reveal">
-                <div class="plan-name">Modular</div>
-                <div class="plan-desc">For teams up to 30 agents</div>
-                <div class="price">$997<span class="price-period">/mo</span></div>
-                <div class="price-note">Billed monthly</div>
-                <ul>
-                    <li><span class="check">&#x2713;</span> Core sales tracking</li>
-                    <li><span class="check">&#x2713;</span> Up to 3 team leaderboards</li>
-                    <li><span class="check">&#x2713;</span> Daily SMS reports</li>
-                    <li><span class="check">&#x2713;</span> Role-based permissions</li>
-                    <li><span class="check">&#x2713;</span> 2 hours/month support</li>
-                    <li><span class="check">&#x2713;</span> Bug fixes included</li>
-                    <li class="disabled"><span class="check">&#8212;</span> Custom KPIs</li>
-                    <li class="disabled"><span class="check">&#8212;</span> Custom feature development</li>
-                </ul>
-                <a href="https://buy.stripe.com/cNi7sL3eo3jpb990vbefC03" class="pricing-btn btn-blue">Get Started</a>
+        <div class="why-acs-grid">
+            <div class="why-acs-card reveal">
+                <div class="card-icon">&#x1F3AF;</div>
+                <div>
+                    <h3>No Cookie-Cutter SaaS</h3>
+                    <p>Everything is built from scratch for you. No workarounds, no "it doesn't do that" &#8212; just software that fits.</p>
+                </div>
             </div>
-
-            <!-- ENTERPRISE MONTHLY -->
-            <div class="pricing-card reveal">
-                <div class="plan-name">Enterprise</div>
-                <div class="plan-desc">Unlimited agents &#183; Monthly billing</div>
-                <div class="price">$1,797<span class="price-period">/mo</span></div>
-                <div class="price-note">Billed monthly &#183; Cancel anytime</div>
-                <ul>
-                    <li><span class="check">&#x2713;</span> Everything in Modular, plus:</li>
-                    <li><span class="check">&#x2713;</span> Unlimited agents</li>
-                    <li><span class="check">&#x2713;</span> Multi-team leaderboards</li>
-                    <li><span class="check">&#x2713;</span> Daily, weekly, & monthly SMS</li>
-                    <li><span class="check">&#x2713;</span> Custom KPIs & tracking</li>
-                    <li><span class="check">&#x2713;</span> Priority same-day support</li>
-                    <li><span class="check">&#x2713;</span> Full team onboarding</li>
-                    <li><span class="check">&#x2713;</span> Custom feature development</li>
-                    <li><span class="check">&#x2713;</span> Dedicated support channel</li>
-                    <li><span class="check">&#x2713;</span> Data exports & analytics</li>
-                    <li><span class="check">&#x2713;</span> Medal system & team comparisons</li>
-                    <li><span class="check">&#x2713;</span> Multi-manager SMS routing</li>
-                </ul>
-                <a href="https://buy.stripe.com/8x2fZh8yI07d2CDgu9efC01" class="pricing-btn btn-orange">Get Started</a>
+            <div class="why-acs-card reveal">
+                <div class="card-icon">&#x1F511;</div>
+                <div>
+                    <h3>You Own Your Solution</h3>
+                    <p>No vendor lock-in, no recurring platform fees for code you paid to build. It's yours.</p>
+                </div>
             </div>
-
-            <!-- ENTERPRISE QUARTERLY -->
-            <div class="pricing-card featured reveal">
-                <div class="pricing-badge">BEST VALUE</div>
-                <div class="plan-name">Enterprise Quarterly</div>
-                <div class="plan-desc">Unlimited agents &#183; Save $4,164/year</div>
-                <div class="price">$1,450<span class="price-period">/mo</span></div>
-                <div class="price-note">Billed $4,350 every 3 months</div>
-                <div class="savings-tag">Save $347/month vs monthly</div>
-                <ul>
-                    <li><span class="check">&#x2713;</span> Everything in Enterprise</li>
-                    <li><span class="check">&#x2713;</span> Unlimited agents</li>
-                    <li><span class="check">&#x2713;</span> Multi-team leaderboards</li>
-                    <li><span class="check">&#x2713;</span> Daily, weekly, & monthly SMS</li>
-                    <li><span class="check">&#x2713;</span> Custom KPIs & tracking</li>
-                    <li><span class="check">&#x2713;</span> Priority same-day support</li>
-                    <li><span class="check">&#x2713;</span> Full team onboarding</li>
-                    <li><span class="check">&#x2713;</span> Custom feature development</li>
-                    <li><span class="check">&#x2713;</span> Dedicated support channel</li>
-                    <li><span class="check">&#x2713;</span> Data exports & analytics</li>
-                    <li><span class="check">&#x2713;</span> Medal system & team comparisons</li>
-                    <li><span class="check">&#x2713;</span> Multi-manager SMS routing</li>
-                </ul>
-                <a href="https://buy.stripe.com/14AaEXg1a9HN5OPcdTefC04" class="pricing-btn btn-orange">Get Started &#8212; Best Value</a>
+            <div class="why-acs-card reveal">
+                <div class="card-icon">&#x1F4B0;</div>
+                <div>
+                    <h3>Flat-Rate Project Pricing</h3>
+                    <p>You get a clear quote before we write a single line of code. No surprise bills, no scope creep charges.</p>
+                </div>
+            </div>
+            <div class="why-acs-card reveal">
+                <div class="card-icon">&#x1F6E0;&#xFE0F;</div>
+                <div>
+                    <h3>Engineers Who Get Business</h3>
+                    <p>Built by developers who understand operations, sales workflows, and what it takes to run a team.</p>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- CONTACT / GET A QUOTE -->
+    <section id="contact" style="padding:80px 20px;max-width:700px;margin:0 auto;">
+        <h2 class="reveal" style="text-align:center;font-size:2.2rem;font-weight:800;margin-bottom:12px;">Get a Free Quote</h2>
+        <p class="reveal" style="text-align:center;color:var(--gray);font-size:1.05rem;margin-bottom:40px;">Tell us about your business and we'll design a custom solution that fits your operation. No commitment, no pressure.</p>
+
+        <form class="reveal" action="https://formsubmit.co/xandoor2003@gmail.com" method="POST" style="display:flex;flex-direction:column;gap:16px;">
+            <!-- FormSubmit config -->
+            <input type="hidden" name="_subject" value="New Quote Request - ACS Solutions">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_next" value="https://sandor-alberti.github.io/acs-solutions-site/">
+            <input type="text" name="_honey" style="display:none">
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div>
+                    <label style="display:block;font-size:0.85rem;color:var(--light-gray);margin-bottom:6px;font-weight:600;">Your Name *</label>
+                    <input type="text" name="name" required placeholder="John Smith" style="width:100%;padding:14px 16px;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--white);font-size:1rem;font-family:inherit;outline:none;transition:border 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--card-border)'">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.85rem;color:var(--light-gray);margin-bottom:6px;font-weight:600;">Email *</label>
+                    <input type="email" name="email" required placeholder="john@company.com" style="width:100%;padding:14px 16px;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--white);font-size:1rem;font-family:inherit;outline:none;transition:border 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--card-border)'">
+                </div>
+            </div>
+
+            <div>
+                <label style="display:block;font-size:0.85rem;color:var(--light-gray);margin-bottom:6px;font-weight:600;">Company / Organization</label>
+                <input type="text" name="company" placeholder="Your company name" style="width:100%;padding:14px 16px;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--white);font-size:1rem;font-family:inherit;outline:none;transition:border 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--card-border)'">
+            </div>
+
+            <div>
+                <label style="display:block;font-size:0.85rem;color:var(--light-gray);margin-bottom:6px;font-weight:600;">Team Size</label>
+                <select name="team_size" style="width:100%;padding:14px 16px;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--white);font-size:1rem;font-family:inherit;outline:none;appearance:none;cursor:pointer;">
+                    <option value="">Select team size</option>
+                    <option value="1-10">1 - 10 people</option>
+                    <option value="11-30">11 - 30 people</option>
+                    <option value="31-75">31 - 75 people</option>
+                    <option value="76-150">76 - 150 people</option>
+                    <option value="150+">150+ people</option>
+                </select>
+            </div>
+
+            <div>
+                <label style="display:block;font-size:0.85rem;color:var(--light-gray);margin-bottom:6px;font-weight:600;">What are you looking for? *</label>
+                <textarea name="message" required rows="4" placeholder="Tell us about your business, what processes you'd like to automate, and what problems you'd like solved..." style="width:100%;padding:14px 16px;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--white);font-size:1rem;font-family:inherit;outline:none;resize:vertical;transition:border 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--card-border)'"></textarea>
+            </div>
+
+            <button type="submit" style="padding:16px 32px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--blue),var(--orange));color:#fff;font-size:1.1rem;font-weight:700;font-family:inherit;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 4px 20px rgba(0,122,255,0.3);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 30px rgba(0,122,255,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(0,122,255,0.3)'">
+                Request a Quote &#x2192;
+            </button>
+
+            <p style="text-align:center;font-size:0.8rem;color:var(--gray);margin-top:4px;">We typically respond within 24 hours.</p>
+        </form>
+    </section>
+
     <!-- TRUST -->
     <div class="trust-bar reveal">
-        <p>All plans include 24/7 automated tracking, secure cloud hosting, and automatic updates. No setup fees. No per-user charges. Cancel anytime &mdash; <a href="terms.html" style="color:var(--blue);text-decoration:underline">Terms of Service</a> apply.</p>
+        <p>Every project includes secure, reliable infrastructure and hands-on support from our engineering team. <a href="terms.html" style="color:var(--blue);text-decoration:underline">Terms of Service</a> apply.</p>
         <div class="trust-icons">
-            <span>&#x1F512; Secure Payments via Stripe</span>
-            <span>&#x1F4F1; Apple Pay & Card Accepted</span>
-            <span>&#x26A1; Live in 48 Hours</span>
+            <span>&#x1F512; Secure &amp; Reliable Systems</span>
+            <span>&#x26A1; Rapid Deployment</span>
+            <span>&#x1F6E0;&#xFE0F; Ongoing Support Available</span>
         </div>
     </div>
 
@@ -934,7 +823,11 @@
     <footer>
         <img src="BRAND.png" alt="ACS Solutions" class="footer-logo">
         <p>&copy; 2026 ACS Solutions &#8212; Alberti Custom Software Solutions. All rights reserved.</p>
-        <p style="margin-top:8px"><a href="terms.html" style="color:#8892A8;text-decoration:none;font-size:0.85rem">Terms of Service</a></p>
+        <p style="margin-top:8px">
+            <a href="terms.html" style="color:#8892A8;text-decoration:none;font-size:0.85rem">Terms of Service</a>
+            &nbsp;&bull;&nbsp;
+            <a href="#contact" style="color:#8892A8;text-decoration:none;font-size:0.85rem">Contact</a>
+        </p>
     </footer>
 
     </div><!-- end content -->
