@@ -1,859 +1,1559 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACS Solutions | Custom Software Solutions</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --navy: #0a0f1e;
-            --dark-navy: #060b16;
-            --card-bg: #111827;
-            --card-bg-glass: rgba(17, 24, 39, 0.7);
-            --card-border: #1e2a45;
-            --blue: #007AFF;
-            --light-blue: #4DA8FF;
-            --orange: #F5820B;
-            --light-orange: #FF9F40;
-            --chrome: #C0C8D8;
-            --white: #FFFFFF;
-            --gray: #8892A8;
-            --light-gray: #B0B8C8;
-            --green: #00C97B;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--dark-navy);
-            color: var(--white);
-            overflow-x: hidden;
-        }
-
-        /* ─── ANIMATED BG GRID ─── */
-        .bg-grid {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 0;
-            pointer-events: none;
-            background-image:
-                linear-gradient(rgba(30, 42, 69, 0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(30, 42, 69, 0.3) 1px, transparent 1px);
-            background-size: 60px 60px;
-            mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 70%);
-            -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 70%);
-        }
-
-        /* ─── FLOATING ORBS ─── */
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: 0;
-            pointer-events: none;
-            animation: orbFloat 20s ease-in-out infinite;
-        }
-
-        .orb-1 {
-            width: 600px; height: 600px;
-            background: rgba(0, 122, 255, 0.07);
-            top: -10%; left: -10%;
-            animation-delay: 0s;
-        }
-
-        .orb-2 {
-            width: 500px; height: 500px;
-            background: rgba(245, 130, 11, 0.06);
-            bottom: -10%; right: -10%;
-            animation-delay: -7s;
-        }
-
-        .orb-3 {
-            width: 400px; height: 400px;
-            background: rgba(0, 201, 123, 0.04);
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: -14s;
-        }
-
-        @keyframes orbFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(30px, -40px) scale(1.05); }
-            50% { transform: translate(-20px, 20px) scale(0.95); }
-            75% { transform: translate(40px, 30px) scale(1.02); }
-        }
-
-        /* ─── CONTENT WRAPPER ─── */
-        .content { position: relative; z-index: 1; }
-
-        /* ─── NAV ─── */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 100;
-            background: rgba(6, 11, 22, 0.85);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-bottom: 1px solid rgba(30, 42, 69, 0.5);
-            padding: 0.8rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.3s;
-        }
-
-        .nav-logo { height: 50px; }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--light-gray);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover { color: var(--white); }
-
-        .nav-cta {
-            background: linear-gradient(135deg, var(--orange), var(--light-orange)) !important;
-            color: var(--white) !important;
-            padding: 0.6rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600 !important;
-            transition: transform 0.2s, box-shadow 0.3s !important;
-        }
-
-        .nav-cta:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 25px rgba(245, 130, 11, 0.5);
-        }
-
-        /* ─── HERO ─── */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 8rem 2rem 4rem;
-            position: relative;
-        }
-
-        .hero-logo {
-            height: 200px;
-            margin-bottom: 2rem;
-            filter: drop-shadow(0 0 40px rgba(0, 122, 255, 0.2));
-            animation: fadeInScale 1s ease both;
-        }
-
-        .hero h1 {
-            font-size: 4.5rem;
-            font-weight: 900;
-            line-height: 1.05;
-            margin-bottom: 1.5rem;
-            letter-spacing: -1px;
-            animation: fadeInUp 0.8s ease 0.15s both;
-        }
-
-        .hero h1 .gradient-text {
-            background: linear-gradient(135deg, var(--blue), var(--light-blue), #80c8ff);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientShift 6s ease infinite;
-        }
-
-        .hero h1 .orange-text {
-            background: linear-gradient(135deg, var(--orange), var(--light-orange), #ffc477);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientShift 6s ease infinite reverse;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .hero-sub {
-            font-size: 1.3rem;
-            color: var(--light-gray);
-            max-width: 650px;
-            line-height: 1.7;
-            margin-bottom: 2.5rem;
-            animation: fadeInUp 0.8s ease 0.3s both;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            animation: fadeInUp 0.8s ease 0.45s both;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--orange), var(--light-orange));
-            color: var(--white);
-            padding: 1rem 2.5rem;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.3s;
-            border: none;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-primary:hover::before { left: 100%; }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(245, 130, 11, 0.45);
-        }
-
-        .btn-secondary {
-            background: rgba(255,255,255,0.03);
-            color: var(--white);
-            padding: 1rem 2.5rem;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-decoration: none;
-            border: 1px solid var(--card-border);
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--blue);
-            background: rgba(0, 122, 255, 0.08);
-            box-shadow: 0 0 30px rgba(0, 122, 255, 0.15);
-        }
-
-        /* ─── STATS BAR ─── */
-        .stats-bar {
-            background: rgba(17, 24, 39, 0.6);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--card-border);
-            border-bottom: 1px solid var(--card-border);
-            padding: 3rem 2rem;
-            display: flex;
-            justify-content: center;
-            gap: 6rem;
-        }
-
-        .stat { text-align: center; }
-
-        .stat-number {
-            font-size: 2.8rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--orange), var(--light-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--gray);
-            margin-top: 0.3rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 500;
-        }
-
-        /* ─── SECTIONS ─── */
-        section {
-            padding: 7rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-label {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--orange);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 0.8rem;
-        }
-
-        .section-title {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-            letter-spacing: -0.5px;
-        }
-
-        .section-desc {
-            font-size: 1.15rem;
-            color: var(--light-gray);
-            max-width: 700px;
-            line-height: 1.7;
-            margin-bottom: 3.5rem;
-        }
-
-        /* ─── SCROLL REVEAL ─── */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ─── FEATURES GRID ─── */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-        }
-
-        .feature-card {
-            background: var(--card-bg-glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 2.2rem;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 3px;
-            background: linear-gradient(90deg, var(--blue), var(--orange));
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-
-        .feature-card:hover::before { opacity: 1; }
-
-        .feature-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(0, 122, 255, 0.3);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 122, 255, 0.08);
-        }
-
-        .feature-icon {
-            font-size: 2.2rem;
-            margin-bottom: 1.2rem;
-            display: inline-block;
-            animation: iconPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes iconPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .feature-card h3 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 0.7rem;
-        }
-
-        .feature-card p {
-            font-size: 0.9rem;
-            color: var(--gray);
-            line-height: 1.6;
-        }
-
-        /* ─── HOW IT WORKS ─── */
-        .how-it-works {
-            background: rgba(17, 24, 39, 0.4);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid var(--card-border);
-            border-bottom: 1px solid var(--card-border);
-        }
-
-        .how-it-works .inner {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .steps-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-        }
-
-        .step {
-            text-align: center;
-            position: relative;
-            padding: 2rem 1rem;
-            border-radius: 16px;
-            transition: background 0.3s;
-        }
-
-        .step:hover {
-            background: rgba(0, 122, 255, 0.05);
-        }
-
-        .step-number {
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--orange), var(--light-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            opacity: 0.8;
-        }
-
-        .step h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0.5rem 0;
-        }
-
-        .step p {
-            font-size: 0.9rem;
-            color: var(--gray);
-            line-height: 1.6;
-        }
-
-        .step-arrow {
-            position: absolute;
-            right: -1.2rem;
-            top: 3rem;
-            color: var(--orange);
-            font-size: 1.5rem;
-            opacity: 0.6;
-        }
-
-        /* ─── WHY ACS ─── */
-        .why-acs-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin-top: 2.5rem;
-        }
-
-        .why-acs-card {
-            background: var(--card-bg-glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 2rem 2.2rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 1.2rem;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .why-acs-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(0, 122, 255, 0.3);
-            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.25), 0 0 30px rgba(0, 122, 255, 0.06);
-        }
-
-        .why-acs-card .card-icon {
-            font-size: 1.8rem;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .why-acs-card h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 0.4rem;
-        }
-
-        .why-acs-card p {
-            font-size: 0.9rem;
-            color: var(--gray);
-            line-height: 1.6;
-        }
-
-        /* ─── TRUST BAR ─── */
-        .trust-bar {
-            text-align: center;
-            padding: 5rem 2rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .trust-bar p {
-            font-size: 0.95rem;
-            color: var(--gray);
-            line-height: 1.7;
-        }
-
-        .trust-icons {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-top: 2rem;
-            color: var(--gray);
-            font-size: 0.85rem;
-        }
-
-        .trust-icons span {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            background: var(--card-bg-glass);
-            backdrop-filter: blur(10px);
-            transition: border-color 0.3s;
-        }
-
-        .trust-icons span:hover {
-            border-color: var(--blue);
-        }
-
-        /* ─── FOOTER ─── */
-        footer {
-            background: var(--navy);
-            border-top: 1px solid var(--card-border);
-            padding: 3rem 2rem;
-            text-align: center;
-        }
-
-        .footer-logo {
-            height: 45px;
-            margin-bottom: 1rem;
-            opacity: 0.7;
-        }
-
-        footer p {
-            color: var(--gray);
-            font-size: 0.85rem;
-        }
-
-        /* ─── ANIMATIONS ─── */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* ─── SMOOTH SCROLL ─── */
-        html { scroll-behavior: smooth; }
-
-        /* ─── RESPONSIVE ─── */
-        @media (max-width: 900px) {
-            .hero h1 { font-size: 2.8rem; }
-            .features-grid { grid-template-columns: 1fr; }
-            .steps-row { grid-template-columns: 1fr 1fr; }
-            .why-acs-grid { grid-template-columns: 1fr; }
-            .stats-bar { flex-wrap: wrap; gap: 2rem; }
-            .step-arrow { display: none; }
-            .nav-links { display: none; }
-            .trust-icons { flex-direction: column; align-items: center; }
-            .section-title { font-size: 2.2rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACS Solutions — Custom Software Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===== CUSTOM PROPERTIES ===== */
+:root {
+  --orange: #F5820B;
+  --orange-glow: rgba(245, 130, 11, 0.35);
+  --navy: #040710;
+  --navy-light: #0a0f1e;
+  --navy-mid: #060b16;
+  --white: #f0f0f0;
+  --white-dim: rgba(240, 240, 240, 0.6);
+  --blue-accent: #3b82f6;
+  --green-accent: #22c55e;
+  --font-head: 'Bebas Neue', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+  --clip-btn: polygon(0 0, 100% 0, 94% 100%, 0% 100%);
+  --clip-card: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===== RESET ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--white);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+
+/* ===== RAIN CANVAS ===== */
+#rain-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  pointer-events: none;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 400; letter-spacing: 0.04em; line-height: 1.1; }
+p { font-family: var(--font-body); font-weight: 300; line-height: 1.65; }
+a { text-decoration: none; color: inherit; }
+
+/* ===== UTILITY ===== */
+.gr { opacity: 0; transform: translateY(14px); }
+.section-tag {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--orange);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+.accent { color: var(--orange); }
+
+/* ===== NAV ===== */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  padding: 0 2.5rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(4, 7, 16, 0.45);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border-bottom: 1px solid rgba(245, 130, 11, 0.08);
+}
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.nav-mark {
+  width: 0; height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 20px solid var(--orange);
+}
+.nav-brand {
+  font-family: var(--font-head);
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
+  color: var(--white);
+}
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.nav-link {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--white-dim);
+  transition: color 0.3s;
+  text-transform: uppercase;
+}
+.nav-link:hover { color: var(--orange); }
+.btn-cta {
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  padding: 0.55rem 1.6rem;
+  background: var(--orange);
+  color: var(--navy);
+  clip-path: var(--clip-btn);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  display: inline-block;
+}
+.btn-cta:hover { background: #ff9429; transform: translateY(-1px); }
+
+/* ===== HERO ===== */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.35) contrast(1.1);
+  z-index: 0;
+}
+.hero-overlay-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 180px;
+  background: linear-gradient(to bottom, var(--navy) 0%, transparent 100%);
+  z-index: 1;
+}
+.hero-overlay-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 260px;
+  background: linear-gradient(to top, var(--navy) 0%, transparent 100%);
+  z-index: 1;
+}
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, var(--navy) 100%);
+  z-index: 1;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 860px;
+  padding: 0 1.5rem;
+}
+.hero-content .section-tag {
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+.hero-h1 {
+  font-size: clamp(3rem, 6.5vw, 7rem);
+  line-height: 1.02;
+  margin-bottom: 1.2rem;
+  color: var(--white);
+}
+.hero-sub {
+  font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+  color: var(--white-dim);
+  max-width: 540px;
+  margin: 0 auto 2.2rem;
+  font-weight: 300;
+}
+.hero-btns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  font-family: var(--font-head);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  padding: 0.7rem 2.2rem;
+  background: var(--orange);
+  color: var(--navy);
+  clip-path: var(--clip-btn);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+.btn-primary:hover { background: #ff9429; transform: translateY(-1px); }
+.btn-ghost {
+  font-family: var(--font-head);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  padding: 0.7rem 2.2rem;
+  background: transparent;
+  color: var(--white);
+  border: 1px solid rgba(240, 240, 240, 0.2);
+  clip-path: var(--clip-btn);
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s, transform 0.2s;
+}
+.btn-ghost:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-1px); }
+
+/* ===== TRANSITION SECTION ===== */
+.transition-zone {
+  position: relative;
+  height: 25vh;
+  min-height: 160px;
+  max-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.transition-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.15) contrast(1.1);
+  z-index: 0;
+}
+.transition-overlay-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, var(--navy) 0%, transparent 100%);
+  z-index: 1;
+}
+.transition-overlay-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(to top, var(--navy) 0%, transparent 100%);
+  z-index: 1;
+}
+.transition-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+.transition-content h2 {
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  color: var(--white);
+  letter-spacing: 0.08em;
+}
+.transition-content p {
+  font-size: 0.78rem;
+  color: var(--white-dim);
+  margin-top: 0.3rem;
+  letter-spacing: 0.05em;
+}
+
+/* ===== PIPELINE ===== */
+.pipeline {
+  position: relative;
+  padding: 6rem 2rem 6rem;
+  overflow: hidden;
+  min-height: 100vh;
+}
+.pipeline-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.12) saturate(0.3);
+  z-index: 0;
+}
+.pipeline-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, var(--navy) 0%, rgba(4,7,16,0.7) 15%, rgba(4,7,16,0.7) 85%, var(--navy) 100%);
+  z-index: 1;
+}
+.pipeline-inner {
+  position: relative;
+  z-index: 3;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.pipeline-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+.pipeline-header h2 {
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+}
+/* truck track styles inline */
+
+/* Pipeline modules */
+.pipe-module {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 3.5rem;
+  position: relative;
+}
+.pipe-module.reverse { direction: rtl; }
+.pipe-module.reverse > * { direction: ltr; }
+
+.pipe-info { opacity: 0.08; transition: opacity 0.8s var(--ease-out); }
+.pipe-info.on { opacity: 1; }
+.pipe-info h3 {
+  font-size: 1.5rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.4rem;
+  color: var(--white);
+}
+.pipe-info p {
+  font-size: 0.8rem;
+  color: var(--white-dim);
+  line-height: 1.6;
+}
+
+.pipe-dot-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pipe-dot {
+  width: 42px;
+  height: 42px;
+  background: rgba(245, 130, 11, 0.08);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  color: rgba(245,130,11,0.2);
+  transition: background 0.6s, color 0.6s, box-shadow 0.6s;
+  opacity: 0.1;
+  transition: opacity 0.8s var(--ease-out), background 0.6s, color 0.6s;
+}
+.pipe-dot.on {
+  opacity: 1;
+  background: var(--orange);
+  color: var(--navy);
+}
+
+.pipe-visual {
+  min-height: 200px;
+  padding: 1.5rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(245,130,11,0.06);
+  clip-path: var(--clip-card);
+  opacity: 0.06;
+  transition: opacity 0.8s var(--ease-out), border-color 0.6s;
+  position: relative;
+  overflow: hidden;
+}
+.pipe-visual.on {
+  opacity: 1;
+  border-color: rgba(245,130,11,0.25);
+}
+
+/* Server rack visual */
+.server-rack {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 3px;
+  width: 100%;
+}
+.rack-unit {
+  height: 18px;
+  background: rgba(10, 15, 30, 0.9);
+  border: 1px solid rgba(59, 130, 246, 0.08);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 3px;
+  gap: 2px;
+}
+.rack-led {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.15);
+  transition: background 0.3s;
+}
+.rack-led.blink-orange { background: var(--orange); box-shadow: 0 0 4px var(--orange); }
+.rack-led.blink-blue { background: var(--blue-accent); box-shadow: 0 0 4px var(--blue-accent); }
+.rack-led.dim { background: rgba(100, 100, 120, 0.2); }
+.scan-line {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--orange), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.pipe-visual.on .scan-line {
+  opacity: 0.6;
+  animation: scanDown 2.5s linear infinite;
+}
+@keyframes scanDown {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+/* Pipeline flow visual */
+.pipeline-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 80px;
+}
+.hex-node {
+  width: 52px;
+  height: 52px;
+  background: rgba(245,130,11,0.06);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.5s;
+}
+.hex-node svg { width: 20px; height: 20px; stroke: rgba(245,130,11,0.2); fill: none; stroke-width: 1.5; transition: stroke 0.5s; }
+.pipe-visual.on .hex-node { background: rgba(245,130,11,0.15); }
+.pipe-visual.on .hex-node svg { stroke: var(--orange); }
+.flow-line {
+  width: 50px;
+  height: 2px;
+  background: rgba(245,130,11,0.08);
+  position: relative;
+  flex-shrink: 0;
+}
+.flow-dot {
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--orange);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.pipe-visual.on .flow-dot {
+  opacity: 1;
+  animation: flowRight 1.5s linear infinite;
+}
+.pipe-visual.on .flow-line { background: rgba(245,130,11,0.2); }
+@keyframes flowRight {
+  0% { left: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: calc(100% - 6px); opacity: 0; }
+}
+
+/* Bar chart visual */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+  width: 100%;
+  padding-top: 1rem;
+}
+.bar-chart .bar {
+  flex: 1;
+  background: linear-gradient(to top, var(--orange), rgba(245,130,11,0.4));
+  opacity: 0.08;
+  transition: opacity 0.5s, height 0.6s var(--ease-out);
+  min-height: 8px;
+}
+.pipe-visual.on .bar-chart .bar { opacity: 1; }
+.bar-label {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245,130,11,0.2);
+  transition: color 0.5s;
+}
+.pipe-visual.on .bar-label { color: var(--orange); }
+
+/* Radar visual */
+.radar-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto;
+}
+.radar-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(34,197,94,0.08);
+  transition: border-color 0.5s;
+}
+.radar-ring:nth-child(1) { inset: 0; }
+.radar-ring:nth-child(2) { inset: 20px; }
+.radar-ring:nth-child(3) { inset: 40px; }
+.pipe-visual.on .radar-ring { border-color: rgba(34,197,94,0.2); }
+.radar-sweep {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--green-accent), transparent);
+  transform-origin: left center;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.pipe-visual.on .radar-sweep {
+  opacity: 0.7;
+  animation: radarSpin 3s linear infinite;
+}
+@keyframes radarSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.radar-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(34,197,94,0.15);
+  transition: background 0.5s, box-shadow 0.5s;
+}
+.pipe-visual.on .radar-center { background: var(--green-accent); box-shadow: 0 0 10px var(--green-accent); }
+.radar-label {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(34,197,94,0.2);
+  transition: color 0.5s;
+  white-space: nowrap;
+}
+.pipe-visual.on .radar-label { color: var(--green-accent); }
+
+/* ===== SERVICES ===== */
+.services {
+  position: relative;
+  padding: 6rem 2rem;
+  background: var(--navy);
+}
+.services-inner {
+  max-width: 1060px;
+  margin: 0 auto;
+}
+.services-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+.services-header h2 {
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+}
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+.service-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(245,130,11,0.06);
+  clip-path: var(--clip-card);
+  padding: 2rem 1.6rem;
+  transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s;
+  cursor: default;
+}
+.service-card:hover {
+  border-color: rgba(245,130,11,0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(245,130,11,0.06);
+}
+.service-card.span-2 { grid-column: span 2; }
+.service-card svg {
+  width: 36px;
+  height: 36px;
+  stroke: var(--orange);
+  fill: none;
+  stroke-width: 1.5;
+  margin-bottom: 1rem;
+}
+.service-card h3 {
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+.service-card p {
+  font-size: 0.82rem;
+  color: var(--white-dim);
+}
+
+/* ===== CASE STUDY ===== */
+.case-study {
+  position: relative;
+  padding: 6rem 2rem;
+  background: var(--navy-mid);
+}
+.case-inner {
+  max-width: 1060px;
+  margin: 0 auto;
+}
+.case-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.case-header h2 {
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+}
+.case-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(245,130,11,0.08);
+  clip-path: var(--clip-card);
+  padding: 2.5rem;
+}
+.case-text h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.05em;
+}
+.case-text p {
+  font-size: 0.85rem;
+  color: var(--white-dim);
+  line-height: 1.7;
+}
+.case-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.metric-box {
+  background: rgba(245,130,11,0.04);
+  border: 1px solid rgba(245,130,11,0.1);
+  clip-path: var(--clip-card);
+  padding: 1.4rem 1rem;
+  text-align: center;
+}
+.metric-box .num {
+  font-family: var(--font-head);
+  font-size: 2.4rem;
+  color: var(--orange);
+  line-height: 1;
+}
+.metric-box .label {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--white-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 0.3rem;
+}
+
+/* ===== CTA / CONTACT ===== */
+.contact {
+  position: relative;
+  padding: 6rem 2rem;
+  text-align: center;
+  background: var(--navy);
+}
+.contact h2 {
+  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  margin-bottom: 1rem;
+}
+.contact p {
+  font-size: 0.92rem;
+  color: var(--white-dim);
+  max-width: 480px;
+  margin: 0 auto 2.2rem;
+}
+.contact-btns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-contact {
+  font-family: var(--font-head);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  padding: 0.75rem 2.2rem;
+  clip-path: var(--clip-btn);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+  display: inline-block;
+}
+.btn-contact:hover { transform: translateY(-1px); }
+.btn-contact.orange { background: var(--orange); color: var(--navy); }
+.btn-contact.orange:hover { background: #ff9429; }
+.btn-contact.outline { background: transparent; color: var(--white); border: 1px solid rgba(240,240,240,0.2); }
+.btn-contact.outline:hover { border-color: var(--orange); color: var(--orange); }
+
+/* ===== FOOTER ===== */
+footer {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid rgba(245,130,11,0.06);
+}
+.footer-inner {
+  max-width: 1060px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+.footer-copy {
+  font-size: 0.72rem;
+  color: var(--white-dim);
+}
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+}
+.footer-links a {
+  font-size: 0.72rem;
+  color: var(--white-dim);
+  transition: color 0.3s;
+}
+.footer-links a:hover { color: var(--orange); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  nav { padding: 0 1.2rem; }
+  .nav-right { gap: 1rem; }
+  .nav-link { display: none; }
+
+  .pipe-module {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    text-align: center;
+  }
+  .pipe-module.reverse { direction: ltr; }
+  .pipe-dot-wrap { display: none; }
+  .pipe-visual { min-height: 160px; }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .service-card.span-2 { grid-column: span 1; }
+
+  .case-card {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  #energy-canvas { display: none; }
+}
+
+@media (max-width: 480px) {
+  .hero-h1 { font-size: 2.6rem; }
+  .hero-btns { flex-direction: column; align-items: center; }
+}
+
+/* ===== SERVICE MODAL ===== */
+.svc-modal-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(4,7,16,.85); backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .35s;
+}
+.svc-modal-overlay.open { opacity: 1; pointer-events: auto; }
+.svc-modal {
+  background: var(--navy-light); border: 1px solid rgba(245,130,11,.12);
+  max-width: 700px; width: 90%; max-height: 85vh; overflow-y: auto;
+  padding: 2.5rem; position: relative;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%);
+}
+.svc-modal-close {
+  position: absolute; top: 1rem; right: 1rem; background: none; border: none;
+  color: var(--white-dim); font-size: 1.5rem; cursor: pointer; transition: color .2s;
+  font-family: var(--font-body); line-height: 1;
+}
+.svc-modal-close:hover { color: var(--orange); }
+.svc-modal h3 { font-size: 1.8rem; letter-spacing: .06em; margin-bottom: .5rem; }
+.svc-modal .accent { color: var(--orange); }
+.svc-modal p { color: var(--white-dim); font-size: .88rem; margin-bottom: 1.2rem; }
+.svc-modal-mockup {
+  background: #060b16; border: 1px solid rgba(255,255,255,.04);
+  border-radius: 6px 6px 0 0; overflow: hidden; margin-top: 1rem;
+  animation: modalSlideUp .5s ease both;
+}
+@keyframes modalSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.svc-modal { animation: modalScale .35s var(--ease-out) both; }
+@keyframes modalScale { from { opacity: 0; transform: scale(.96) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+/* Animated scan line inside mockups */
+.mock-scan { position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--orange), transparent); opacity: .2; animation: mockScan 3s ease-in-out infinite; top: 0; pointer-events: none; }
+@keyframes mockScan { 0% { top: 0; opacity: 0; } 10% { opacity: .2; } 90% { opacity: .2; } 100% { top: 100%; opacity: 0; } }
+/* Pulse for metric numbers in modals */
+.mock-pulse { animation: mockPulse 2s ease infinite; }
+@keyframes mockPulse { 0%, 100% { opacity: .6; } 50% { opacity: 1; } }
+@keyframes barGrow { from { transform: scaleY(0); transform-origin: bottom; } to { transform: scaleY(1); transform-origin: bottom; } }
+.mockup-chrome { height: 24px; background: #0a0f1e; display: flex; align-items: center; padding: 0 10px; gap: 5px; border-bottom: 1px solid rgba(255,255,255,.03); }
+.mockup-dot { width: 7px; height: 7px; border-radius: 50%; }
+.mockup-url { flex: 1; height: 14px; background: rgba(255,255,255,.03); border-radius: 3px; margin-left: 8px; }
+.mockup-body { padding: 16px; min-height: 180px; position: relative; }
+.mk-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.mk-logo { width: 50px; height: 10px; border-radius: 2px; }
+.mk-bars { display: flex; gap: 5px; }
+.mk-bars span { width: 20px; height: 3px; background: rgba(255,255,255,.06); border-radius: 1px; }
+.mk-hero-area { margin-bottom: 12px; }
+.mk-h { height: 12px; border-radius: 2px; margin-bottom: 6px; }
+.mk-h2 { height: 12px; border-radius: 2px; margin-bottom: 8px; }
+.mk-p { height: 4px; border-radius: 1px; margin-bottom: 3px; }
+.mk-btn { display: inline-block; width: 60px; height: 16px; border-radius: 2px; margin-top: 8px; }
+.mk-grid { display: grid; gap: 6px; margin-top: 12px; }
+.mk-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.mk-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.mk-cell { background: rgba(255,255,255,.015); border: 1px solid rgba(255,255,255,.03); border-radius: 4px; padding: 10px; }
+.mk-cell-icon { width: 16px; height: 16px; border-radius: 3px; margin-bottom: 6px; }
+.mk-cell-line { height: 3px; border-radius: 1px; margin-bottom: 3px; }
+
+.service-card { cursor: pointer; }
+
+/* ===== TRUCK DESTINATION ===== */
+.truck-destination {
+  position: relative; text-align: center; margin-top: 3rem; padding: 3rem 1rem;
+  border-top: 1px solid rgba(245,130,11,.08);
+}
+.dest-building {
+  display: inline-flex; flex-direction: column; align-items: center; gap: .8rem;
+}
+.dest-icon {
+  width: 60px; height: 60px; background: rgba(245,130,11,.06);
+  border: 1px solid rgba(245,130,11,.12); display: flex; align-items: center;
+  justify-content: center; clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+}
+.dest-icon svg { width: 24px; height: 24px; }
+.dest-label { font-family: var(--font-head); font-size: 1rem; letter-spacing: .1em; color: var(--orange); }
+.dest-sub { font-size: .72rem; color: var(--white-dim); }
+</style>
 </head>
 <body>
 
-    <!-- ANIMATED BACKGROUND -->
-    <div class="bg-grid"></div>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
+<!-- Rain Canvas -->
+<canvas id="rain-canvas"></canvas>
 
-    <div class="content">
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <div class="nav-mark"></div>
+    <span class="nav-brand">ACS SOLUTIONS</span>
+  </div>
+  <div class="nav-right">
+    <a href="#services" class="nav-link">Services</a>
+    <a href="#case-study" class="nav-link">Work</a>
+    <a href="#contact" class="nav-link">Contact</a>
+    <a href="#contact" class="btn-cta">GET A QUOTE</a>
+  </div>
+</nav>
 
-    <!-- NAV -->
-    <nav>
-        <img src="BRAND.png" alt="ACS Solutions" class="nav-logo">
-        <div class="nav-links">
-            <a href="#services">Services</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#contact">Contact</a>
-            <a href="#contact" class="nav-cta">Get a Quote</a>
-        </div>
-    </nav>
+<!-- HERO -->
+<section class="hero" id="hero">
+  <video class="hero-video" autoplay muted loop playsinline>
+    <source src="datacube-hq.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay-top"></div>
+  <div class="hero-overlay-bottom"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <p class="section-tag hero-anim">— Custom Software Engineering —</p>
+    <h1 class="hero-h1 hero-anim">IF YOU CAN <span class="accent">IMAGINE</span> IT,<br>WE CAN <span class="accent">BUILD</span> IT.</h1>
+    <p class="hero-sub hero-anim">Software and automation engineered on dedicated infrastructure. No templates. No compromises.</p>
+    <div class="hero-btns hero-anim">
+      <a href="#contact" class="btn-primary">START YOUR BUILD</a>
+      <a href="#case-study" class="btn-ghost">SEE OUR WORK</a>
+    </div>
+  </div>
+</section>
 
-    <!-- HERO -->
-    <section class="hero">
-        <img src="BRAND.png" alt="ACS Solutions" class="hero-logo">
-        <h1>
-            <span class="gradient-text">Custom Software Solutions</span><br>
-            <span class="orange-text">That Scale Your Business</span>
-        </h1>
-        <p class="hero-sub">
-            We build automation, dashboards, integrations, and tools tailored to how your team operates. No templates. No compromises. Just software that works the way you do.
-        </p>
-        <div class="hero-buttons">
-            <a href="#contact" class="btn-primary">Get a Free Quote</a>
-            <a href="#services" class="btn-secondary">Our Services</a>
-        </div>
-    </section>
+<!-- TRANSITION ZONE -->
+<section class="transition-zone">
+  <video class="transition-video" autoplay muted loop playsinline>
+    <source src="plexus-bg.mp4" type="video/mp4">
+  </video>
+  <div class="transition-overlay-top"></div>
+  <div class="transition-overlay-bottom"></div>
+  <div class="transition-content">
+    <h2 class="gr">WE ENGINEER YOUR VISION.</h2>
+    <p class="gr">From concept to deployment — precision at every phase.</p>
+  </div>
+</section>
 
-    <!-- STATS BAR -->
-    <div class="stats-bar">
-        <div class="stat">
-            <div class="stat-number">Custom</div>
-            <div class="stat-label">Tailored to your workflow</div>
-        </div>
-        <div class="stat">
-            <div class="stat-number">48 hrs</div>
-            <div class="stat-label">Rapid deployment</div>
-        </div>
-        <div class="stat">
-            <div class="stat-number">24/7</div>
-            <div class="stat-label">Always-on systems</div>
-        </div>
-        <div class="stat">
-            <div class="stat-number">100%</div>
-            <div class="stat-label">Your vision, our code</div>
-        </div>
+<!-- PIPELINE -->
+<section class="pipeline" id="pipeline">
+  <video class="pipeline-bg-video" autoplay muted loop playsinline>
+    <source src="abstract-bg.mp4" type="video/mp4">
+  </video>
+  <div class="pipeline-overlay"></div>
+  <!-- Road + Truck System -->
+  <div id="road-system" style="position:absolute;left:50%;top:0;bottom:0;transform:translateX(-50%);z-index:2;width:60px;">
+    <!-- Road surface -->
+    <div style="position:absolute;inset:0;background:rgba(255,255,255,.02);border-left:1px solid rgba(255,255,255,.04);border-right:1px solid rgba(255,255,255,.04);"></div>
+    <!-- Center lane dashes -->
+    <div style="position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);background:repeating-linear-gradient(to bottom,rgba(245,130,11,.12) 0px,rgba(245,130,11,.12) 20px,transparent 20px,transparent 45px);"></div>
+    <!-- Orange glow trail (fills as truck passes) -->
+    <div id="road-glow" style="position:absolute;left:50%;top:0;width:4px;transform:translateX(-50%);height:0%;background:linear-gradient(to bottom,rgba(245,130,11,.2),rgba(245,130,11,.05));box-shadow:0 0 20px rgba(245,130,11,.1);transition:height .05s;"></div>
+  </div>
+  <!-- Truck -->
+  <img id="acs-truck" src="acs-truck.png" alt="" style="position:absolute;left:50%;top:0;transform:translateX(-50%) translateY(-50%);z-index:4;width:200px;height:auto;pointer-events:none;filter:drop-shadow(0 6px 30px rgba(0,0,0,.7)) drop-shadow(0 0 15px rgba(245,130,11,.08));opacity:0.95;">
+  <div class="pipeline-inner">
+    <div class="pipeline-header">
+      <p class="section-tag gr">— How It Works —</p>
+      <h2 class="gr">FROM <span class="accent">FORGE</span> TO DEPLOY.</h2>
     </div>
 
-    <!-- SERVICES -->
-    <section id="services">
-        <div class="reveal">
-            <div class="section-label">Services</div>
-            <h2 class="section-title">What We Build</h2>
-            <p class="section-desc">
-                From internal tools to full-scale platforms, we deliver software that solves real business problems.
-            </p>
-        </div>
-        <div class="features-grid">
-            <div class="feature-card reveal">
-                <div class="feature-icon">&#x1F4C8;</div>
-                <h3>Sales &amp; Performance Tracking</h3>
-                <p>Automated tracking, leaderboards, and real-time analytics designed for sales teams that need results at a glance.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">&#x1F4CA;</div>
-                <h3>Custom Dashboards</h3>
-                <p>Live web dashboards with charts, team breakdowns, and trend analysis &#8212; built around the metrics that matter to you.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">&#x2699;&#xFE0F;</div>
-                <h3>Business Automation</h3>
-                <p>Eliminate manual processes with intelligent automation that runs 24/7 so your team can focus on what they do best.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">&#x1F517;</div>
-                <h3>System Integrations</h3>
-                <p>Connect your existing tools and platforms into one seamless workflow. No more switching between apps or copy-pasting data.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">&#x1F4CB;</div>
-                <h3>Data Analytics &amp; Reporting</h3>
-                <p>Automated reports, KPI tracking, and actionable insights delivered on the schedule you choose.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">&#x1F4BB;</div>
-                <h3>Custom Software Development</h3>
-                <p>From concept to deployment, we build exactly what your business needs &#8212; no more paying for features you don't use.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- HOW IT WORKS -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="inner">
-            <div class="reveal">
-                <div class="section-label">How It Works</div>
-                <h2 class="section-title">From Idea to Launch</h2>
-                <p class="section-desc">A simple, transparent process designed to get your solution live fast.</p>
-            </div>
-            <div class="steps-row">
-                <div class="step reveal">
-                    <div class="step-number">01</div>
-                    <h3>Discovery Call</h3>
-                    <p>Tell us about your business, pain points, and goals. We'll figure out what you need together.</p>
-                    <span class="step-arrow">&#8594;</span>
-                </div>
-                <div class="step reveal">
-                    <div class="step-number">02</div>
-                    <h3>Custom Blueprint</h3>
-                    <p>We design a solution tailored to your exact workflow &#8212; no generic templates, no bloated features.</p>
-                    <span class="step-arrow">&#8594;</span>
-                </div>
-                <div class="step reveal">
-                    <div class="step-number">03</div>
-                    <h3>Build &amp; Deploy</h3>
-                    <p>We develop, test, and launch your system. Most projects go live within 48 hours.</p>
-                    <span class="step-arrow">&#8594;</span>
-                </div>
-                <div class="step reveal">
-                    <div class="step-number">04</div>
-                    <h3>Ongoing Support</h3>
-                    <p>We're here when you need us with flexible support plans, updates, and enhancements.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- WHY ACS -->
-    <section id="why-acs">
-        <div class="reveal">
-            <div class="section-label">Why ACS</div>
-            <h2 class="section-title">Why Businesses Choose Us</h2>
-            <p class="section-desc">
-                We're not a SaaS platform. We're engineers who build software around how your business actually runs.
-            </p>
-        </div>
-        <div class="why-acs-grid">
-            <div class="why-acs-card reveal">
-                <div class="card-icon">&#x1F3AF;</div>
-                <div>
-                    <h3>No Cookie-Cutter SaaS</h3>
-                    <p>Everything is built from scratch for you. No workarounds, no "it doesn't do that" &#8212; just software that fits.</p>
-                </div>
-            </div>
-            <div class="why-acs-card reveal">
-                <div class="card-icon">&#x1F4DE;</div>
-                <div>
-                    <h3>Direct Line to Your Developer</h3>
-                    <p>No support tickets, no chatbots. You get direct access to the engineer who built your system.</p>
-                </div>
-            </div>
-            <div class="why-acs-card reveal">
-                <div class="card-icon">&#x1F4B0;</div>
-                <div>
-                    <h3>Flat-Rate Project Pricing</h3>
-                    <p>You get a clear quote before we write a single line of code. No surprise bills, no scope creep charges.</p>
-                </div>
-            </div>
-            <div class="why-acs-card reveal">
-                <div class="card-icon">&#x1F6E0;&#xFE0F;</div>
-                <div>
-                    <h3>Engineers Who Get Business</h3>
-                    <p>Built by developers who understand operations, sales workflows, and what it takes to run a team.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CONTACT / GET A QUOTE -->
-    <section id="contact" style="padding:80px 20px;max-width:700px;margin:0 auto;">
-        <h2 class="reveal" style="text-align:center;font-size:2.2rem;font-weight:800;margin-bottom:12px;">Get a Free Quote</h2>
-        <p class="reveal" style="text-align:center;color:var(--gray);font-size:1.05rem;margin-bottom:40px;">Tell us about your business and we'll design a custom solution that fits your operation. No commitment, no pressure.</p>
-
-        <form class="reveal" action="https://formsubmit.co/xandoor2003@gmail.com" method="POST" style="display:flex;flex-direction:column;gap:16px;">
-            <!-- FormSubmit config -->
-            <input type="hidden" name="_subject" value="New Quote Request - ACS Solutions">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_next" value="https://sandor-alberti.github.io/acs-solutions-site/">
-            <input type="text" name="_honey" style="display:none">
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-                <div>
-                    <label style="display:block;font-size:0.85rem;color:var(--light-gray);margin-bottom:6px;font-weight:600;">Your Name *</label>
-                    <input type="text" name="name" required placeholder="John Smith" style="width:100%;padding:14px 16px;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--white);font-size:1rem;font-family:inherit;outline:none;transition:border 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--card-border)'">
-                </div>
-                <div>
-                    <label style="display:block;font-size:0.85rem;color:var(--light-gray);margin-bottom:6px;font-weight:600;">Email *</label>
-                    <input type="email" name="email" required placeholder="john@company.com" style="width:100%;padding:14px 16px;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--white);font-size:1rem;font-family:inherit;outline:none;transition:border 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--card-border)'">
-                </div>
-            </div>
-
-            <div>
-                <label style="display:block;font-size:0.85rem;color:var(--light-gray);margin-bottom:6px;font-weight:600;">Company / Organization</label>
-                <input type="text" name="company" placeholder="Your company name" style="width:100%;padding:14px 16px;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--white);font-size:1rem;font-family:inherit;outline:none;transition:border 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--card-border)'">
-            </div>
-
-            <div>
-                <label style="display:block;font-size:0.85rem;color:var(--light-gray);margin-bottom:6px;font-weight:600;">Team Size</label>
-                <select name="team_size" style="width:100%;padding:14px 16px;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--white);font-size:1rem;font-family:inherit;outline:none;appearance:none;cursor:pointer;">
-                    <option value="">Select team size</option>
-                    <option value="1-10">1 - 10 people</option>
-                    <option value="11-30">11 - 30 people</option>
-                    <option value="31-75">31 - 75 people</option>
-                    <option value="76-150">76 - 150 people</option>
-                    <option value="150+">150+ people</option>
-                </select>
-            </div>
-
-            <div>
-                <label style="display:block;font-size:0.85rem;color:var(--light-gray);margin-bottom:6px;font-weight:600;">What are you looking for? *</label>
-                <textarea name="message" required rows="4" placeholder="Tell us about your business, what processes you'd like to automate, and what problems you'd like solved..." style="width:100%;padding:14px 16px;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--white);font-size:1rem;font-family:inherit;outline:none;resize:vertical;transition:border 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--card-border)'"></textarea>
-            </div>
-
-            <button type="submit" style="padding:16px 32px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--blue),var(--orange));color:#fff;font-size:1.1rem;font-weight:700;font-family:inherit;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 4px 20px rgba(0,122,255,0.3);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 30px rgba(0,122,255,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(0,122,255,0.3)'">
-                Request a Quote &#x2192;
-            </button>
-
-            <p style="text-align:center;font-size:0.8rem;color:var(--gray);margin-top:4px;">We typically respond within 24 hours.</p>
-            <p style="text-align:center;font-size:0.95rem;color:var(--light-gray);margin-top:12px;">Or call us directly: <a href="tel:+17632919407" style="color:var(--blue);font-weight:600;text-decoration:none;">+1 (763) 291-9407</a></p>
-        </form>
-    </section>
-
-    <!-- TRUST -->
-    <div class="trust-bar reveal">
-        <p>Every project includes secure, reliable infrastructure and hands-on support from our engineering team. <a href="terms.html" style="color:var(--blue);text-decoration:underline">Terms of Service</a> apply.</p>
-        <div class="trust-icons">
-            <span>&#x1F512; Secure &amp; Reliable Systems</span>
-            <span>&#x26A1; Rapid Deployment</span>
-            <span>&#x1F6E0;&#xFE0F; Ongoing Support Available</span>
-        </div>
+    <!-- Origin: ACS Factory -->
+    <div class="gr" style="text-align:center;margin-bottom:2rem;">
+      <svg width="280" height="90" viewBox="0 0 280 90" fill="none" style="display:block;margin:0 auto .6rem;opacity:.7;">
+        <!-- Factory building -->
+        <rect x="60" y="20" width="160" height="70" fill="#0a0f1e" stroke="rgba(245,130,11,.15)" stroke-width="1"/>
+        <!-- Roof -->
+        <polygon points="55,20 140,2 225,20" fill="#080d18" stroke="rgba(245,130,11,.1)" stroke-width="0.5"/>
+        <!-- ACS sign -->
+        <text x="140" y="14" text-anchor="middle" fill="#F5820B" font-family="Bebas Neue,sans-serif" font-size="10" letter-spacing="3" opacity=".6">ACS</text>
+        <!-- Smokestacks -->
+        <rect x="85" y="2" width="10" height="18" fill="#080d18" stroke="rgba(255,255,255,.04)" stroke-width="0.5"/>
+        <rect x="185" y="2" width="10" height="18" fill="#080d18" stroke="rgba(255,255,255,.04)" stroke-width="0.5"/>
+        <!-- Windows row 1 -->
+        <rect x="75" y="30" width="14" height="10" fill="rgba(245,130,11,.12)"/>
+        <rect x="95" y="30" width="14" height="10" fill="rgba(59,130,246,.08)"/>
+        <rect x="115" y="30" width="14" height="10" fill="rgba(245,130,11,.1)"/>
+        <rect x="135" y="30" width="14" height="10" fill="rgba(59,130,246,.1)"/>
+        <rect x="155" y="30" width="14" height="10" fill="rgba(245,130,11,.08)"/>
+        <rect x="175" y="30" width="14" height="10" fill="rgba(59,130,246,.12)"/>
+        <rect x="195" y="30" width="14" height="10" fill="rgba(245,130,11,.1)"/>
+        <!-- Windows row 2 -->
+        <rect x="75" y="48" width="14" height="10" fill="rgba(59,130,246,.08)"/>
+        <rect x="95" y="48" width="14" height="10" fill="rgba(245,130,11,.1)"/>
+        <rect x="115" y="48" width="14" height="10" fill="rgba(59,130,246,.1)"/>
+        <rect x="135" y="48" width="14" height="10" fill="rgba(245,130,11,.12)"/>
+        <rect x="155" y="48" width="14" height="10" fill="rgba(59,130,246,.08)"/>
+        <rect x="175" y="48" width="14" height="10" fill="rgba(245,130,11,.1)"/>
+        <rect x="195" y="48" width="14" height="10" fill="rgba(59,130,246,.1)"/>
+        <!-- Loading dock door — where truck exits -->
+        <rect x="120" y="64" width="40" height="26" fill="rgba(245,130,11,.06)" stroke="rgba(245,130,11,.15)" stroke-width="0.5"/>
+        <!-- Dock door glow -->
+        <rect x="122" y="66" width="36" height="22" fill="rgba(245,130,11,.04)"/>
+        <!-- Left wing -->
+        <rect x="10" y="40" width="50" height="50" fill="#080d18" stroke="rgba(255,255,255,.03)" stroke-width="0.5"/>
+        <rect x="18" y="48" width="10" height="7" fill="rgba(245,130,11,.06)"/>
+        <rect x="34" y="48" width="10" height="7" fill="rgba(59,130,246,.06)"/>
+        <rect x="18" y="60" width="10" height="7" fill="rgba(59,130,246,.05)"/>
+        <rect x="34" y="60" width="10" height="7" fill="rgba(245,130,11,.05)"/>
+        <!-- Right wing -->
+        <rect x="220" y="40" width="50" height="50" fill="#080d18" stroke="rgba(255,255,255,.03)" stroke-width="0.5"/>
+        <rect x="228" y="48" width="10" height="7" fill="rgba(59,130,246,.06)"/>
+        <rect x="244" y="48" width="10" height="7" fill="rgba(245,130,11,.06)"/>
+        <rect x="228" y="60" width="10" height="7" fill="rgba(245,130,11,.05)"/>
+        <rect x="244" y="60" width="10" height="7" fill="rgba(59,130,246,.05)"/>
+        <!-- Ground -->
+        <line x1="0" y1="90" x2="280" y2="90" stroke="rgba(255,255,255,.04)" stroke-width="0.5"/>
+      </svg>
+      <div style="font-family:var(--font-head);font-size:1rem;letter-spacing:.12em;color:var(--orange);opacity:.7;">ACS ENGINEERING HQ</div>
+      <div style="font-size:.68rem;color:var(--white-dim);margin-top:.15rem;">Where your software is forged.</div>
     </div>
 
-    <!-- FOOTER -->
-    <footer>
-        <img src="BRAND.png" alt="ACS Solutions" class="footer-logo">
-        <p>&copy; 2026 ACS Solutions &#8212; Alberti Custom Software Solutions. All rights reserved.</p>
-        <p style="margin-top:8px">
-            <a href="terms.html" style="color:#8892A8;text-decoration:none;font-size:0.85rem">Terms of Service</a>
-            &nbsp;&bull;&nbsp;
-            <a href="#contact" style="color:#8892A8;text-decoration:none;font-size:0.85rem">Contact</a>
-        </p>
-    </footer>
+    <!-- Module 1: The Forge -->
+    <div class="pipe-module" data-module="0">
+      <div class="pipe-info">
+        <h3>THE FORGE</h3>
+        <p>Your project spins up on dedicated servers purpose-built for performance. Bare metal. No shared resources. Full power from day one.</p>
+      </div>
+      <div class="pipe-dot-wrap"><div class="pipe-dot">01</div></div>
+      <div class="pipe-visual">
+        <div class="scan-line"></div>
+        <div class="server-rack" id="server-rack"></div>
+      </div>
+    </div>
 
-    </div><!-- end content -->
+    <!-- Module 2: In Transit -->
+    <div class="pipe-module reverse" data-module="1">
+      <div class="pipe-info">
+        <h3>IN TRANSIT</h3>
+        <p>Code moves through automated pipelines — built, tested, and validated at every stage before it ever reaches production.</p>
+      </div>
+      <div class="pipe-dot-wrap"><div class="pipe-dot">02</div></div>
+      <div class="pipe-visual">
+        <div class="pipeline-flow">
+          <div class="hex-node">
+            <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <div class="flow-line"><div class="flow-dot"></div></div>
+          <div class="hex-node">
+            <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div class="flow-line"><div class="flow-dot" style="animation-delay:0.5s"></div></div>
+          <div class="hex-node">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <!-- SCROLL REVEAL JS -->
-    <script>
-        const reveals = document.querySelectorAll('.reveal');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    <!-- Module 3: Ready to Deploy -->
+    <div class="pipe-module" data-module="2">
+      <div class="pipe-info">
+        <h3>READY TO DEPLOY</h3>
+        <p>Performance metrics verified. Load-tested. Optimized. Your application is cleared for launch with zero guesswork.</p>
+      </div>
+      <div class="pipe-dot-wrap"><div class="pipe-dot">03</div></div>
+      <div class="pipe-visual">
+        <div class="bar-chart" id="bar-chart"></div>
+        <div class="bar-label">Standby</div>
+      </div>
+    </div>
 
-        reveals.forEach(el => observer.observe(el));
+    <!-- Module 4: Ongoing Support -->
+    <div class="pipe-module reverse" data-module="3">
+      <div class="pipe-info">
+        <h3>ONGOING SUPPORT</h3>
+        <p>24/7 monitoring, rapid incident response, and continuous optimization. We don't just launch — we stand watch.</p>
+      </div>
+      <div class="pipe-dot-wrap"><div class="pipe-dot">04</div></div>
+      <div class="pipe-visual">
+        <div class="radar-wrap">
+          <div class="radar-ring"></div>
+          <div class="radar-ring"></div>
+          <div class="radar-ring"></div>
+          <div class="radar-sweep"></div>
+          <div class="radar-center"></div>
+          <div class="radar-label">Standby</div>
+        </div>
+      </div>
+    </div>
+    <!-- Truck Destination — Client Facility -->
+    <div class="truck-destination gr" style="margin-top:2rem;padding:2.5rem 1rem;border-top:1px solid rgba(245,130,11,.06);text-align:center;">
+      <!-- Building silhouette -->
+      <svg width="240" height="80" viewBox="0 0 240 80" fill="none" style="margin:0 auto 1rem;display:block;opacity:.6;">
+        <!-- Main building -->
+        <rect x="70" y="15" width="100" height="65" fill="#0a0f1e" stroke="rgba(245,130,11,.12)" stroke-width="1"/>
+        <!-- Windows (lit up) -->
+        <rect x="82" y="25" width="12" height="8" fill="rgba(245,130,11,.15)"/><rect x="100" y="25" width="12" height="8" fill="rgba(59,130,246,.1)"/>
+        <rect x="118" y="25" width="12" height="8" fill="rgba(245,130,11,.1)"/><rect x="136" y="25" width="12" height="8" fill="rgba(59,130,246,.15)"/>
+        <rect x="82" y="40" width="12" height="8" fill="rgba(59,130,246,.12)"/><rect x="100" y="40" width="12" height="8" fill="rgba(245,130,11,.12)"/>
+        <rect x="118" y="40" width="12" height="8" fill="rgba(245,130,11,.15)"/><rect x="136" y="40" width="12" height="8" fill="rgba(59,130,246,.1)"/>
+        <rect x="82" y="55" width="12" height="8" fill="rgba(245,130,11,.1)"/><rect x="100" y="55" width="12" height="8" fill="rgba(59,130,246,.12)"/>
+        <rect x="118" y="55" width="12" height="8" fill="rgba(59,130,246,.1)"/><rect x="136" y="55" width="12" height="8" fill="rgba(245,130,11,.12)"/>
+        <!-- Door -->
+        <rect x="108" y="60" width="24" height="20" fill="rgba(245,130,11,.08)" stroke="rgba(245,130,11,.15)" stroke-width="0.5"/>
+        <!-- Left wing -->
+        <rect x="30" y="35" width="40" height="45" fill="#080d18" stroke="rgba(255,255,255,.03)" stroke-width="0.5"/>
+        <rect x="38" y="42" width="8" height="6" fill="rgba(59,130,246,.08)"/><rect x="52" y="42" width="8" height="6" fill="rgba(245,130,11,.08)"/>
+        <rect x="38" y="54" width="8" height="6" fill="rgba(245,130,11,.06)"/><rect x="52" y="54" width="8" height="6" fill="rgba(59,130,246,.06)"/>
+        <!-- Right wing -->
+        <rect x="170" y="35" width="40" height="45" fill="#080d18" stroke="rgba(255,255,255,.03)" stroke-width="0.5"/>
+        <rect x="178" y="42" width="8" height="6" fill="rgba(245,130,11,.08)"/><rect x="192" y="42" width="8" height="6" fill="rgba(59,130,246,.08)"/>
+        <rect x="178" y="54" width="8" height="6" fill="rgba(59,130,246,.06)"/><rect x="192" y="54" width="8" height="6" fill="rgba(245,130,11,.06)"/>
+        <!-- Antenna -->
+        <line x1="120" y1="15" x2="120" y2="4" stroke="rgba(255,255,255,.1)" stroke-width="0.8"/>
+        <circle cx="120" cy="3" r="2" fill="rgba(245,130,11,.3)"/>
+        <!-- Ground line -->
+        <line x1="10" y1="80" x2="230" y2="80" stroke="rgba(255,255,255,.04)" stroke-width="0.5"/>
+      </svg>
+      <div style="font-family:var(--font-head);font-size:1.2rem;letter-spacing:.12em;color:var(--orange);margin-bottom:.3rem;">DELIVERED TO CLIENT</div>
+      <div style="font-size:.75rem;color:var(--white-dim);">Your custom software — live, monitored, and performing.</div>
+    </div>
+  </div>
+</section>
 
-        // Parallax orbs on mouse move
-        document.addEventListener('mousemove', (e) => {
-            const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;
-            document.querySelector('.orb-1').style.transform = `translate(${x * 30}px, ${y * 30}px)`;
-            document.querySelector('.orb-2').style.transform = `translate(${-x * 20}px, ${-y * 20}px)`;
+<!-- Service Modal -->
+<div class="svc-modal-overlay" id="svcModal">
+  <div class="svc-modal">
+    <button class="svc-modal-close" id="svcClose">&times;</button>
+    <h3 id="svcModalTitle"></h3>
+    <p id="svcModalDesc"></p>
+    <div class="svc-modal-mockup" id="svcModalMockup">
+      <div class="mockup-chrome">
+        <div class="mockup-dot" style="background:#ff5f57"></div>
+        <div class="mockup-dot" style="background:#febc2e"></div>
+        <div class="mockup-dot" style="background:#28c840"></div>
+        <div class="mockup-url"></div>
+      </div>
+      <div class="mockup-body" id="svcMockupBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-inner">
+    <div class="services-header">
+      <p class="section-tag gr">— What We Build —</p>
+      <h2 class="gr">PRECISION CRAFTED <span class="accent">SERVICES</span>.</h2>
+    </div>
+    <div class="services-grid">
+      <!-- Card 1: span 2 -->
+      <div class="service-card span-2 gr">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="0"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><polyline points="7 8 4 11 7 14"/><polyline points="17 8 20 11 17 14"/><line x1="14" y1="7" x2="10" y2="15"/></svg>
+        <h3>CUSTOM WEBSITES</h3>
+        <p>Bespoke web applications designed from scratch. No templates, no page builders. Code-level precision for brands that refuse to blend in.</p>
+      </div>
+      <!-- Card 2 -->
+      <div class="service-card gr">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="0"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/><circle cx="15" cy="15" r="2"/><path d="M15 13v-1"/><path d="M15 17v1"/><path d="M13 15h-1"/><path d="M17 15h1"/></svg>
+        <h3>LIVE DASHBOARDS</h3>
+        <p>Real-time data visualization panels that give you instant insight into operations, sales, and system health.</p>
+      </div>
+      <!-- Card 3 -->
+      <div class="service-card gr">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        <h3>AUTOMATION</h3>
+        <p>Workflows that run themselves. From data processing to scheduled tasks, we eliminate the manual work that slows you down.</p>
+      </div>
+      <!-- Card 4 -->
+      <div class="service-card gr">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9-9"/><path d="M20 13a9 9 0 0 1-9 9"/><circle cx="12" cy="12" r="3"/><path d="M16 8l2-2"/><path d="M6 16l2-2"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg>
+        <h3>INTEGRATIONS</h3>
+        <p>Seamless connections between your existing tools. APIs, webhooks, and data bridges that make your stack work as one.</p>
+      </div>
+      <!-- Card 5: span 2 -->
+      <div class="service-card span-2 gr">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="0"/><rect x="2" y="14" width="20" height="8" rx="0"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/><line x1="10" y1="6" x2="18" y2="6"/><line x1="10" y1="18" x2="18" y2="18"/></svg>
+        <h3>ENTERPRISE SOFTWARE</h3>
+        <p>Full-scale business platforms engineered for complexity. Multi-tenant architectures, role-based access, and infrastructure that scales to meet demand.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY -->
+<section class="case-study" id="case-study">
+  <div class="case-inner">
+    <div class="case-header">
+      <p class="section-tag gr">— Case Study —</p>
+      <h2 class="gr">REAL-TIME <span class="accent">SALES</span> PLATFORM.</h2>
+    </div>
+    <div class="case-card gr">
+      <div class="case-text">
+        <h3>MULTI-CITY AGENT NETWORK</h3>
+        <p>We built a real-time sales tracking and communication platform for a nationwide team of 130+ field agents. The system connects three major cities with live dashboards, automated reporting, and instant notifications — deployed from concept to production in just 48 hours.</p>
+        <p style="margin-top:0.8rem; color: var(--orange); font-size: 0.78rem; letter-spacing: 0.06em; font-weight: 500;">TWILIO &bull; WEBSOCKETS &bull; NODE.JS &bull; REAL-TIME DB</p>
+      </div>
+      <div class="case-metrics">
+        <div class="metric-box">
+          <div class="num" data-count="130">0</div>
+          <div class="label">Agents</div>
+        </div>
+        <div class="metric-box">
+          <div class="num" data-count="3">0</div>
+          <div class="label">Cities</div>
+        </div>
+        <div class="metric-box">
+          <div class="num">24/7</div>
+          <div class="label">Automated</div>
+        </div>
+        <div class="metric-box">
+          <div class="num">48HR</div>
+          <div class="label">Deployed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / CONTACT -->
+<section class="contact" id="contact">
+  <h2 class="gr">READY TO <span class="accent">FORGE</span> YOUR FUTURE?</h2>
+  <p class="gr">Let's build something that doesn't exist yet. Tell us what you need — we'll engineer the rest.</p>
+  <div class="contact-btns gr">
+    <a href="mailto:alberticustomsoftwaresolutions@gmail.com" class="btn-contact orange">REQUEST A QUOTE</a>
+    <a href="tel:+17632919407" class="btn-contact outline">CALL: (763) 291-9407</a>
+    <a href="https://www.linkedin.com/in/alex-alberti-95018220a/" target="_blank" rel="noopener" class="btn-contact outline">LINKEDIN</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-copy">&copy; 2026 ACS Solutions. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="#">Terms</a>
+      <a href="#contact">Contact</a>
+      <a href="https://www.linkedin.com/in/alex-alberti-95018220a/" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<!-- GSAP CDN -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+<script>
+(function() {
+  'use strict';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ===== HERO VIDEO =====
+  const heroVid = document.querySelector('.hero-video');
+  if (heroVid) { heroVid.playbackRate = 0.93; }
+
+  // ===== HERO STAGGERED ANIMATION =====
+  const heroAnims = document.querySelectorAll('.hero-anim');
+  heroAnims.forEach((el, i) => {
+    gsap.fromTo(el,
+      { opacity: 0, y: 22 },
+      { opacity: 1, y: 0, duration: 1, delay: 0.3 + i * 0.18, ease: 'power3.out' }
+    );
+  });
+
+  // ===== SCROLL REVEAL (.gr) =====
+  document.querySelectorAll('.gr').forEach(el => {
+    gsap.to(el, {
+      scrollTrigger: { trigger: el, start: 'top 93%', toggleActions: 'play none none none' },
+      opacity: 1, y: 0, duration: 0.7, ease: 'power2.out'
+    });
+  });
+
+  // ===== SERVER RACK BUILDER =====
+  const rackEl = document.getElementById('server-rack');
+  if (rackEl) {
+    for (let i = 0; i < 64; i++) {
+      const unit = document.createElement('div');
+      unit.className = 'rack-unit';
+      const led1 = document.createElement('div');
+      led1.className = 'rack-led dim';
+      const led2 = document.createElement('div');
+      led2.className = 'rack-led dim';
+      unit.appendChild(led1);
+      unit.appendChild(led2);
+      rackEl.appendChild(unit);
+    }
+  }
+
+  // Blink LEDs when powered on
+  let rackInterval = null;
+  function startRackBlink() {
+    if (rackInterval) return;
+    const leds = rackEl.querySelectorAll('.rack-led');
+    rackInterval = setInterval(() => {
+      leds.forEach(led => {
+        if (Math.random() < 0.08) {
+          const r = Math.random();
+          led.className = 'rack-led ' + (r < 0.4 ? 'blink-orange' : r < 0.75 ? 'blink-blue' : 'dim');
+        }
+      });
+    }, 150);
+  }
+
+  // ===== BAR CHART BUILDER =====
+  const barChart = document.getElementById('bar-chart');
+  if (barChart) {
+    const heights = [15, 25, 30, 40, 50, 62, 78, 95];
+    heights.forEach(h => {
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      bar.style.height = h + '%';
+      barChart.appendChild(bar);
+    });
+  }
+
+  // ===== TRUCK PATH + MODULE POWER =====
+  const pipelineSection = document.querySelector('.pipeline');
+  const acsTruck = document.getElementById('acs-truck');
+  const trackFill = document.getElementById('road-glow');
+  const modules = document.querySelectorAll('.pipe-module');
+  const moduleThresholds = [0.08, 0.30, 0.52, 0.74];
+  const poweredOn = [false, false, false, false];
+
+  function powerModule(index) {
+    if (poweredOn[index]) return;
+    poweredOn[index] = true;
+    const mod = modules[index];
+    if (!mod) return;
+    const info = mod.querySelector('.pipe-info');
+    const dot = mod.querySelector('.pipe-dot');
+    const visual = mod.querySelector('.pipe-visual');
+    if (info) info.classList.add('on');
+    if (dot) dot.classList.add('on');
+    if (visual) visual.classList.add('on');
+
+    if (index === 0) startRackBlink();
+    if (index === 2) {
+      const label = mod.querySelector('.bar-label');
+      if (label) label.textContent = 'Optimal';
+    }
+    if (index === 3) {
+      const label = mod.querySelector('.radar-label');
+      if (label) label.textContent = 'All Systems Go';
+    }
+  }
+
+  if (pipelineSection) {
+    ScrollTrigger.create({
+      trigger: pipelineSection,
+      start: 'top 90%',
+      end: 'bottom 10%',
+      scrub: 0.6,
+      onUpdate: (self) => {
+        const p = self.progress;
+        // Move truck down the pipeline
+        if (acsTruck) {
+          const pipeH = pipelineSection.scrollHeight;
+          const truckY = p * pipeH;
+          acsTruck.style.top = truckY + 'px';
+        }
+        // Fill the track behind the truck
+        if (trackFill) {
+          trackFill.style.height = (p * 100) + '%';
+        }
+        // Power modules
+        moduleThresholds.forEach((thresh, i) => {
+          if (p >= thresh) powerModule(i);
         });
-    </script>
+      }
+    });
+  }
 
+  // ===== SERVICE MODALS =====
+  const svcModalData = {
+    'CUSTOM WEBSITES': {
+      title: 'CUSTOM <span class="accent">WEBSITES</span>',
+      desc: 'Every site we build is hand-coded from scratch — no WordPress, no templates, no page builders. Optimized for speed, SEO, and conversion.',
+      mockup: `<div class="mk-nav"><div class="mk-logo" style="background:var(--orange);opacity:.6"></div><div class="mk-bars"><span></span><span></span><span></span></div></div>
+        <div class="mk-hero-area"><div class="mk-h" style="width:75%;background:rgba(255,255,255,.1)"></div><div class="mk-h2" style="width:50%;background:rgba(255,255,255,.06)"></div><div class="mk-p" style="width:65%;background:rgba(255,255,255,.03)"></div><div class="mk-p" style="width:45%;background:rgba(255,255,255,.03)"></div><div class="mk-btn" style="background:var(--orange);opacity:.5"></div></div>
+        <div class="mk-grid mk-grid-3"><div class="mk-cell"><div class="mk-cell-icon" style="background:rgba(245,130,11,.08)"></div><div class="mk-cell-line" style="width:80%;background:rgba(255,255,255,.06)"></div><div class="mk-cell-line" style="width:55%;background:rgba(255,255,255,.03)"></div></div><div class="mk-cell"><div class="mk-cell-icon" style="background:rgba(59,130,246,.08)"></div><div class="mk-cell-line" style="width:70%;background:rgba(255,255,255,.06)"></div><div class="mk-cell-line" style="width:60%;background:rgba(255,255,255,.03)"></div></div><div class="mk-cell"><div class="mk-cell-icon" style="background:rgba(34,197,94,.08)"></div><div class="mk-cell-line" style="width:85%;background:rgba(255,255,255,.06)"></div><div class="mk-cell-line" style="width:50%;background:rgba(255,255,255,.03)"></div></div></div>`
+    },
+    'LIVE DASHBOARDS': {
+      title: 'LIVE <span class="accent">DASHBOARDS</span>',
+      desc: 'Real-time data panels with charts, KPIs, team breakdowns, and automated alerts — built around your exact metrics.',
+      mockup: `<div class="mock-scan"></div><div style="display:flex;gap:6px;margin-bottom:10px;"><div style="height:5px;width:28px;background:var(--orange);opacity:.4;border-radius:2px"></div><div style="height:5px;width:20px;background:rgba(255,255,255,.04);border-radius:2px"></div><div style="height:5px;width:20px;background:rgba(255,255,255,.04);border-radius:2px"></div></div>
+        <div style="display:flex;align-items:flex-end;gap:3px;height:70px;margin-bottom:12px;">${[25,40,30,55,45,70,60,80,75,90].map((h,i)=>`<div style="flex:1;height:${h}%;border-radius:2px 2px 0 0;background:linear-gradient(to top,rgba(245,130,11,.4),rgba(245,130,11,.15));animation:barGrow .6s ease ${i*0.06}s both"></div>`).join('')}</div>
+        <div class="mk-grid mk-grid-3"><div class="mk-cell" style="text-align:center"><div class="mock-pulse" style="font-family:var(--font-head);font-size:1rem;color:var(--orange)">2.4K</div><div style="font-size:.4rem;color:var(--white-dim);text-transform:uppercase;letter-spacing:1px">Leads</div></div><div class="mk-cell" style="text-align:center"><div class="mock-pulse" style="font-family:var(--font-head);font-size:1rem;color:var(--orange);animation-delay:.3s">89%</div><div style="font-size:.4rem;color:var(--white-dim);text-transform:uppercase;letter-spacing:1px">Close Rate</div></div><div class="mk-cell" style="text-align:center"><div class="mock-pulse" style="font-family:var(--font-head);font-size:1rem;color:var(--orange);animation-delay:.6s">$340K</div><div style="font-size:.4rem;color:var(--white-dim);text-transform:uppercase;letter-spacing:1px">Revenue</div></div></div>`
+    },
+    'AUTOMATION': {
+      title: '<span class="accent">AUTOMATION</span> SYSTEMS',
+      desc: 'Workflows that run themselves — scheduled tasks, data processing, notifications, and reporting on autopilot.',
+      mockup: `<div style="display:flex;align-items:center;gap:8px;justify-content:center;padding:20px 0;"><div style="width:40px;height:40px;border:1px solid rgba(245,130,11,.15);background:rgba(245,130,11,.05);display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5820B" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2"/></svg></div><div style="width:30px;height:1px;background:rgba(245,130,11,.2);position:relative;overflow:hidden;"><div style="position:absolute;width:30%;height:100%;background:var(--orange);animation:flP 1s linear infinite"></div></div><div style="width:40px;height:40px;border:1px solid rgba(59,130,246,.15);background:rgba(59,130,246,.05);display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94z"/></svg></div><div style="width:30px;height:1px;background:rgba(34,197,94,.2);position:relative;overflow:hidden;"><div style="position:absolute;width:30%;height:100%;background:var(--green-accent);animation:flP 1s linear infinite;animation-delay:.4s"></div></div><div style="width:40px;height:40px;border:1px solid rgba(34,197,94,.15);background:rgba(34,197,94,.05);display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+        <div class="mk-grid mk-grid-2" style="margin-top:16px;"><div class="mk-cell"><div style="font-size:.55rem;color:var(--orange);font-weight:600;margin-bottom:4px">TRIGGER</div><div class="mk-cell-line" style="width:80%;background:rgba(255,255,255,.04)"></div></div><div class="mk-cell"><div style="font-size:.55rem;color:var(--green-accent);font-weight:600;margin-bottom:4px">ACTION</div><div class="mk-cell-line" style="width:65%;background:rgba(255,255,255,.04)"></div></div></div>`
+    },
+    'INTEGRATIONS': {
+      title: 'SYSTEM <span class="accent">INTEGRATIONS</span>',
+      desc: 'APIs, webhooks, and data bridges that make your entire tool stack work as one unified system.',
+      mockup: `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:10px 0;text-align:center;">${['Slack','Stripe','Twilio','HubSpot','Sheets','Custom'].map(n=>`<div style="background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.03);padding:12px 6px;border-radius:4px;"><div style="font-family:var(--font-head);font-size:.7rem;letter-spacing:1px;color:var(--white-dim)">${n}</div></div>`).join('')}</div>
+        <div style="text-align:center;margin:12px 0;"><div style="display:inline-block;width:1px;height:20px;background:rgba(245,130,11,.2)"></div></div>
+        <div style="text-align:center;background:rgba(245,130,11,.04);border:1px solid rgba(245,130,11,.1);padding:10px;border-radius:4px;"><div style="font-family:var(--font-head);font-size:.8rem;letter-spacing:1px;color:var(--orange)">YOUR PLATFORM</div></div>`
+    },
+    'ENTERPRISE SOFTWARE': {
+      title: '<span class="accent">ENTERPRISE</span> SOFTWARE',
+      desc: 'Full-scale platforms for complex operations — multi-tenant, role-based access, and infrastructure that scales.',
+      mockup: `<div style="display:flex;gap:0;height:140px;"><div style="width:45px;background:#060b14;border-right:1px solid rgba(255,255,255,.03);padding:8px 6px;display:flex;flex-direction:column;gap:6px;">${[1,2,3,4,5].map((_,i)=>`<div style="width:100%;height:10px;border-radius:2px;background:${i===0?'rgba(245,130,11,.12)':'rgba(255,255,255,.03)'}"></div>`).join('')}</div><div style="flex:1;padding:10px;"><div style="display:flex;gap:4px;margin-bottom:8px;"><div style="height:4px;width:22px;background:var(--orange);opacity:.3;border-radius:1px"></div><div style="height:4px;width:16px;background:rgba(255,255,255,.04);border-radius:1px"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">${['Users','Revenue','Tickets','Uptime'].map(l=>`<div style="background:rgba(255,255,255,.01);border:1px solid rgba(255,255,255,.02);padding:8px;border-radius:3px;text-align:center;"><div style="font-family:var(--font-head);font-size:.75rem;color:var(--orange);opacity:.6">${l==='Users'?'1.2K':l==='Revenue'?'$89K':l==='Tickets'?'12':'>99%'}</div><div style="font-size:.35rem;color:var(--white-dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">${l}</div></div>`).join('')}</div></div></div>`
+    }
+  };
+
+  // Attach click handlers to service cards
+  document.querySelectorAll('.service-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const title = card.querySelector('h3')?.textContent?.trim();
+      const data = svcModalData[title];
+      if (!data) return;
+      document.getElementById('svcModalTitle').innerHTML = data.title;
+      document.getElementById('svcModalDesc').textContent = data.desc;
+      document.getElementById('svcMockupBody').innerHTML = data.mockup;
+      document.getElementById('svcModal').classList.add('open');
+    });
+  });
+
+  // Close modal
+  document.getElementById('svcClose').addEventListener('click', () => {
+    document.getElementById('svcModal').classList.remove('open');
+  });
+  document.getElementById('svcModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('svcModal')) {
+      document.getElementById('svcModal').classList.remove('open');
+    }
+  });
+
+  // ===== COUNTER ANIMATION =====
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const target = parseInt(el.getAttribute('data-count'));
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 90%',
+      once: true,
+      onEnter: () => {
+        gsap.to({ val: 0 }, {
+          val: target,
+          duration: 1.8,
+          ease: 'power2.out',
+          onUpdate: function() {
+            el.textContent = Math.floor(this.targets()[0].val) + '+';
+          }
+        });
+      }
+    });
+  });
+
+  // ===== CURSOR FOLLOWER — Ring + trailing particles =====
+  const rainCanvas = document.getElementById('rain-canvas');
+  const rainCtx = rainCanvas.getContext('2d');
+  let rainW, rainH, mouseX = -9999, mouseY = -9999, curX = 0, curY = 0, frame = 0;
+
+  function resizeRain() { rainW = window.innerWidth; rainH = window.innerHeight; rainCanvas.width = rainW; rainCanvas.height = rainH; }
+  resizeRain(); window.addEventListener('resize', resizeRain);
+
+  // Orbiting satellites
+  const sats = [];
+  for (let i = 0; i < 6; i++) {
+    sats.push({ angle: (Math.PI*2/6)*i, radius: 22+i*5, speed: (0.01+i*0.004)*(i%2===0?1:-1), size: 3-i*0.15, isOrange: i<3 });
+  }
+
+  // Trailing particles — leave a fading trail behind cursor movement
+  const trail = [];
+  const TRAIL_MAX = 20;
+  let lastTrailX = 0, lastTrailY = 0;
+
+  function animateCursor() {
+    rainCtx.clearRect(0, 0, rainW, rainH);
+    frame++;
+    if (mouseX < -9000) { requestAnimationFrame(animateCursor); return; }
+
+    curX += (mouseX - curX) * 0.12;
+    curY += (mouseY - curY) * 0.12;
+
+    // Add trail particle every few pixels of movement
+    const dx = curX - lastTrailX, dy = curY - lastTrailY;
+    if (Math.sqrt(dx*dx+dy*dy) > 8) {
+      trail.push({ x: curX, y: curY, life: 1, isOrange: Math.random() < 0.4, size: 1.5 + Math.random() * 2 });
+      if (trail.length > TRAIL_MAX) trail.shift();
+      lastTrailX = curX; lastTrailY = curY;
+    }
+
+    // Draw trail particles (fade out)
+    trail.forEach(t => {
+      t.life -= 0.02;
+      if (t.life <= 0) return;
+      const alpha = t.life * 0.3;
+      rainCtx.beginPath();
+      rainCtx.arc(t.x, t.y, t.size * t.life, 0, Math.PI * 2);
+      rainCtx.fillStyle = t.isOrange ? `rgba(245,130,11,${alpha})` : `rgba(160,195,255,${alpha * 0.7})`;
+      rainCtx.fill();
+    });
+    // Remove dead trail particles
+    while (trail.length > 0 && trail[0].life <= 0) trail.shift();
+
+    // Connect trail particles to each other
+    for (let i = 1; i < trail.length; i++) {
+      if (trail[i].life <= 0 || trail[i-1].life <= 0) continue;
+      const alpha = Math.min(trail[i].life, trail[i-1].life) * 0.06;
+      rainCtx.beginPath();
+      rainCtx.moveTo(trail[i-1].x, trail[i-1].y);
+      rainCtx.lineTo(trail[i].x, trail[i].y);
+      rainCtx.strokeStyle = `rgba(245,130,11,${alpha})`;
+      rainCtx.lineWidth = 0.4;
+      rainCtx.stroke();
+    }
+
+    // Outer ring — dashed
+    rainCtx.beginPath();
+    rainCtx.arc(curX, curY, 28, 0, Math.PI * 2);
+    rainCtx.strokeStyle = 'rgba(245,130,11,0.18)';
+    rainCtx.lineWidth = 1;
+    rainCtx.setLineDash([4, 7]);
+    rainCtx.stroke();
+    rainCtx.setLineDash([]);
+
+    // Second faint ring
+    rainCtx.beginPath();
+    rainCtx.arc(curX, curY, 38, 0, Math.PI * 2);
+    rainCtx.strokeStyle = 'rgba(245,130,11,0.06)';
+    rainCtx.lineWidth = 0.5;
+    rainCtx.stroke();
+
+    // Rotating triangle
+    const triA = frame * 0.008;
+    rainCtx.save(); rainCtx.translate(curX, curY); rainCtx.rotate(triA);
+    rainCtx.beginPath();
+    for (let i = 0; i < 3; i++) { const a = (Math.PI*2/3)*i - Math.PI/2; rainCtx.lineTo(Math.cos(a)*11, Math.sin(a)*11); }
+    rainCtx.closePath();
+    rainCtx.strokeStyle = 'rgba(245,130,11,0.25)';
+    rainCtx.lineWidth = 0.8;
+    rainCtx.stroke();
+    rainCtx.restore();
+
+    // Center dot + glow
+    rainCtx.beginPath(); rainCtx.arc(curX, curY, 8, 0, Math.PI*2);
+    rainCtx.fillStyle = 'rgba(245,130,11,0.04)'; rainCtx.fill();
+    rainCtx.beginPath(); rainCtx.arc(curX, curY, 2.5, 0, Math.PI*2);
+    rainCtx.fillStyle = 'rgba(245,130,11,0.5)'; rainCtx.fill();
+
+    // Orbiting satellites + lines
+    sats.forEach(s => {
+      s.angle += s.speed;
+      const sx = curX + Math.cos(s.angle) * s.radius;
+      const sy = curY + Math.sin(s.angle) * s.radius;
+      // Glow
+      rainCtx.beginPath(); rainCtx.arc(sx, sy, s.size*3, 0, Math.PI*2);
+      rainCtx.fillStyle = s.isOrange ? 'rgba(245,130,11,0.04)' : 'rgba(160,195,255,0.03)'; rainCtx.fill();
+      // Dot
+      rainCtx.beginPath(); rainCtx.arc(sx, sy, s.size, 0, Math.PI*2);
+      rainCtx.fillStyle = s.isOrange ? 'rgba(245,130,11,0.5)' : 'rgba(160,195,255,0.35)'; rainCtx.fill();
+      // Line to center
+      rainCtx.beginPath(); rainCtx.moveTo(sx, sy); rainCtx.lineTo(curX, curY);
+      rainCtx.strokeStyle = s.isOrange ? 'rgba(245,130,11,0.08)' : 'rgba(160,195,255,0.06)';
+      rainCtx.lineWidth = 0.4; rainCtx.stroke();
+    });
+
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+  document.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; });
+
+})();
+</script>
 </body>
 </html>
