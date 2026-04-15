@@ -1436,122 +1436,63 @@ footer {
     });
   });
 
-  // ===== CURSOR FOLLOWER — Ring + trailing particles =====
+  // ===== CURSOR — clean dot + soft trail =====
   const rainCanvas = document.getElementById('rain-canvas');
   const rainCtx = rainCanvas.getContext('2d');
-  let rainW, rainH, mouseX = -9999, mouseY = -9999, curX = 0, curY = 0, frame = 0;
+  let rainW, rainH, mouseX = -9999, mouseY = -9999, curX = 0, curY = 0;
 
   function resizeRain() { rainW = window.innerWidth; rainH = window.innerHeight; rainCanvas.width = rainW; rainCanvas.height = rainH; }
   resizeRain(); window.addEventListener('resize', resizeRain);
 
-  // Orbiting satellites
-  const sats = [];
-  for (let i = 0; i < 6; i++) {
-    sats.push({ angle: (Math.PI*2/6)*i, radius: 22+i*5, speed: (0.01+i*0.004)*(i%2===0?1:-1), size: 3-i*0.15, isOrange: i<3 });
-  }
-
-  // Trailing particles — leave a fading trail behind cursor movement
+  // Trail — just position history, draws a fading line
   const trail = [];
-  const TRAIL_MAX = 20;
-  let lastTrailX = 0, lastTrailY = 0;
+  const TRAIL_LEN = 24;
 
   function animateCursor() {
     rainCtx.clearRect(0, 0, rainW, rainH);
-    frame++;
     if (mouseX < -9000) { requestAnimationFrame(animateCursor); return; }
 
-    curX += (mouseX - curX) * 0.12;
-    curY += (mouseY - curY) * 0.12;
+    // Smooth follow
+    curX += (mouseX - curX) * 0.15;
+    curY += (mouseY - curY) * 0.15;
 
-    // Add trail particle every few pixels of movement
-    const dx = curX - lastTrailX, dy = curY - lastTrailY;
-    if (Math.sqrt(dx*dx+dy*dy) > 8) {
-      trail.push({ x: curX, y: curY, life: 1, isOrange: Math.random() < 0.4, size: 1.5 + Math.random() * 2 });
-      if (trail.length > TRAIL_MAX) trail.shift();
-      lastTrailX = curX; lastTrailY = curY;
+    // Store position
+    trail.push({ x: curX, y: curY });
+    if (trail.length > TRAIL_LEN) trail.shift();
+
+    // Draw fading trail line
+    if (trail.length > 2) {
+      for (let i = 1; i < trail.length; i++) {
+        const alpha = (i / trail.length) * 0.12;
+        const width = (i / trail.length) * 1.5;
+        rainCtx.beginPath();
+        rainCtx.moveTo(trail[i-1].x, trail[i-1].y);
+        rainCtx.lineTo(trail[i].x, trail[i].y);
+        rainCtx.strokeStyle = `rgba(245,130,11,${alpha})`;
+        rainCtx.lineWidth = width;
+        rainCtx.lineCap = 'round';
+        rainCtx.stroke();
+      }
     }
 
-    // Draw trail particles (fade out)
-    trail.forEach(t => {
-      t.life -= 0.02;
-      if (t.life <= 0) return;
-      const alpha = t.life * 0.3;
-      rainCtx.beginPath();
-      rainCtx.arc(t.x, t.y, t.size * t.life, 0, Math.PI * 2);
-      rainCtx.fillStyle = t.isOrange ? `rgba(245,130,11,${alpha})` : `rgba(160,195,255,${alpha * 0.7})`;
-      rainCtx.fill();
-    });
-    // Remove dead trail particles
-    while (trail.length > 0 && trail[0].life <= 0) trail.shift();
-
-    // Connect trail particles to each other
-    for (let i = 1; i < trail.length; i++) {
-      if (trail[i].life <= 0 || trail[i-1].life <= 0) continue;
-      const alpha = Math.min(trail[i].life, trail[i-1].life) * 0.06;
-      rainCtx.beginPath();
-      rainCtx.moveTo(trail[i-1].x, trail[i-1].y);
-      rainCtx.lineTo(trail[i].x, trail[i].y);
-      rainCtx.strokeStyle = `rgba(245,130,11,${alpha})`;
-      rainCtx.lineWidth = 0.4;
-      rainCtx.stroke();
-    }
-
-    // Outer ring — dashed
+    // Soft glow
     rainCtx.beginPath();
-    rainCtx.arc(curX, curY, 28, 0, Math.PI * 2);
-    rainCtx.strokeStyle = 'rgba(245,130,11,0.18)';
-    rainCtx.lineWidth = 1;
-    rainCtx.setLineDash([4, 7]);
-    rainCtx.stroke();
-    rainCtx.setLineDash([]);
+    rainCtx.arc(curX, curY, 12, 0, Math.PI * 2);
+    rainCtx.fillStyle = 'rgba(245,130,11,0.04)';
+    rainCtx.fill();
 
-    // Second faint ring
+    // Main dot
     rainCtx.beginPath();
-    rainCtx.arc(curX, curY, 38, 0, Math.PI * 2);
-    rainCtx.strokeStyle = 'rgba(245,130,11,0.06)';
-    rainCtx.lineWidth = 0.5;
-    rainCtx.stroke();
-
-    // Rotating triangle
-    const triA = frame * 0.008;
-    rainCtx.save(); rainCtx.translate(curX, curY); rainCtx.rotate(triA);
-    rainCtx.beginPath();
-    for (let i = 0; i < 3; i++) { const a = (Math.PI*2/3)*i - Math.PI/2; rainCtx.lineTo(Math.cos(a)*11, Math.sin(a)*11); }
-    rainCtx.closePath();
-    rainCtx.strokeStyle = 'rgba(245,130,11,0.25)';
-    rainCtx.lineWidth = 0.8;
-    rainCtx.stroke();
-    rainCtx.restore();
-
-    // Center dot + glow
-    rainCtx.beginPath(); rainCtx.arc(curX, curY, 8, 0, Math.PI*2);
-    rainCtx.fillStyle = 'rgba(245,130,11,0.04)'; rainCtx.fill();
-    rainCtx.beginPath(); rainCtx.arc(curX, curY, 2.5, 0, Math.PI*2);
-    rainCtx.fillStyle = 'rgba(245,130,11,0.5)'; rainCtx.fill();
-
-    // Orbiting satellites + lines
-    sats.forEach(s => {
-      s.angle += s.speed;
-      const sx = curX + Math.cos(s.angle) * s.radius;
-      const sy = curY + Math.sin(s.angle) * s.radius;
-      // Glow
-      rainCtx.beginPath(); rainCtx.arc(sx, sy, s.size*3, 0, Math.PI*2);
-      rainCtx.fillStyle = s.isOrange ? 'rgba(245,130,11,0.04)' : 'rgba(160,195,255,0.03)'; rainCtx.fill();
-      // Dot
-      rainCtx.beginPath(); rainCtx.arc(sx, sy, s.size, 0, Math.PI*2);
-      rainCtx.fillStyle = s.isOrange ? 'rgba(245,130,11,0.5)' : 'rgba(160,195,255,0.35)'; rainCtx.fill();
-      // Line to center
-      rainCtx.beginPath(); rainCtx.moveTo(sx, sy); rainCtx.lineTo(curX, curY);
-      rainCtx.strokeStyle = s.isOrange ? 'rgba(245,130,11,0.08)' : 'rgba(160,195,255,0.06)';
-      rainCtx.lineWidth = 0.4; rainCtx.stroke();
-    });
+    rainCtx.arc(curX, curY, 3, 0, Math.PI * 2);
+    rainCtx.fillStyle = 'rgba(245,130,11,0.45)';
+    rainCtx.fill();
 
     requestAnimationFrame(animateCursor);
   }
   animateCursor();
 
   document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-  document.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; });
+  document.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; trail.length = 0; });
 
 })();
 </script>
