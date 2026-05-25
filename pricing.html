@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — ACS Solutions</title>
+<meta name="description" content="Custom Discord sales tracker + live dashboard for insurance agencies. Simple monthly pricing, real-time analytics, zero setup hassle.">
+<link rel="icon" href="BRAND.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --orange: #F5820B;
+  --orange-glow: rgba(245, 130, 11, 0.35);
+  --navy: #040710;
+  --navy-light: #0a0f1e;
+  --navy-mid: #060b16;
+  --white: #f0f0f0;
+  --white-dim: rgba(240, 240, 240, 0.6);
+  --white-faint: rgba(240, 240, 240, 0.35);
+  --blue-accent: #3b82f6;
+  --green-accent: #22c55e;
+  --font-head: 'Bebas Neue', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+  --clip-btn: polygon(0 0, 100% 0, 94% 100%, 0% 100%);
+  --clip-card: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* ─────────── NAV ─────────── */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 40px;
+  background: rgba(4, 7, 16, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(245,130,11,0.12);
+}
+.nav-brand {
+  font-family: var(--font-head);
+  font-size: 22px; letter-spacing: 0.08em;
+  color: var(--white);
+}
+.nav-brand .dot { color: var(--orange); }
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-link {
+  font-family: var(--font-body);
+  font-size: 13px; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--white-dim);
+  transition: color 0.2s;
+}
+.nav-link:hover { color: var(--orange); }
+.btn-cta {
+  font-family: var(--font-head);
+  font-size: 14px; letter-spacing: 0.12em;
+  color: var(--navy); background: var(--orange);
+  padding: 10px 22px;
+  clip-path: var(--clip-btn);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px var(--orange-glow); }
+
+/* ─────────── HERO ─────────── */
+.hero {
+  text-align: center;
+  padding: 90px 24px 50px;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245,130,11,0.08) 0%, transparent 70%);
+}
+.hero-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 18px;
+}
+.hero h1 {
+  font-family: var(--font-head);
+  font-size: clamp(46px, 8vw, 96px);
+  letter-spacing: 0.02em; line-height: 1.02;
+  color: var(--white);
+  margin-bottom: 14px;
+}
+.hero h1 .accent { color: var(--orange); }
+.hero-sub {
+  font-size: 17px; color: var(--white-dim);
+  max-width: 660px; margin: 0 auto;
+  font-weight: 300;
+}
+
+/* ─────────── PRICING GRID ─────────── */
+.pricing-section {
+  padding: 50px 24px 80px;
+  max-width: 1240px; margin: 0 auto;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+}
+.card {
+  position: relative;
+  background: var(--navy-light);
+  border: 1px solid rgba(245,130,11,0.12);
+  padding: 32px 28px 36px;
+  clip-path: var(--clip-card);
+  transition: transform 0.3s var(--ease-out), border-color 0.3s;
+}
+.card:hover { transform: translateY(-4px); border-color: rgba(245,130,11,0.3); }
+.card.featured {
+  background: linear-gradient(180deg, rgba(245,130,11,0.08), var(--navy-light) 60%);
+  border-color: rgba(245,130,11,0.4);
+}
+.card-badge {
+  position: absolute; top: 14px; right: 14px;
+  font-family: var(--font-body);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  background: var(--orange); color: var(--navy);
+  padding: 4px 10px; border-radius: 2px;
+}
+.card-tier {
+  font-family: var(--font-body);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 10px;
+}
+.card-name {
+  font-family: var(--font-head);
+  font-size: 30px; letter-spacing: 0.04em;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+.card-blurb {
+  font-size: 13px; color: var(--white-dim);
+  margin-bottom: 22px; min-height: 36px;
+}
+.card-price {
+  display: baseline; margin-bottom: 4px;
+}
+.card-price .amount {
+  font-family: var(--font-head);
+  font-size: 54px; letter-spacing: 0.02em;
+  color: var(--white);
+}
+.card-price .unit {
+  font-family: var(--font-body);
+  font-size: 14px; font-weight: 500;
+  color: var(--white-dim);
+  margin-left: 4px;
+}
+.card-setup {
+  font-size: 11px; color: var(--white-faint);
+  margin-bottom: 22px;
+  font-family: var(--font-body);
+  letter-spacing: 0.04em;
+}
+.card-features {
+  list-style: none;
+  margin-bottom: 26px;
+}
+.card-features li {
+  font-size: 13.5px; color: var(--white);
+  padding: 7px 0; padding-left: 24px;
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.card-features li:last-child { border-bottom: none; }
+.card-features li::before {
+  content: "✓"; position: absolute; left: 0; top: 7px;
+  color: var(--orange); font-weight: 700; font-size: 14px;
+}
+.card-features li.muted { color: var(--white-dim); }
+.card-features li.muted::before { content: "–"; color: var(--white-faint); }
+.card-cta {
+  display: block;
+  text-align: center;
+  font-family: var(--font-head);
+  font-size: 17px; letter-spacing: 0.1em;
+  color: var(--navy); background: var(--orange);
+  padding: 14px 0;
+  clip-path: var(--clip-btn);
+  transition: transform 0.2s, box-shadow 0.3s;
+  cursor: pointer;
+}
+.card-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 24px var(--orange-glow); }
+.card-cta.ghost {
+  background: transparent; color: var(--white);
+  border: 1px solid rgba(255,255,255,0.2);
+  clip-path: none;
+}
+.card-cta.ghost:hover { border-color: var(--orange); color: var(--orange); box-shadow: none; }
+
+/* ─────────── ADD-ON CALLOUT ─────────── */
+.addon-banner {
+  margin: 50px auto 0; max-width: 1100px;
+  padding: 28px 36px;
+  background: linear-gradient(135deg, rgba(245,130,11,0.06), transparent);
+  border: 1px solid rgba(245,130,11,0.2);
+  border-left: 4px solid var(--orange);
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 24px; flex-wrap: wrap;
+}
+.addon-banner .text { flex: 1; min-width: 280px; }
+.addon-banner h3 {
+  font-family: var(--font-head);
+  font-size: 28px; letter-spacing: 0.04em;
+  color: var(--white); margin-bottom: 6px;
+}
+.addon-banner p {
+  font-size: 14px; color: var(--white-dim);
+}
+.addon-banner .price-tag {
+  font-family: var(--font-head);
+  font-size: 36px; color: var(--orange);
+  letter-spacing: 0.02em;
+}
+.addon-banner .price-tag .unit {
+  font-family: var(--font-body);
+  font-size: 13px; font-weight: 500;
+  color: var(--white-dim);
+  letter-spacing: 0.04em;
+}
+
+/* ─────────── ENTERPRISE ─────────── */
+.enterprise {
+  margin: 70px auto 0; max-width: 1100px;
+  padding: 44px 40px;
+  background: var(--navy-mid);
+  border: 1px solid rgba(59,130,246,0.25);
+  clip-path: var(--clip-card);
+  text-align: center;
+}
+.enterprise .eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--blue-accent); margin-bottom: 14px;
+}
+.enterprise h2 {
+  font-family: var(--font-head);
+  font-size: 44px; letter-spacing: 0.03em;
+  color: var(--white); margin-bottom: 12px;
+}
+.enterprise p {
+  font-size: 15px; color: var(--white-dim);
+  max-width: 640px; margin: 0 auto 22px;
+}
+.enterprise .btn {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: 16px; letter-spacing: 0.12em;
+  color: var(--white);
+  border: 1px solid var(--blue-accent);
+  padding: 12px 26px;
+  transition: background-color 0.2s;
+}
+.enterprise .btn:hover { background: rgba(59,130,246,0.15); }
+
+/* ─────────── FAQ ─────────── */
+.faq-section {
+  padding: 70px 24px;
+  max-width: 920px; margin: 0 auto;
+}
+.faq-section h2 {
+  font-family: var(--font-head);
+  font-size: 44px; letter-spacing: 0.04em;
+  color: var(--white); text-align: center;
+  margin-bottom: 32px;
+}
+.faq-item {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 22px 0;
+}
+.faq-q {
+  font-family: var(--font-head);
+  font-size: 20px; letter-spacing: 0.03em;
+  color: var(--orange); margin-bottom: 10px;
+}
+.faq-a {
+  font-size: 14.5px; color: var(--white-dim);
+  line-height: 1.65;
+}
+
+/* ─────────── FOOTER ─────────── */
+.footer {
+  padding: 40px 24px;
+  text-align: center;
+  background: var(--navy-mid);
+  border-top: 1px solid rgba(245,130,11,0.08);
+}
+.footer p { font-size: 12.5px; color: var(--white-faint); }
+.footer a { color: var(--orange); }
+
+/* ─────────── RESPONSIVE ─────────── */
+@media (max-width: 720px) {
+  .nav { padding: 14px 18px; }
+  .nav-links { display: none; }
+  .nav-links .btn-cta { display: inline-block; }
+  .nav-links { display: flex; gap: 0; }
+  .nav-links a:not(.btn-cta) { display: none; }
+  .hero { padding: 60px 18px 30px; }
+  .pricing-section { padding: 30px 16px 50px; }
+  .addon-banner { padding: 22px; }
+  .addon-banner .price-tag { font-size: 28px; }
+  .enterprise { padding: 32px 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────── NAV ─────────── -->
+<nav class="nav">
+  <a href="index.html" class="nav-brand">ACS<span class="dot">.</span> SOLUTIONS</a>
+  <div class="nav-links">
+    <a href="index.html#services" class="nav-link">Services</a>
+    <a href="index.html#case-study" class="nav-link">Work</a>
+    <a href="pricing.html" class="nav-link">Pricing</a>
+    <a href="index.html#contact" class="btn-cta">CONTACT</a>
+  </div>
+</nav>
+
+<!-- ─────────── HERO ─────────── -->
+<section class="hero">
+  <div class="hero-eyebrow">SIMPLE PLANS · NO HIDDEN FEES</div>
+  <h1>Pricing built for <span class="accent">sales teams</span></h1>
+  <p class="hero-sub">Discord-native sales tracking with optional live web dashboards. Designed for insurance agencies of every size — from boutique shops to multi-agency networks.</p>
+</section>
+
+<!-- ─────────── PRICING GRID ─────────── -->
+<section class="pricing-section">
+  <div class="grid">
+
+    <!-- Tier 1: Discord, Small -->
+    <div class="card">
+      <div class="card-tier">Tier 1</div>
+      <div class="card-name">DISCORD STARTER</div>
+      <div class="card-blurb">For agencies under 30 agents. Bot-only, no dashboard.</div>
+      <div class="card-price"><span class="amount">$1,250</span><span class="unit">/ month</span></div>
+      <div class="card-setup">+ $1,500 one-time setup</div>
+      <ul class="card-features">
+        <li>Auto-track every $sale in Discord</li>
+        <li>Daily, weekly, monthly leaderboards</li>
+        <li>Scheduled posts at 10:30 PM CST</li>
+        <li>No-sales reports posted nightly</li>
+        <li>Team breakdowns by Discord role</li>
+        <li>20+ mod & admin commands</li>
+        <li class="muted">No web dashboard</li>
+      </ul>
+      <a href="https://buy.stripe.com/eVqeVddT27zF3GH3HnefC0e" class="card-cta" target="_blank" rel="noopener">SUBSCRIBE</a>
+    </div>
+
+    <!-- Tier 2: Discord, Standard -->
+    <div class="card">
+      <div class="card-tier">Tier 2</div>
+      <div class="card-name">DISCORD STANDARD</div>
+      <div class="card-blurb">For agencies 30+ agents. Same powerful bot, scaled.</div>
+      <div class="card-price"><span class="amount">$1,500</span><span class="unit">/ month</span></div>
+      <div class="card-setup">+ $1,500 one-time setup</div>
+      <ul class="card-features">
+        <li>Everything in Discord Starter</li>
+        <li>Up to 200 agents tracked</li>
+        <li>Priority bot uptime (99%+ SLA)</li>
+        <li>Hour-of-day deal spike tracking</li>
+        <li>Backfill from existing channel history</li>
+        <li>Live support during business hours</li>
+        <li class="muted">No web dashboard</li>
+      </ul>
+      <a href="https://buy.stripe.com/28E4gz16g6vB6ST1zfefC0d" class="card-cta" target="_blank" rel="noopener">SUBSCRIBE</a>
+    </div>
+
+    <!-- Tier 3: Bundle Small (Most Popular) -->
+    <div class="card featured">
+      <div class="card-badge">MOST POPULAR</div>
+      <div class="card-tier">Tier 3</div>
+      <div class="card-name">FULL SUITE · SMALL</div>
+      <div class="card-blurb">Discord bot + live web dashboard. For agencies under 30 agents.</div>
+      <div class="card-price"><span class="amount">$2,250</span><span class="unit">/ month</span></div>
+      <div class="card-setup">+ $2,000 one-time setup</div>
+      <ul class="card-features">
+        <li>Everything in Discord Starter</li>
+        <li>Live web dashboard (custom domain optional)</li>
+        <li>Real-time leaderboards & analytics</li>
+        <li>Pace charts, MoM comparison, day-of-week</li>
+        <li>Team manager logins (role-scoped)</li>
+        <li>Time Travel: drill into any past day</li>
+        <li>Built-in chat for managers</li>
+      </ul>
+      <a href="https://buy.stripe.com/3cI7sL9CMf279112DjefC0c" class="card-cta" target="_blank" rel="noopener">SUBSCRIBE</a>
+    </div>
+
+    <!-- Tier 4: Bundle Standard -->
+    <div class="card">
+      <div class="card-tier">Tier 4</div>
+      <div class="card-name">FULL SUITE · STANDARD</div>
+      <div class="card-blurb">Same as Full Suite, scaled for 30+ agents.</div>
+      <div class="card-price"><span class="amount">$2,500</span><span class="unit">/ month</span></div>
+      <div class="card-setup">+ $2,000 one-time setup</div>
+      <ul class="card-features">
+        <li>Everything in Discord Standard</li>
+        <li>Live web dashboard (custom domain optional)</li>
+        <li>Real-time leaderboards & analytics</li>
+        <li>Pace charts, MoM comparison, day-of-week</li>
+        <li>Unlimited manager logins</li>
+        <li>Time Travel: drill into any past day</li>
+        <li>Built-in chat for managers</li>
+      </ul>
+      <a href="https://buy.stripe.com/4gMdR9dT2cTZell1zfefC0b" class="card-cta" target="_blank" rel="noopener">SUBSCRIBE</a>
+    </div>
+
+  </div>
+
+  <!-- Add-on banner -->
+  <div class="addon-banner">
+    <div class="text">
+      <h3>Add a dashboard to any tier</h3>
+      <p>Already have Discord bot only? Add a live web dashboard anytime — full analytics, charts, drill-down, manager logins. Custom domain included on request.</p>
+    </div>
+    <div class="price-tag">+$1,000<span class="unit"> / month</span></div>
+  </div>
+
+  <!-- Enterprise -->
+  <div class="enterprise">
+    <div class="eyebrow">FOR MULTI-AGENCY NETWORKS</div>
+    <h2>ENTERPRISE & WHITE-LABEL</h2>
+    <p>Running a network of agencies? Get a single super-admin view across all of them — aggregate KPIs, cross-agency leaderboards, custom branding. Per-tenant Discord bots, custom domains, white-label everything.</p>
+    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=alberticustomsoftwaresolutions@gmail.com&su=Enterprise%20Plan%20Inquiry" target="_blank" rel="noopener" class="btn">REQUEST A QUOTE →</a>
+  </div>
+</section>
+
+<!-- ─────────── FAQ ─────────── -->
+<section class="faq-section">
+  <h2>FREQUENTLY ASKED</h2>
+  <div class="faq-item">
+    <div class="faq-q">CAN I UPGRADE FROM DISCORD TO FULL SUITE LATER?</div>
+    <div class="faq-a">Yes. You can add a dashboard to any Discord-only tier at any time — just $1,000/mo more, no new setup fee.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">WHAT DOES THE SETUP FEE COVER?</div>
+    <div class="faq-a">Setup includes deploying your bot to your Discord server, configuring channels and roles, importing existing sales history from your Discord (if any), training your managers, and dashboard provisioning (for Full Suite plans).</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">IS THERE A CONTRACT?</div>
+    <div class="faq-a">Monthly subscriptions, no long-term commitment. Cancel anytime with 30 days notice. Enterprise plans use an annual contract for predictability.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">CAN I BRING MY OWN DOMAIN?</div>
+    <div class="faq-a">Yes — included in Full Suite and Enterprise tiers. You buy the domain, we configure DNS and HTTPS. Or skip it and use a subdomain we provide ([yourname].acssolutions.xyz).</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">WHAT IF MY AGENT COUNT GROWS PAST THE TIER LIMIT?</div>
+    <div class="faq-a">We'll move you to the next tier at the start of the next billing cycle. No abrupt change — your team keeps working uninterrupted.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">DO YOU SUPPORT OTHER PLATFORMS BESIDES DISCORD?</div>
+    <div class="faq-a">Discord is what we do best. We can build custom integrations for other platforms (Slack, Teams, Telegram, etc.) on Enterprise plans — contact us for a quote.</div>
+  </div>
+</section>
+
+<!-- ─────────── FOOTER ─────────── -->
+<footer class="footer">
+  <p>© 2026 ACS Solutions — Alberti Custom Software · <a href="mailto:alberticustomsoftwaresolutions@gmail.com">alberticustomsoftwaresolutions@gmail.com</a> · <a href="tel:+17632919407">(763) 291-9407</a></p>
+</footer>
+
+</body>
+</html>
