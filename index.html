@@ -53,7 +53,7 @@
   }
 }
 </script>
-<noscript><style>.gr,.pipe-info,.pipe-visual,.pipe-dot{opacity:1!important;transform:none!important}</style></noscript>
+<noscript><style>.gr{opacity:1!important;transform:none!important}</style></noscript>
 <style>
 /* ===== CUSTOM PROPERTIES ===== */
 :root {
@@ -284,17 +284,33 @@ nav {
 }
 .btn-ghost:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-1px); }
 
-/* ===== TRANSITION SECTION ===== */
+/* ===== TRANSITION SECTION (hero -> journey dusk bridge) ===== */
 .transition-zone {
   position: relative;
-  height: 25vh;
-  min-height: 160px;
-  max-height: 280px;
+  height: 28vh;
+  min-height: 240px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: radial-gradient(ellipse at center, rgba(245,130,11,0.05), var(--navy) 70%);
+  background: linear-gradient(180deg, var(--navy) 0%, #081020 45%, #030509 100%);
+}
+/* dusk composition: warm sodium horizon behind a dark ridge profile
+   (scrubbed by JS; these defaults are the composed no-JS state) */
+.tz-glow {
+  position: absolute; left: 6%; right: 6%; bottom: 0; height: 62%; z-index: 1;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255,165,55,.34), rgba(245,130,11,.10) 55%, transparent 78%);
+  opacity: .55; transform-origin: 50% 100%;
+}
+.tz-ridge {
+  position: absolute; left: -4vw; right: -4vw; bottom: -1px; height: 58%; z-index: 2;
+  background: linear-gradient(180deg, #0b1224 0%, #050a14 55%, #02050c 100%);
+  clip-path: polygon(0 55%, 6% 38%, 14% 50%, 23% 26%, 32% 44%, 41% 32%, 52% 54%, 61% 30%, 70% 46%, 79% 36%, 88% 52%, 96% 40%, 100% 48%, 100% 100%, 0 100%);
+  opacity: .95;
+}
+.hero-dim { /* scrubbed veil that eases the datacube video toward dusk (caps at .55) */
+  position: absolute; inset: 0; z-index: 3;
+  background: #02040a; opacity: 0; pointer-events: none;
 }
 .transition-video {
   position: absolute;
@@ -315,322 +331,648 @@ nav {
 .transition-overlay-bottom {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: 50%;
-  background: linear-gradient(to top, var(--navy) 0%, transparent 100%);
+  height: 22%;
+  background: linear-gradient(to top, #030509 0%, transparent 100%);
   z-index: 1;
 }
 .transition-content {
   position: relative;
-  z-index: 2;
+  z-index: 4;
   text-align: center;
 }
 .transition-content h2 {
   font-size: clamp(1.8rem, 3.2vw, 2.8rem);
   color: var(--white);
   letter-spacing: 0.08em;
-}
-.transition-content p {
-  font-size: 0.78rem;
-  color: var(--white-dim);
-  margin-top: 0.3rem;
-  letter-spacing: 0.05em;
+  text-shadow: 0 2px 24px rgba(2, 4, 10, 0.8);
 }
 
-/* ===== PIPELINE ===== */
-.pipeline {
-  position: relative;
-  padding: 6rem 2rem 6rem;
-  overflow: hidden;
-  min-height: 100vh;
-}
-.pipeline-bg-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.12) saturate(0.3);
-  z-index: 0;
-}
-.pipeline-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, var(--navy) 0%, rgba(4,7,16,0.7) 15%, rgba(4,7,16,0.7) 85%, var(--navy) 100%);
-  z-index: 1;
-}
-.pipeline-inner {
-  position: relative;
-  z-index: 3;
-  max-width: 960px;
-  margin: 0 auto;
-}
-.pipeline-header {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-.pipeline-header h2 {
-  font-size: clamp(2.2rem, 4vw, 3.4rem);
-}
-/* truck track styles inline */
-
-/* Pipeline modules */
-.pipe-module {
-  display: grid;
-  grid-template-columns: 1fr 60px 1fr;
-  gap: 1.5rem;
-  align-items: center;
-  margin-bottom: 3.5rem;
-  position: relative;
-}
-.pipe-module.reverse { direction: rtl; }
-.pipe-module.reverse > * { direction: ltr; }
-
-.pipe-info { opacity: 0.08; transition: opacity 0.8s var(--ease-out); }
-.pipe-info.on { opacity: 1; }
-.pipe-info h3 {
-  font-size: 1.5rem;
-  letter-spacing: 0.08em;
-  margin-bottom: 0.4rem;
-  color: var(--white);
-}
-.pipe-info p {
-  font-size: 0.8rem;
-  color: var(--white-dim);
-  line-height: 1.6;
+/* ============================================================
+   HOW IT WORKS — "SWITCHBACK RUN" night grade descent journey
+   (merged from pipeline-v3; section keeps id="pipeline")
+   ============================================================ */
+:root {
+  --amber-lit: #ffb54d;
+  --panel: #0c1220;
+  --bd: 1px solid rgba(245, 130, 11, 0.22);
+  --bd-dim: 1px solid rgba(245, 130, 11, 0.12);
+  /* Truck: PNG 1536x1024, body x 3.8-96%, y 34.4-63.7%, ground line 63.48% */
+  --truckW: min(24vw, 400px);
+  --truckH: calc(var(--truckW) * 0.66667);
+  --roadH: 4.6vh;              /* road bar thickness */
 }
 
-.pipe-dot-wrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* ===== JOURNEY: pinned viewport + tall mountain plane ===== */
+.journey { position: relative; background: var(--navy); overflow: hidden; } /* clips in every state, incl. pre-init */
+.gsap-on .journey { height: 100vh; height: 100svh; overflow: hidden; }
+.stage {
+  position: relative; width: 100%; height: 100vh; height: 100svh; overflow: hidden;
+  background: linear-gradient(180deg, #030509 0%, var(--navy) 40%, #081020 100%);
+  contain: strict;
 }
-.pipe-dot {
-  width: 42px;
-  height: 42px;
-  background: rgba(245, 130, 11, 0.08);
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-head);
-  font-size: 0.85rem;
-  color: rgba(245,130,11,0.2);
-  transition: background 0.6s, color 0.6s, box-shadow 0.6s;
-  opacity: 0.1;
-  transition: opacity 0.8s var(--ease-out), background 0.6s, color 0.6s;
+.gsap-on .stage { position: absolute; inset: 0; height: auto; }
+
+/* sky lives in the VIEWPORT (doesn't travel with the camera) */
+.l-sky { position: absolute; inset: 0; z-index: 1; }
+.stars {
+  position: absolute; top: 5vh; left: 8vw; width: 1px; height: 1px;
+  background: rgba(240,240,240,.7);
+  box-shadow: 9vw 4vh 0 rgba(240,240,240,.5), 22vw -1vh 0 rgba(240,240,240,.35),
+    34vw 7vh 0 rgba(240,240,240,.55), 46vw 2vh 0 rgba(240,240,240,.3),
+    55vw 10vh 0 rgba(240,240,240,.5), 63vw -2vh 0 rgba(240,240,240,.4),
+    70vw 6vh 0 rgba(240,240,240,.55), 79vw 13vh 0 rgba(240,240,240,.3),
+    86vw 3vh 0 rgba(240,240,240,.5), 15vw 15vh 0 rgba(240,240,240,.3),
+    41vw 18vh 0 rgba(240,240,240,.4), 74vw 22vh 0 rgba(240,240,240,.28),
+    6vw 24vh 0 rgba(240,240,240,.32), 58vw 26vh 0 rgba(240,240,240,.3),
+    90vw 19vh 0 rgba(240,240,240,.4), 28vw 28vh 0 rgba(240,240,240,.25);
 }
-.pipe-dot.on {
-  opacity: 1;
-  background: var(--orange);
-  color: var(--navy);
+.l-sky::after { /* faint sodium haze near the upper skyline */
+  content: ''; position: absolute; left: 0; right: 0; top: 20vh; height: 14vh;
+  background: linear-gradient(180deg, transparent, rgba(245,130,11,.05) 55%, transparent);
 }
 
-.pipe-visual {
-  min-height: 200px;
-  padding: 1.5rem;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(245,130,11,0.06);
-  clip-path: var(--clip-card);
-  opacity: 0.06;
-  transition: opacity 0.8s var(--ease-out), border-color 0.6s;
-  position: relative;
-  overflow: hidden;
+/* ===== FAR RIDGES (z2, parallax ~0.18x of camera) ===== */
+.l-ridges { position: absolute; left: 0; top: 0; width: 200vw; height: 160vh; z-index: 2; will-change: transform; }
+.ridge {
+  position: absolute; left: 0; width: 200vw; height: 60vh;
+  background: linear-gradient(180deg, #0a1122 0%, #070d1a 55%, #050912 100%);
 }
-.pipe-visual.on {
-  opacity: 1;
-  border-color: rgba(245,130,11,0.25);
+.ridge.r1 {
+  top: 26vh; opacity: .8;
+  clip-path: polygon(0 62%, 7% 44%, 15% 55%, 24% 30%, 33% 48%, 41% 36%, 52% 58%, 61% 33%, 70% 50%, 79% 40%, 88% 56%, 96% 42%, 100% 52%, 100% 100%, 0 100%);
 }
-
-/* Server rack visual */
-.server-rack {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 3px;
-  width: 100%;
+.ridge.r2 {
+  top: 44vh; opacity: .95;
+  background: linear-gradient(180deg, #080e1c 0%, #05080f 60%);
+  clip-path: polygon(0 48%, 9% 60%, 18% 38%, 29% 56%, 38% 44%, 49% 62%, 58% 40%, 68% 58%, 77% 46%, 87% 62%, 95% 50%, 100% 58%, 100% 100%, 0 100%);
 }
-.rack-unit {
-  height: 18px;
-  background: rgba(10, 15, 30, 0.9);
-  border: 1px solid rgba(59, 130, 246, 0.08);
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 3px;
-  gap: 2px;
-}
-.rack-led {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: rgba(59, 130, 246, 0.15);
-  transition: background 0.3s;
-}
-.rack-led.blink-orange { background: var(--orange); box-shadow: 0 0 4px var(--orange); }
-.rack-led.blink-blue { background: var(--blue-accent); box-shadow: 0 0 4px var(--blue-accent); }
-.rack-led.dim { background: rgba(100, 100, 120, 0.2); }
-.scan-line {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--orange), transparent);
-  opacity: 0;
-  transition: opacity 0.4s;
-}
-.pipe-visual.on .scan-line {
-  opacity: 0.6;
-  animation: scanDown 2.5s linear infinite;
-}
-@keyframes scanDown {
-  0% { top: 0; }
-  100% { top: 100%; }
+.ridge .ridge-dots { /* sparse far lights on the ridge line */
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(90deg, transparent 0 17vw, rgba(245,130,11,.3) 17vw calc(17vw + 2px), transparent calc(17vw + 2px) 23vw);
+  background-size: 100% 2px; background-position: 0 58%; background-repeat: no-repeat;
+  opacity: .5;
 }
 
-/* Pipeline flow visual */
-.pipeline-flow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  width: 100%;
-  height: 100%;
-  min-height: 80px;
+/* ===== MOUNTAIN PLANE (z3): everything world-anchored ===== */
+.mountain {
+  position: absolute; left: 0; top: 0; z-index: 3;
+  width: 150vw; height: 330vh;
+  will-change: transform;
 }
-.hex-node {
-  width: 52px;
-  height: 52px;
-  background: rgba(245,130,11,0.06);
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background 0.5s;
-}
-.hex-node svg { width: 20px; height: 20px; stroke: rgba(245,130,11,0.2); fill: none; stroke-width: 1.5; transition: stroke 0.5s; }
-.pipe-visual.on .hex-node { background: rgba(245,130,11,0.15); }
-.pipe-visual.on .hex-node svg { stroke: var(--orange); }
-.flow-line {
-  width: 50px;
-  height: 2px;
-  background: rgba(245,130,11,0.08);
-  position: relative;
-  flex-shrink: 0;
-}
-.flow-dot {
-  position: absolute;
-  top: -2px;
-  left: 0;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--orange);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.pipe-visual.on .flow-dot {
-  opacity: 1;
-  animation: flowRight 1.5s linear infinite;
-}
-.pipe-visual.on .flow-line { background: rgba(245,130,11,0.2); }
-@keyframes flowRight {
-  0% { left: 0; opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { left: calc(100% - 6px); opacity: 0; }
-}
+html:not(.gsap-on) .mountain { transform: translateY(-18vh); }
 
-/* Bar chart visual */
-.bar-chart {
-  display: flex;
-  align-items: flex-end;
-  gap: 6px;
-  height: 120px;
-  width: 100%;
-  padding-top: 1rem;
+/* ===== ROADS: rotated bars; surface line = truck path ===== */
+.road {
+  position: absolute; height: var(--roadH); z-index: 2;
+  transform-origin: left top;
+  background: linear-gradient(180deg, #131b2e 0%, #0b111f 30%, #060a13 78%, #04070e 100%);
+  border-top: 1px solid rgba(240,240,240,.09);
 }
-.bar-chart .bar {
-  flex: 1;
-  background: linear-gradient(to top, var(--orange), rgba(245,130,11,0.4));
-  opacity: 0.08;
-  transition: opacity 0.5s, height 0.6s var(--ease-out);
-  min-height: 8px;
+.road::before { /* amber centerline dashes + cat-eyes (fixed to the road — truck moves, road doesn't) */
+  content: ''; position: absolute; left: 0; right: 0; top: 42%; height: 3px;
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 11.4vw, rgba(255,170,60,.9) 11.4vw 11.75vw),
+    repeating-linear-gradient(90deg, rgba(255,190,90,.34) 0 2.6vw, transparent 2.6vw 6vw);
 }
-.pipe-visual.on .bar-chart .bar { opacity: 1; }
-.bar-label {
-  position: absolute;
-  bottom: 8px;
-  right: 12px;
-  font-family: var(--font-body);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(245,130,11,0.2);
-  transition: color 0.5s;
+.road::after { /* guardrail: rail + posts hanging off the downhill edge */
+  content: ''; position: absolute; left: 1%; right: 1%; top: 100%; height: 2.8vh;
+  background-image:
+    linear-gradient(180deg, rgba(148,158,178,.28) 0 2px, transparent 2px),
+    repeating-linear-gradient(90deg, rgba(10,14,24,.9) 0 3px, transparent 3px 4.2vw);
 }
-.pipe-visual.on .bar-label { color: var(--orange); }
+/* default (no-JS) placement approximates the top of the descent; JS lays out exactly */
+#r-t1a { left: 6vw; top: 74vh; width: 46vw; }
+#r-t1b { left: 48vw; top: 74vh; width: 74vw; transform: rotate(4.6deg); }
+#r-t2  { left: 18vw; top: 120vh; width: 104vw; transform: rotate(-4.9deg); }
+#r-t3  { left: 18vw; top: 166vh; width: 104vw; transform: rotate(4.9deg); }
+#r-t4a { left: 56vw; top: 212vh; width: 64vw; transform: rotate(-4deg); }
+#r-t4b { left: 26vw; top: 220vh; width: 32vw; }
+.road .rm { /* mile marker riding the road edge */
+  position: absolute; bottom: calc(100% + 0.6vh); width: 3.4vw; padding: 0.3vw 0;
+  text-align: center; font-family: var(--font-head); font-size: clamp(9px, 0.8vw, 14px);
+  letter-spacing: .1em; color: #7fd6a0; background: #071510; border: 1px solid rgba(34,197,94,.3);
+}
+.road .rm::after { content: ''; position: absolute; top: 100%; left: 48%; width: 2px; height: 0.6vh; background: #12203a; }
 
-/* Radar visual */
-.radar-wrap {
-  position: relative;
-  width: 140px;
-  height: 140px;
-  margin: 0 auto;
+/* ===== HAIRPIN CLIFFS (z7, occlude the flip) + CHEVRON BOARDS ===== */
+.cliff {
+  position: absolute; z-index: 7; width: 40vw; height: 58vh;
+  left: 0; top: 200vh;   /* safe pre-init default, below the static fold; layout() places it */
+  background: linear-gradient(165deg, #0a1122 0%, #060b16 45%, #03060c 100%);
 }
-.radar-ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid rgba(34,197,94,0.08);
-  transition: border-color 0.5s;
+.cliff.cr { clip-path: polygon(22% 0, 100% 0, 100% 100%, 12% 100%, 4% 82%, 14% 64%, 6% 47%, 16% 30%, 8% 14%); }
+.cliff.cl { clip-path: polygon(0 0, 78% 0, 92% 14%, 84% 30%, 94% 47%, 86% 64%, 96% 82%, 88% 100%, 0 100%); }
+.cliff::after { /* faint lit rock edge */
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(105deg, rgba(245,130,11,.08), transparent 22%);
 }
-.radar-ring:nth-child(1) { inset: 0; }
-.radar-ring:nth-child(2) { inset: 20px; }
-.radar-ring:nth-child(3) { inset: 40px; }
-.pipe-visual.on .radar-ring { border-color: rgba(34,197,94,0.2); }
-.radar-sweep {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 50%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--green-accent), transparent);
-  transform-origin: left center;
-  opacity: 0;
-  transition: opacity 0.4s;
+.chev { /* switchback chevron board mounted at the bend */
+  position: absolute; z-index: 8; width: 15vw; height: 7.2vh;
+  left: 0; top: 200vh;   /* safe pre-init default, below the static fold; layout() places it */
+  border: var(--bd); background: #0a0f1e;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
 }
-.pipe-visual.on .radar-sweep {
-  opacity: 0.7;
-  animation: radarSpin 3s linear infinite;
+.chev::before { /* chevron stripes */
+  content: ''; position: absolute; inset: 12% 8% 34% 8%;
+  background: repeating-linear-gradient(115deg, var(--orange) 0 0.9vw, #0a0f1e 0.9vw 1.8vw);
 }
-@keyframes radarSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.radar-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(34,197,94,0.15);
-  transition: background 0.5s, box-shadow 0.5s;
+.chev.left::before { background: repeating-linear-gradient(65deg, var(--orange) 0 0.9vw, #0a0f1e 0.9vw 1.8vw); }
+.chev .chev-label {
+  position: absolute; left: 8%; bottom: 6%;
+  font-family: var(--font-head); font-size: clamp(9px, 0.85vw, 15px);
+  letter-spacing: .3em; color: var(--white-dim);
 }
-.pipe-visual.on .radar-center { background: var(--green-accent); box-shadow: 0 0 10px var(--green-accent); }
-.radar-label {
-  position: absolute;
-  bottom: -22px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-body);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(34,197,94,0.2);
-  transition: color 0.5s;
+.chev::after { content: ''; position: absolute; top: 100%; left: 46%; width: 3px; height: 2.4vh; background: #0e1424; }
+/* ===== SHARED WORLD LANGUAGE ===== */
+.sign {
+  position: absolute; padding: 0.45vw 1vw; z-index: 3;
+  font-family: var(--font-head); color: var(--orange); letter-spacing: 0.14em;
+  background: rgba(4,7,16,.9); border: var(--bd);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
   white-space: nowrap;
 }
-.pipe-visual.on .radar-label { color: var(--green-accent); }
+.sign .s-sub { display: block; font-family: var(--font-body); font-size: 0.52em; letter-spacing: 0.26em; color: var(--white-dim); }
+.win-band {
+  position: absolute; left: 6%; right: 6%; height: 6%;
+  background-image: repeating-linear-gradient(90deg,
+    rgba(245,130,11,.16) 0 6%, transparent 6% 11%,
+    rgba(59,130,246,.13) 11% 17%, transparent 17% 24%,
+    rgba(245,130,11,.10) 24% 30%, transparent 30% 38%,
+    rgba(59,130,246,.10) 38% 44%, transparent 44% 52%,
+    rgba(245,130,11,.14) 52% 58%, transparent 58% 66%,
+    rgba(59,130,246,.12) 66% 72%, transparent 72% 80%,
+    rgba(245,130,11,.11) 80% 86%, transparent 86% 100%);
+}
+
+/* ===== HQ COMPLEX (top plateau, CSS-static: tier 1a is flat) ===== */
+.hq {
+  position: absolute; z-index: 1; left: 1vw; top: 22vh; width: 42vw; height: 52vh;
+  background: linear-gradient(180deg, #0d1526 0%, var(--panel) 40%, #080d18 100%);
+  border: var(--bd-dim); border-bottom: none;
+  clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%);
+}
+.hq .hq-stack { position: absolute; top: -9vh; width: 1.9vw; height: 9.5vh; background: linear-gradient(180deg, #0d1424, #080d18); border: var(--bd-dim); }
+.hq .hq-stack.s1 { left: 14%; } .hq .hq-stack.s2 { left: 24%; }
+.hq .hq-sign { top: 6%; left: 7%; font-size: clamp(17px, 1.7vw, 30px); }
+.hq .win-band.r1 { top: 28%; } .hq .win-band.r2 { top: 42%; } .hq .win-band.r3 { top: 56%; }
+.hq-dock {
+  position: absolute; bottom: 0; left: 24%; width: 22%; height: 26%;
+  background: linear-gradient(180deg, #05080f, #03050b);
+  border: 1px solid rgba(245,130,11,.28); border-bottom: none;
+}
+.hq-dock::before {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(180deg, transparent 0 12%, rgba(245,130,11,.05) 12% 14%);
+}
+.hq-dock .dock-slit {
+  position: absolute; bottom: 0; left: 3%; right: 3%; height: 9%;
+  background: linear-gradient(180deg, rgba(255,180,80,.85), rgba(245,130,11,.55));
+  animation: slitPulse 2.6s ease-in-out infinite;
+}
+.hq-dock .dock-spill {
+  position: absolute; bottom: -1vh; left: -20%; right: -20%; height: 5vh;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,170,60,.2), transparent 70%);
+}
+@keyframes slitPulse { 0%, 100% { opacity: .75; } 50% { opacity: 1; } }
+
+/* world title on the plateau, caught by the ignition beam */
+.world-title {
+  position: absolute; z-index: 4; left: 33vw; top: 60vh; width: 30vw;
+  font-family: var(--font-head); font-size: clamp(2.2rem, 4.2vw, 4.4rem);
+  line-height: 0.98; color: var(--white); letter-spacing: 0.03em;
+}
+.world-title .accent { color: var(--orange); }
+.world-title .wt-sub { display: block; margin-top: 0.8rem; font-family: var(--font-body); font-size: clamp(.62rem, .8vw, .85rem); font-weight: 300; letter-spacing: .3em; color: var(--white-dim); }
+
+/* ===== STATIONS (plumb wrappers; JS sets left/top on the road surface) ===== */
+.stn { position: absolute; z-index: 3; transform: translate(-50%, -100%); }
+/* no-JS defaults: st1 visible at the top plateau, the rest below the static fold */
+.stn.st1 { left: 44vw; top: 74vh; }
+.stn.st3 { left: 82vw; top: 190vh; }
+.stn.st4 { left: 88vw; top: 240vh; }
+#weigh-scale { left: 82vw; top: 189vh; }
+#barrier { left: 95vw; top: 186vh; }
+.stn .pad { /* flat pull-off shelf meeting the sloped road */
+  position: absolute; left: -6%; right: -6%; bottom: -1.4vh; height: 1.6vh;
+  background: linear-gradient(180deg, #0d1424, #060a13); border-top: 1px solid rgba(240,240,240,.07);
+}
+.stn .sign { position: absolute; font-size: clamp(13px, 1.25vw, 22px); }
+
+/* --- 01 FORGE DEPOT (server bay beside the HQ dock) --- */
+.stn.st1 { width: 20vw; height: 22vh; }
+.st1 .depot-bay {
+  position: absolute; inset: auto 6% 0 6%; height: 78%;
+  background: linear-gradient(180deg, rgba(10,16,32,.9), rgba(6,10,19,.95));
+  border: var(--bd); padding: 4% 3.5%;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 6%;
+}
+.rack { position: relative; border: 1px solid rgba(245,130,11,.28); background: #070c16; overflow: hidden; }
+.rack::before {
+  content: ''; position: absolute; inset: 8% 14%;
+  background-image:
+    repeating-linear-gradient(180deg, rgba(245,130,11,.75) 0 6%, transparent 6% 16%),
+    repeating-linear-gradient(90deg, #000 0 26%, transparent 26% 37%);
+  background-blend-mode: darken; opacity: .5;
+}
+.rack::after {
+  content: ''; position: absolute; left: 0; right: 0; top: -30%; height: 30%;
+  background: linear-gradient(180deg, transparent, rgba(255,180,80,.30), transparent);
+  animation: rackScan 1.9s linear infinite; animation-play-state: paused;
+}
+.st-on .rack::after { animation-play-state: running; }
+.st-on .rack::before { animation: ledFlicker 1.3s steps(2) infinite; }
+.rack:nth-child(2)::after { animation-delay: .6s; } .rack:nth-child(3)::after { animation-delay: 1.2s; }
+@keyframes rackScan { to { transform: translateY(467%); } }
+@keyframes ledFlicker { 0%, 100% { opacity: .5; } 50% { opacity: .78; } }
+.st1 .sign { top: -6.5vh; left: 2%; }
+.st1 .crane-light {
+  position: absolute; top: -1.5vh; right: 4%; width: 0.8vw; height: 0.8vw;
+  background: radial-gradient(circle, rgba(255,190,90,.95), rgba(245,130,11,.25) 60%, transparent 75%);
+  opacity: .15;
+}
+.st-on .crane-light { animation: strobe 1.1s steps(1) infinite; }
+@keyframes strobe { 0%, 45% { opacity: 1; } 50%, 100% { opacity: .15; } }
+
+/* --- 02 CI/CD SCAN ARCH (child of tier-2 road, spans it) --- */
+.scan-arch {
+  position: absolute; z-index: 3; bottom: 100%; width: 26vw; height: 17vh;
+  transform: translateX(-50%);
+}
+.scan-arch .arch-leg { position: absolute; bottom: 0; width: 1.3vw; height: 100%; background: linear-gradient(180deg, #0e1628, #080d18); border: var(--bd-dim); }
+.scan-arch .arch-leg.al { left: 0; } .scan-arch .arch-leg.ar { right: 0; }
+.scan-arch .arch-beam {
+  position: absolute; top: 0; left: 0; right: 0; height: 4.4vh;
+  background: linear-gradient(180deg, #101a30, #0a101f); border: var(--bd);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px));
+}
+.scan-arch .sign { position: static; display: inline-block; margin: 0.7vh 0 0 8%; border: none; background: none; padding: 0; }
+.hex-pipe {
+  position: absolute; top: 3.4vh; left: 6%; right: 6%; height: 1vh;
+  background-image: repeating-linear-gradient(90deg, rgba(59,130,246,.5) 0 0.8vh, transparent 0.8vh 2.6vw);
+}
+.hex-pipe::before { content: ''; position: absolute; left: 0; right: 0; top: 45%; height: 1px; background: rgba(59,130,246,.35); }
+.packet {
+  position: absolute; top: 4.4vh; width: 0.7vh; height: 0.7vh; background: var(--blue-accent);
+  opacity: 0; box-shadow: 0 0 6px rgba(59,130,246,.8);
+}
+.packet.p1 { left: 28%; } .packet.p2 { left: 50%; animation-delay: .5s !important; } .packet.p3 { left: 70%; animation-delay: 1s !important; }
+.st-on .packet { animation: pktDrop 1.5s linear infinite; }
+@keyframes pktDrop {
+  0% { transform: translateY(0); opacity: 0; }
+  12% { opacity: 1; } 78% { opacity: 1; }
+  92%, 100% { transform: translateY(11vh); opacity: 0; }
+}
+
+/* --- 03 WEIGH STATION / OVERLOOK --- */
+.stn.st3 { width: 24vw; height: 26vh; }
+.st3 .sign { top: -6.5vh; left: 0; }
+.weigh-canopy {
+  position: absolute; top: 2vh; left: 0; width: 52%; height: 3.4vh;
+  background: linear-gradient(180deg, #101a30, #0a101f); border: var(--bd);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+}
+.weigh-canopy::before, .weigh-canopy::after {
+  content: ''; position: absolute; top: 100%; width: 1vw; height: 20.6vh;
+  background: linear-gradient(180deg, #0e1628, #080d18); border: var(--bd-dim);
+}
+.weigh-canopy::before { left: 5%; } .weigh-canopy::after { right: 5%; }
+.weigh-canopy .wc-label {
+  position: absolute; left: 8%; top: 50%; transform: translateY(-50%);
+  font-family: var(--font-head); font-size: clamp(9px, 0.85vw, 15px);
+  letter-spacing: .3em; color: rgba(245,130,11,.6); white-space: nowrap;
+}
+.weigh-canopy .wc-lights {
+  position: absolute; left: 2%; right: 2%; bottom: -2px; height: 3px;
+  background-image: repeating-linear-gradient(90deg, rgba(255,180,80,.75) 0 5px, transparent 5px 1.6vw);
+}
+.weigh-board { /* display board: idle state so it never reads empty */
+  position: absolute; right: 0; bottom: 0; width: 44%; height: 20vh;
+  background: rgba(4,7,16,.92); border: var(--bd); padding: 1.2vh 0.8vw;
+  clip-path: var(--clip-card);
+}
+.weigh-board .wb-title { font-family: var(--font-head); font-size: clamp(10px, 0.95vw, 17px); letter-spacing: .16em; color: var(--white-dim); }
+.weigh-readout { font-family: var(--font-head); font-size: clamp(16px, 1.9vw, 34px); color: var(--amber-lit); letter-spacing: .06em; line-height: 1; margin-top: .3vh; }
+.wb-bars { position: absolute; left: 10%; right: 10%; bottom: 12%; top: 48%; display: flex; align-items: flex-end; gap: 8%; }
+.wb-bars::before { /* faint ruled grid behind the bars (idle texture) */
+  content: ''; position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(180deg, rgba(245,130,11,.09) 0 1px, transparent 1px 24%);
+}
+.wb-bars .bar {
+  flex: 1; height: var(--bh, 60%); position: relative; z-index: 1;
+  background: linear-gradient(180deg, var(--amber-lit), var(--orange));
+  transform: scaleY(0); transform-origin: bottom;
+}
+.wb-bars .bar:nth-child(2) { --bh: 80%; } .wb-bars .bar:nth-child(3) { --bh: 45%; }
+.wb-bars .bar:nth-child(4) { --bh: 95%; } .wb-bars .bar:nth-child(5) { --bh: 70%; }
+.wb-idle {
+  position: absolute; left: 8%; right: 8%; top: 60%; text-align: center;
+  font-family: var(--font-head); font-size: clamp(9px, 0.9vw, 16px);
+  letter-spacing: .3em; color: rgba(245,130,11,.5);
+}
+.pass-stamp {
+  position: absolute; left: 6%; top: 36%; padding: .2vh .6vw; z-index: 2;
+  font-family: var(--font-head); font-size: clamp(13px, 1.4vw, 26px); letter-spacing: .2em;
+  color: var(--blue-accent); border: 2px solid var(--blue-accent);
+  transform: rotate(-8deg); opacity: 0;
+}
+/* recessed scale slab + barrier: children of the tier-3 road (JS sets left%) */
+.weigh-scale {
+  position: absolute; top: -2px; width: 30vw; height: 62%; transform: translateX(-50%);
+  background:
+    linear-gradient(90deg, rgba(255,175,70,.6) 0 0.35vw, transparent 0.35vw calc(100% - 0.35vw), rgba(255,175,70,.6) calc(100% - 0.35vw)),
+    repeating-linear-gradient(90deg, rgba(245,130,11,.08) 0 0.25vw, transparent 0.25vw 3vw),
+    linear-gradient(180deg, #030509, #0b1120);
+  border: 1px solid rgba(245,130,11,.28);
+  box-shadow: inset 0 3px 6px rgba(0,0,0,.85), inset 0 -1px 0 rgba(245,130,11,.12);
+}
+.weigh-scale::before {
+  content: 'SCALE'; position: absolute; left: 0.8vw; top: -2vh;
+  font-family: var(--font-head); font-size: clamp(8px, .7vw, 12px);
+  letter-spacing: .3em; color: rgba(245,130,11,.55);
+}
+.barrier { position: absolute; bottom: 100%; width: 0.8vw; height: 8.5vh; transform: translateX(-50%); background: linear-gradient(180deg, #101a30, #0a101f); border: var(--bd-dim); }
+.barrier-arm {
+  position: absolute; bottom: 84%; left: 0; width: 10vw; height: 0.9vh;
+  transform-origin: 0.4vw 50%;
+  background: repeating-linear-gradient(90deg, var(--orange) 0 1.6vw, #0a0f1e 1.6vw 3.2vw);
+  border: 1px solid rgba(4,7,16,.8);
+}
+.barrier-arm::after { content: ''; position: absolute; right: -2px; top: -3px; width: 5px; height: 5px; background: #ff5a3c; box-shadow: 0 0 8px rgba(255,90,60,.8); }
+
+/* --- 04 SIGNAL TOWER --- */
+.stn.st4 { width: 13vw; height: 30vh; }
+.st4 .sign { top: 2vh; left: 44%; }
+.tower-mast {
+  position: absolute; bottom: 0; left: 18%; width: 2.2vw; height: 82%;
+  background-image:
+    repeating-linear-gradient(60deg, transparent 0 1.2vh, rgba(245,130,11,.16) 1.2vh calc(1.2vh + 1px)),
+    repeating-linear-gradient(-60deg, transparent 0 1.2vh, rgba(245,130,11,.16) 1.2vh calc(1.2vh + 1px)),
+    linear-gradient(90deg, rgba(245,130,11,.3) 0 1px, transparent 1px calc(100% - 1px), rgba(245,130,11,.3) calc(100% - 1px));
+  background-color: rgba(8,13,24,.65);
+}
+.radar-disc {
+  position: absolute; top: 0; left: 2%; width: 6.4vw; height: 6.4vw;
+  border-radius: 50%; border: 1px solid rgba(245,130,11,.35);
+  background: radial-gradient(circle, rgba(12,18,32,.9), rgba(8,13,24,.5) 70%);
+  overflow: hidden;
+}
+.radar-disc::before { content: ''; position: absolute; inset: 22%; border-radius: 50%; border: 1px solid rgba(245,130,11,.22); }
+.radar-disc::after { content: ''; position: absolute; inset: 44%; border-radius: 50%; border: 1px solid rgba(245,130,11,.22); }
+.radar-sweep {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 0deg, rgba(245,130,11,.55), rgba(245,130,11,.12) 24%, transparent 30%);
+  animation: sweep 3s linear infinite; animation-play-state: paused;
+}
+.st-on .radar-sweep { animation-play-state: running; }
+@keyframes sweep { to { transform: rotate(360deg); } }
+.tower-blip { position: absolute; top: -1.6vh; left: 24%; width: .5vw; height: .5vw; border-radius: 50%; background: #ff5a3c; opacity: .2; }
+.st-on .tower-blip { animation: strobe 2s steps(1) infinite; }
+
+/* ===== CLIENT TOWER (valley floor; JS sets top) ===== */
+.client {
+  position: absolute; z-index: 1; left: 2vw; top: 240vh; width: 34vw; height: 62vh;
+  background: linear-gradient(180deg, #0d1526 0%, var(--panel) 40%, #080d18 100%);
+  border: var(--bd-dim); border-bottom: none;
+  clip-path: polygon(24px 0, 100% 0, 100% 100%, 0 100%, 0 24px);
+}
+.client .win-band { background-image: repeating-linear-gradient(90deg,
+    rgba(59,130,246,.16) 0 5%, transparent 5% 12%,
+    rgba(59,130,246,.10) 12% 17%, transparent 17% 26%,
+    rgba(245,130,11,.08) 26% 31%, transparent 31% 40%,
+    rgba(59,130,246,.14) 40% 45%, transparent 45% 56%,
+    rgba(59,130,246,.09) 56% 61%, transparent 61% 72%,
+    rgba(245,130,11,.07) 72% 77%, transparent 77% 88%,
+    rgba(59,130,246,.12) 88% 93%, transparent 93% 100%); }
+.client .win-band.r1 { top: 12%; } .client .win-band.r2 { top: 26%; } .client .win-band.r3 { top: 40%; }
+.client .win-band.r4 { top: 54%; } .client .win-band.r5 { top: 68%; }
+.client .cl-antenna { position: absolute; top: -7vh; left: 32%; width: 2px; height: 7vh; background: rgba(240,240,240,.18); }
+.client .cl-antenna::after { content: ''; position: absolute; top: -4px; left: -3px; width: 8px; height: 8px; border-radius: 50%; background: rgba(255,90,60,.9); animation: strobe 2.4s steps(1) infinite; }
+.client .cl-sign { top: 16%; left: 7%; font-size: clamp(14px, 1.4vw, 26px); }
+.client-dock {
+  position: absolute; bottom: 0; left: 12%; width: 26%; height: 22%;
+  background: linear-gradient(180deg, #05080f, #03050b); border: 1px solid rgba(59,130,246,.25); border-bottom: none;
+}
+.dock-glow { position: absolute; inset: 30% -30% -10% -30%; opacity: 0; }
+.dock-glow.amber { background: radial-gradient(ellipse at 50% 100%, rgba(255,170,60,.30), transparent 70%); opacity: .5; }
+.dock-glow.blue { background: radial-gradient(ellipse at 50% 100%, rgba(0,122,255,.34), transparent 70%); }
+/* ===== TRUCK RIG (z5; ground-contact point = 50%, 63.48% of the box) =====
+   .truck-pos  x/y/rotation from the path (JS)   origin = contact point
+   .t-flip     scaleX(±1) at hairpins — pitch/beam/hubs mirror automatically
+   .t-pitch    launch/brake pitch (timeline)      origin = rear axle
+   .t-bob      suspension bob (ticker)                                   */
+.truck-pos {
+  position: absolute; z-index: 5;
+  left: calc(16vw - var(--truckW) / 2);           /* static-mode park position */
+  top: calc(74vh - var(--truckH) * 0.6348);
+  width: var(--truckW); height: var(--truckH);
+  transform-origin: 50% 63.48%;
+  pointer-events: none;
+}
+.t-flip { position: absolute; inset: 0; }
+.t-pitch { position: absolute; inset: 0; transform-origin: 58% 60%; }
+.t-bob { position: absolute; inset: 0; }
+.t-bob img { display: block; width: 100%; height: 100%; }
+/* trailer logo cover: the baked "ACS" mirrors when the rig flips — while
+   flipped, a trailer-colored patch + counter-mirrored upright ACS covers it
+   (baked logo occupies ~x 8-16%, y 42-52% of the image box) */
+.logo-fix {
+  position: absolute; left: 7%; top: 40.6%; width: 10.6%; height: 12.6%;
+  background: #171b24;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head); color: var(--orange);
+  font-size: calc(var(--truckW) * 0.037); letter-spacing: .04em; line-height: 1;
+  transform: scaleX(-1);       /* reads upright once the parent flip mirrors it */
+  opacity: 0; pointer-events: none;
+}
+.flipped .logo-fix { opacity: 1; }
+/* 6 hub overlays over the baked wheels (measured % of the image box) */
+.hub {
+  position: absolute; width: 3.05%; aspect-ratio: 1; border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(circle at 50% 50%, #262c38 0 26%, transparent 26.5%),
+    repeating-conic-gradient(from 0deg, rgba(20,24,32,.95) 0deg 24deg, rgba(190,196,208,.9) 24deg 60deg),
+    radial-gradient(circle, #c9ced8 0 100%);
+  border: 1px solid rgba(15,18,26,.9);
+}
+.hub::after { content: ''; position: absolute; inset: 30%; border-radius: 50%; border: 1px solid rgba(220,225,235,.8); background: radial-gradient(circle, #3a4150 0 40%, #12161f 100%); }
+.hub.h1 { left: 12.61%; top: 59.56%; } .hub.h2 { left: 17.81%; top: 59.56%; }
+.hub.h3 { left: 22.80%; top: 59.58%; } .hub.h4 { left: 55.76%; top: 59.50%; width: 3.2%; }
+.hub.h5 { left: 61.51%; top: 59.51%; width: 3.2%; } .hub.h6 { left: 88.68%; top: 59.96%; }
+/* headlight beam — ticker scales its length with velocity so it never
+   lances through a building at a stop (collapses to a short pool) */
+.beam {
+  position: absolute; left: 93%; top: 44%; width: 34vw; height: 34%;
+  transform-origin: left 40%;
+  background: linear-gradient(90deg, rgba(255,175,70,.5), rgba(255,165,60,.18) 45%, rgba(255,160,55,.04) 78%, transparent);
+  clip-path: polygon(0 34%, 100% 0, 100% 100%, 0 52%);
+  mix-blend-mode: screen;
+}
+.beam-src {
+  position: absolute; left: 92.5%; top: 50%; width: 7%; aspect-ratio: 1.6;
+  transform: translate(-30%, -50%);
+  background: radial-gradient(ellipse, rgba(255,200,120,.9), rgba(255,160,50,.25) 55%, transparent 72%);
+  mix-blend-mode: screen;
+}
+.light-pool {
+  position: absolute; left: 88%; top: 62%; width: 46%; height: 16%;
+  background: radial-gradient(ellipse at 20% 50%, rgba(255,170,60,.22), transparent 70%);
+  mix-blend-mode: screen;
+}
+.brake-glow {
+  position: absolute; left: -1.5%; top: 46%; width: 8%; height: 14%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,70,40,.85), rgba(255,90,50,.3) 55%, transparent 75%);
+  mix-blend-mode: screen; opacity: 0;
+}
+.antenna {
+  position: absolute; left: 71.5%; top: 20.5%; width: 2px; height: 14.5%;
+  background: linear-gradient(180deg, rgba(200,205,215,.75), rgba(120,126,138,.5));
+  transform-origin: bottom center;
+}
+.antenna::before { content: ''; position: absolute; top: -3px; left: -1.5px; width: 5px; height: 5px; border-radius: 50%; background: rgba(255,120,60,.9); }
+.puff {
+  position: absolute; left: 67%; top: 30%; width: 2vw; height: 2vw; border-radius: 50%;
+  background: radial-gradient(circle, rgba(190,200,215,.28), rgba(160,170,190,.12) 55%, transparent 72%);
+  opacity: 0;
+}
+.vapor {
+  position: absolute; width: 3.6vw; height: 2.2vw; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(200,210,225,.4), rgba(170,180,200,.14) 55%, transparent 75%);
+  opacity: 0; top: 56%;
+}
+.vapor.v1 { left: 50%; } .vapor.v2 { left: 82%; }
+/* radar scan-trace: thin corner brackets + top hairline (subtle, not a box) */
+.scan-trace { position: absolute; left: 3%; top: 33.5%; width: 62.5%; height: 22.5%; opacity: 0; }
+.scan-trace::before, .scan-trace::after {
+  content: ''; position: absolute; width: 1.2vw; height: 1.2vw;
+  border: 0 solid rgba(255, 175, 70, .95);
+}
+.scan-trace::before { left: 0; top: 0; border-top-width: 2px; border-left-width: 2px; }
+.scan-trace::after { right: 0; bottom: 0; border-bottom-width: 2px; border-right-width: 2px; }
+.scan-trace { background: linear-gradient(90deg, transparent, rgba(245,130,11,.3), transparent) top / 100% 1px no-repeat; }
+
+/* ===== IGNITION SHADE (z8 in viewport) ===== */
+.shade { position: absolute; inset: 0; z-index: 8; background: #02040a; opacity: 0; pointer-events: none; }
+.shade::after { /* HQ dock slit ghost at its p=0 screen position */
+  content: ''; position: absolute; top: 54.6vh; left: 11.5vw; width: 8.5vw; height: 1vh;
+  background: linear-gradient(180deg, rgba(255,185,85,.95), rgba(245,130,11,.6));
+  box-shadow: 0 -1vh 4vh 1vh rgba(255,170,60,.18), 0 1vh 3vh rgba(255,170,60,.22);
+  animation: slitPulse 2.6s ease-in-out infinite;
+}
+.shade::before {
+  content: 'SCROLL TO START'; position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%);
+  font-family: var(--font-body); font-size: .68rem; letter-spacing: .3em; color: rgba(255,180,90,.6);
+}
+.vignette {
+  position: absolute; inset: 0; z-index: 8; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(2,4,10,.55) 100%);
+}
+
+/* ===== HUD (z9, viewport) ===== */
+.hud { position: absolute; inset: 0; z-index: 9; pointer-events: none; }
+.odometer {
+  position: absolute; top: 3vh; right: 3vw;
+  font-family: var(--font-head); font-size: clamp(14px, 1.3vw, 22px); letter-spacing: .18em;
+  color: var(--white-dim); background: rgba(4,7,16,.92); border: var(--bd-dim);
+  padding: .5vh 1vw;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+  opacity: 0;
+}
+.odometer .od-mi { color: var(--amber-lit); }
+.prog-rail { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(240,240,240,.06); }
+.prog-fill { position: absolute; inset: 0; background: linear-gradient(90deg, var(--orange), var(--amber-lit)); transform: scaleX(0); transform-origin: left; }
+.delivered {
+  position: absolute; top: 24vh; left: 50%; padding: .6vh 2vw;
+  font-family: var(--font-head); font-size: clamp(2.4rem, 5vw, 5rem); letter-spacing: .16em;
+  color: var(--blue-accent); border: 3px solid var(--blue-accent);
+  transform: translateX(-50%) rotate(-5deg); opacity: 0;
+}
+
+/* ===== STEP CARDS (static default = stacked flow; gsap mode = HUD panels) ===== */
+.cards { display: grid; gap: 1.2rem; padding: 3rem 6vw 4rem; max-width: 1100px; margin: 0 auto; }
+.card {
+  position: relative; background: rgba(12, 18, 32, .92); border: var(--bd);
+  clip-path: var(--clip-card); padding: 1.6rem 1.8rem 1.5rem 5.4rem;
+}
+.card .c-num {
+  position: absolute; left: 1.4rem; top: 1.1rem;
+  font-family: var(--font-head); font-size: 2.6rem; line-height: 1; color: transparent;
+  -webkit-text-stroke: 1px var(--orange);
+}
+.card h3 { font-size: clamp(1.5rem, 2.2vw, 2.2rem); color: var(--white); margin-bottom: .45rem; }
+.card h3 .c-tag { color: var(--orange); }
+.card p { font-size: clamp(.82rem, 1vw, .95rem); font-weight: 300; color: var(--white-dim); max-width: 52ch; }
+.card .c-rule { position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: linear-gradient(180deg, var(--orange), transparent 80%); }
+.card.arrival-card { text-align: center; padding: 2rem 1.5rem; }
+.card.arrival-card .a-title { font-family: var(--font-head); font-size: clamp(1.8rem, 3vw, 3rem); letter-spacing: .1em; color: var(--white); }
+.card.arrival-card .a-title .accent { color: var(--blue-accent); }
+.card.arrival-card p { margin: .5rem auto 1.2rem; }
+/* .btn-primary reused from site styles */
+.gsap-on .cards { display: block; position: absolute; inset: 0; z-index: 10; padding: 0; max-width: none; margin: 0; pointer-events: none; }
+.gsap-on .card { position: absolute; right: 5vw; top: 11vh; width: min(34vw, 500px); visibility: hidden; }
+.gsap-on .card.arrival-card { right: auto; left: 50%; top: 42vh; width: min(44vw, 560px); margin-left: max(-22vw, -280px); background: none; border: none; clip-path: none; }
+
+/* ===== MOBILE (<=768px): portrait switchback, 2 longer tiers ===== */
+@media (max-width: 768px) {
+  :root { --truckW: 60vw; --roadH: 3.6svh; }
+  .mountain { width: 130vw; height: 300svh; }
+  html:not(.gsap-on) .mountain { transform: translateY(-6svh); }
+  .truck-pos { left: calc(18vw - var(--truckW) / 2); top: calc(62svh - var(--truckH) * 0.6348); }
+  .beam { width: 52vw; }
+  .hub.h2, .hub.h3, .hub.h5 { display: none; }  /* 3 hub overlays */
+  .hq { left: 1vw; top: 18svh; width: 74vw; height: 44svh; }
+  .hq .hq-sign { font-size: 15px; }
+  .world-title { left: 48vw; top: 50svh; width: 54vw; font-size: clamp(1.6rem, 8vw, 2.6rem); }
+  #r-t1a { left: 2vw; top: 62svh; width: 44vw; transform: none; }
+  #r-t1b, #r-t2, #r-t3, #r-t4a, #r-t4b { display: none; }
+  #r-m-t1b, #r-m-t2a, #r-m-t2b { display: block; }
+  .stn.st1 { width: 44vw; height: 17svh; }
+  .st1 .sign, .st3 .sign { font-size: 12px; top: -5svh; }
+  .st4 .sign { font-size: 11px; }
+  .scan-arch { width: 56vw; height: 13svh; }
+  .scan-arch .sign { font-size: 11px; }
+  .stn.st3 { width: 52vw; height: 20svh; }
+  .weigh-canopy::before, .weigh-canopy::after { height: 15svh; }
+  .weigh-board { height: 15svh; }
+  .weigh-scale { width: 56vw; }
+  .barrier { width: 2vw; height: 7svh; }
+  .barrier-arm { width: 26vw; height: 0.8svh; bottom: 82%; transform-origin: 1vw 50%; }
+  .stn.st4 { width: 30vw; height: 24svh; }
+  .radar-disc { width: 15vw; height: 15vw; }
+  .tower-mast { width: 5vw; }
+  .cliff { width: 44vw; height: 44svh; }
+  .chev { width: 30vw; height: 6svh; }
+  .chev::before { background: repeating-linear-gradient(115deg, var(--orange) 0 2.4vw, #0a0f1e 2.4vw 4.8vw); }
+  .client { width: 64vw; height: 52svh; }
+  .client .cl-sign { font-size: 13px; }
+  .puff { width: 5vw; height: 5vw; }
+  .vapor { width: 9vw; height: 5.5vw; }
+  .scan-trace::before, .scan-trace::after { width: 3vw; height: 3vw; }
+  .shade::after { top: 54.5svh; left: 14vw; width: 14vw; }
+  .odometer { top: 2vh; right: 4vw; font-size: 13px; }
+  .delivered { top: 16svh; font-size: 2.2rem; }
+  .road .rm { width: 8vw; font-size: 9px; }
+  .gsap-on .card {
+    right: auto; left: 0; top: auto; bottom: 0; width: 100%;
+    padding: 1.2rem 1.2rem 1.6rem 4.6rem;
+    clip-path: polygon(0 22px, 22px 0, 100% 0, 100% 100%, 0 100%);
+    border-bottom: none;
+  }
+  .gsap-on .card .c-num { left: 1.1rem; top: .9rem; font-size: 2.1rem; }
+  .gsap-on .card.arrival-card { left: 0; margin-left: 0; width: 100%; bottom: 0; top: auto; padding: 1.4rem 1rem 2rem; background: rgba(4,7,16,.9); }
+}
+/* mobile-only road bars (hidden on desktop) */
+#r-m-t1b, #r-m-t2a, #r-m-t2b { display: none; }
+
+/* ===== REDUCED MOTION / NO-GSAP: static composed scene ===== */
+html:not(.gsap-on) .shade { display: none; }
+html:not(.gsap-on) .beam { opacity: .5; transform: scaleX(.4); }
+html:not(.gsap-on) .odometer, html:not(.gsap-on) .delivered { display: none; }
+html:not(.gsap-on) .static-note {
+  position: absolute; z-index: 9; bottom: 2vh; left: 50%; transform: translateX(-50%);
+  font-size: .7rem; letter-spacing: .25em; text-transform: uppercase; color: var(--white-dim);
+}
+.gsap-on .static-note { display: none; }
 
 /* ===== SERVICES ===== */
 .services {
@@ -825,15 +1167,6 @@ footer {
   .nav-right { gap: 1rem; }
   .nav-link { display: none; }
 
-  .pipe-module {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    text-align: center;
-  }
-  .pipe-module.reverse { direction: ltr; }
-  .pipe-dot-wrap { display: none; }
-  .pipe-visual { min-height: 160px; }
-
   .services-grid {
     grid-template-columns: 1fr;
   }
@@ -844,9 +1177,8 @@ footer {
     gap: 1.5rem;
   }
 
-  /* Hide the desktop-only cursor canvas + the off-center truck/road (they overlap stacked content) */
+  /* Hide the desktop-only cursor canvas */
   #rain-canvas { display: none; }
-  #road-system, #acs-truck { display: none; }
   /* Cut compositor cost on phones: solid nav instead of backdrop-blur over video, drop grain overlay */
   nav { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(4,7,16,0.92); }
   body::after { display: none; }
@@ -951,23 +1283,6 @@ footer {
 }
 .skip-link:focus { left: 8px; top: 8px; }
 
-/* ===== TRUCK DESTINATION ===== */
-.truck-destination {
-  position: relative; text-align: center; margin-top: 3rem; padding: 3rem 1rem;
-  border-top: 1px solid rgba(245,130,11,.08);
-}
-.dest-building {
-  display: inline-flex; flex-direction: column; align-items: center; gap: .8rem;
-}
-.dest-icon {
-  width: 60px; height: 60px; background: rgba(245,130,11,.06);
-  border: 1px solid rgba(245,130,11,.12); display: flex; align-items: center;
-  justify-content: center; clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-}
-.dest-icon svg { width: 24px; height: 24px; }
-.dest-label { font-family: var(--font-head); font-size: 1rem; letter-spacing: .1em; color: var(--orange); }
-.dest-sub { font-size: .72rem; color: var(--white-dim); }
-
 /* ===== REDUCED MOTION ===== */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -976,7 +1291,7 @@ footer {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  .gr, .pipe-info, .pipe-visual, .pipe-dot { opacity: 1 !important; transform: none !important; }
+  .gr { opacity: 1 !important; transform: none !important; }
 }
 </style>
 </head>
@@ -1011,6 +1326,7 @@ footer {
   <div class="hero-overlay-top"></div>
   <div class="hero-overlay-bottom"></div>
   <div class="hero-vignette"></div>
+  <div class="hero-dim" aria-hidden="true"></div>
   <div class="hero-content">
     <p class="section-tag hero-anim">— Custom Software Engineering —</p>
     <h1 class="hero-h1 hero-anim">IF YOU CAN <span class="accent">IMAGINE</span> IT,<br>WE CAN <span class="accent">BUILD</span> IT.</h1>
@@ -1025,187 +1341,177 @@ footer {
 <!-- TRANSITION ZONE -->
 <section class="transition-zone">
   <div class="transition-overlay-top"></div>
+  <div class="tz-ridge" aria-hidden="true"></div>
+  <div class="tz-glow" aria-hidden="true"></div>
   <div class="transition-overlay-bottom"></div>
   <div class="transition-content">
     <h2 class="gr">WE ENGINEER YOUR VISION.</h2>
-    <p class="gr">From concept to deployment — precision at every phase.</p>
   </div>
 </section>
 
-<!-- PIPELINE -->
-<section class="pipeline" id="pipeline">
-  <video class="pipeline-bg-video" muted loop playsinline preload="none" aria-hidden="true" data-lazyplay>
-    <source src="abstract-bg.mp4" type="video/mp4">
-  </video>
-  <div class="pipeline-overlay"></div>
-  <!-- Road + Truck System -->
-  <div id="road-system" style="position:absolute;left:50%;top:0;bottom:0;transform:translateX(-50%);z-index:2;width:60px;">
-    <!-- Road surface -->
-    <div style="position:absolute;inset:0;background:rgba(255,255,255,.02);border-left:1px solid rgba(255,255,255,.04);border-right:1px solid rgba(255,255,255,.04);"></div>
-    <!-- Center lane dashes -->
-    <div style="position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);background:repeating-linear-gradient(to bottom,rgba(245,130,11,.12) 0px,rgba(245,130,11,.12) 20px,transparent 20px,transparent 45px);"></div>
-    <!-- Orange glow trail (fills as truck passes) -->
-    <div id="road-glow" style="position:absolute;left:50%;top:0;width:4px;transform:translateX(-50%);height:0%;background:linear-gradient(to bottom,rgba(245,130,11,.2),rgba(245,130,11,.05));box-shadow:0 0 20px rgba(245,130,11,.1);transition:height .05s;"></div>
+<!-- HOW IT WORKS: switchback journey (flag GSAP mode early; removed if GSAP fails or reduced motion) -->
+<script>document.documentElement.classList.add('gsap-on');</script>
+
+<section class="journey" id="pipeline" aria-label="How it works — from forge to deploy">
+  <div class="stage">
+
+    <!-- z1 sky (viewport-fixed) -->
+    <div class="l-sky"><div class="stars"></div></div>
+
+    <!-- z2 far ridges (0.18x camera) -->
+    <div class="l-ridges">
+      <div class="ridge r1"><div class="ridge-dots"></div></div>
+      <div class="ridge r2"></div>
+    </div>
+
+    <!-- z3 mountain plane: roads, buildings, stations, truck, cliffs -->
+    <div class="mountain">
+
+      <!-- roads (JS lays out exact geometry; ids match the route config) -->
+      <div class="road" id="r-t1a"></div>
+      <div class="road" id="r-t1b"><span class="rm" style="left:32%">MI 1</span></div>
+      <div class="road" id="r-t2"><span class="rm" style="left:42%">MI 2</span></div>
+      <div class="road" id="r-t3"><span class="rm" style="left:30%">MI 3</span></div>
+      <div class="road" id="r-t4a"><span class="rm" style="left:55%">MI 4</span></div>
+      <div class="road" id="r-t4b"></div>
+      <!-- mobile 2-tier variant -->
+      <div class="road" id="r-m-t1b"><span class="rm" style="left:34%">MI 1</span></div>
+      <div class="road" id="r-m-t2a"><span class="rm" style="left:44%">MI 3</span></div>
+      <div class="road" id="r-m-t2b"></div>
+
+      <!-- HQ complex on the top plateau -->
+      <div class="hq">
+        <div class="hq-stack s1"></div><div class="hq-stack s2"></div>
+        <div class="sign hq-sign">ACS ENGINEERING HQ</div>
+        <div class="win-band r1"></div><div class="win-band r2"></div><div class="win-band r3"></div>
+        <div class="hq-dock"><div class="dock-slit"></div><div class="dock-spill"></div></div>
+      </div>
+
+      <div class="world-title"><span class="accent">FROM FORGE</span><br>TO DEPLOY<span class="wt-sub">HOW WE BUILD AND SHIP.</span></div>
+
+      <!-- 01 Forge depot (beside the HQ dock; full stop) -->
+      <div class="stn st1">
+        <div class="pad"></div>
+        <div class="sign">01 · THE FORGE<span class="s-sub">DEDICATED SERVERS</span></div>
+        <div class="depot-bay"><div class="rack"></div><div class="rack"></div><div class="rack"></div></div>
+        <div class="crane-light"></div>
+      </div>
+
+      <!-- 02 CI/CD scan arch (re-parented onto its tier road by JS; rolling pass) -->
+      <div class="scan-arch" id="scan-arch">
+        <div class="arch-leg al"></div><div class="arch-leg ar"></div>
+        <div class="arch-beam">
+          <div class="sign">02 · IN TRANSIT<span class="s-sub">BUILT. TESTED. VALIDATED.</span></div>
+        </div>
+        <div class="hex-pipe"></div>
+        <div class="packet p1"></div><div class="packet p2"></div><div class="packet p3"></div>
+      </div>
+
+      <!-- 03 weigh station / overlook (full stop) -->
+      <div class="stn st3">
+        <div class="pad"></div>
+        <div class="sign">03 · READY TO DEPLOY<span class="s-sub">LOAD TESTING</span></div>
+        <div class="weigh-canopy"><span class="wc-label">INSPECTION BAY 01</span><span class="wc-lights"></span></div>
+        <div class="weigh-board">
+          <div class="wb-title">GROSS LOAD</div>
+          <div class="weigh-readout">0.0 T</div>
+          <div class="wb-bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+          <div class="wb-idle">AWAITING VEHICLE</div>
+          <div class="pass-stamp">PASS</div>
+        </div>
+      </div>
+      <!-- scale slab + barrier live ON the road (re-parented by JS) -->
+      <div class="weigh-scale" id="weigh-scale"></div>
+      <div class="barrier" id="barrier"><div class="barrier-arm"></div></div>
+
+      <!-- 04 signal tower (steady drive-by) -->
+      <div class="stn st4">
+        <div class="pad"></div>
+        <div class="tower-mast"></div>
+        <div class="radar-disc"><div class="radar-sweep"></div></div>
+        <div class="tower-blip"></div>
+        <div class="sign">04 · ONGOING SUPPORT<span class="s-sub">24/7 MONITORING</span></div>
+      </div>
+
+      <!-- client tower at the valley floor -->
+      <div class="client">
+        <div class="cl-antenna"></div>
+        <div class="sign cl-sign">CLIENT SITE<span class="s-sub">DOCK 01</span></div>
+        <div class="win-band r1"></div><div class="win-band r2"></div><div class="win-band r3"></div>
+        <div class="win-band r4"></div><div class="win-band r5"></div>
+        <div class="client-dock"><div class="dock-glow amber"></div><div class="dock-glow blue"></div></div>
+      </div>
+
+      <!-- truck rig: drives the path; camera chases it -->
+      <div class="truck-pos">
+        <div class="t-flip">
+          <div class="t-pitch">
+            <div class="t-bob">
+              <div class="beam"></div>
+              <div class="light-pool"></div>
+              <img src="acs-truck.png" alt="ACS delivery truck">
+              <div class="logo-fix" aria-hidden="true">ACS</div>
+              <div class="beam-src"></div>
+              <div class="hub h1"></div><div class="hub h2"></div><div class="hub h3"></div>
+              <div class="hub h4"></div><div class="hub h5"></div><div class="hub h6"></div>
+              <div class="brake-glow"></div>
+              <div class="antenna"></div>
+              <div class="scan-trace"></div>
+              <div class="vapor v1"></div><div class="vapor v2"></div>
+              <div class="puff"></div><div class="puff"></div><div class="puff"></div>
+              <div class="puff"></div><div class="puff"></div><div class="puff"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- hairpin cliffs + chevron boards (occlude the direction flips) -->
+      <div class="cliff cr" id="cliff1"></div>
+      <div class="chev" id="chev1"><span class="chev-label">SWITCHBACK 01</span></div>
+      <div class="cliff cl" id="cliff2"></div>
+      <div class="chev left" id="chev2"><span class="chev-label">SWITCHBACK 02</span></div>
+      <div class="cliff cr" id="cliff3"></div>
+      <div class="chev" id="chev3"><span class="chev-label">SWITCHBACK 03</span></div>
+    </div>
+
+    <!-- z8 shade + vignette, z9 HUD -->
+    <div class="shade" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="hud">
+      <div class="odometer"><span class="od-mi">MI 0.0</span> · <span class="od-step">01/04</span></div>
+      <div class="delivered">DELIVERED</div>
+      <div class="prog-rail"><div class="prog-fill"></div></div>
+    </div>
+    <p class="static-note">Static view — motion reduced</p>
   </div>
-  <!-- Truck -->
-  <img id="acs-truck" src="acs-truck.png" alt="" style="position:absolute;left:50%;top:0;transform:translateX(-50%) translateY(-50%);z-index:4;width:200px;height:auto;pointer-events:none;filter:drop-shadow(0 6px 30px rgba(0,0,0,.7)) drop-shadow(0 0 15px rgba(245,130,11,.08));opacity:0.95;">
-  <div class="pipeline-inner">
-    <div class="pipeline-header">
-      <p class="section-tag gr">— How It Works —</p>
-      <h2 class="gr">FROM <span class="accent">FORGE</span> TO DEPLOY.</h2>
-    </div>
 
-    <!-- Origin: ACS Factory -->
-    <div class="gr" style="text-align:center;margin-bottom:2rem;">
-      <svg width="280" height="90" viewBox="0 0 280 90" fill="none" aria-hidden="true" style="display:block;margin:0 auto .6rem;opacity:.7;">
-        <!-- Factory building -->
-        <rect x="60" y="20" width="160" height="70" fill="#0a0f1e" stroke="rgba(245,130,11,.15)" stroke-width="1"/>
-        <!-- Roof -->
-        <polygon points="55,20 140,2 225,20" fill="#080d18" stroke="rgba(245,130,11,.1)" stroke-width="0.5"/>
-        <!-- ACS sign -->
-        <text x="140" y="14" text-anchor="middle" fill="#F5820B" font-family="Bebas Neue,sans-serif" font-size="10" letter-spacing="3" opacity=".6">ACS</text>
-        <!-- Smokestacks -->
-        <rect x="85" y="2" width="10" height="18" fill="#080d18" stroke="rgba(255,255,255,.04)" stroke-width="0.5"/>
-        <rect x="185" y="2" width="10" height="18" fill="#080d18" stroke="rgba(255,255,255,.04)" stroke-width="0.5"/>
-        <!-- Windows row 1 -->
-        <rect x="75" y="30" width="14" height="10" fill="rgba(245,130,11,.12)"/>
-        <rect x="95" y="30" width="14" height="10" fill="rgba(59,130,246,.08)"/>
-        <rect x="115" y="30" width="14" height="10" fill="rgba(245,130,11,.1)"/>
-        <rect x="135" y="30" width="14" height="10" fill="rgba(59,130,246,.1)"/>
-        <rect x="155" y="30" width="14" height="10" fill="rgba(245,130,11,.08)"/>
-        <rect x="175" y="30" width="14" height="10" fill="rgba(59,130,246,.12)"/>
-        <rect x="195" y="30" width="14" height="10" fill="rgba(245,130,11,.1)"/>
-        <!-- Windows row 2 -->
-        <rect x="75" y="48" width="14" height="10" fill="rgba(59,130,246,.08)"/>
-        <rect x="95" y="48" width="14" height="10" fill="rgba(245,130,11,.1)"/>
-        <rect x="115" y="48" width="14" height="10" fill="rgba(59,130,246,.1)"/>
-        <rect x="135" y="48" width="14" height="10" fill="rgba(245,130,11,.12)"/>
-        <rect x="155" y="48" width="14" height="10" fill="rgba(59,130,246,.08)"/>
-        <rect x="175" y="48" width="14" height="10" fill="rgba(245,130,11,.1)"/>
-        <rect x="195" y="48" width="14" height="10" fill="rgba(59,130,246,.1)"/>
-        <!-- Loading dock door — where truck exits -->
-        <rect x="120" y="64" width="40" height="26" fill="rgba(245,130,11,.06)" stroke="rgba(245,130,11,.15)" stroke-width="0.5"/>
-        <!-- Dock door glow -->
-        <rect x="122" y="66" width="36" height="22" fill="rgba(245,130,11,.04)"/>
-        <!-- Left wing -->
-        <rect x="10" y="40" width="50" height="50" fill="#080d18" stroke="rgba(255,255,255,.03)" stroke-width="0.5"/>
-        <rect x="18" y="48" width="10" height="7" fill="rgba(245,130,11,.06)"/>
-        <rect x="34" y="48" width="10" height="7" fill="rgba(59,130,246,.06)"/>
-        <rect x="18" y="60" width="10" height="7" fill="rgba(59,130,246,.05)"/>
-        <rect x="34" y="60" width="10" height="7" fill="rgba(245,130,11,.05)"/>
-        <!-- Right wing -->
-        <rect x="220" y="40" width="50" height="50" fill="#080d18" stroke="rgba(255,255,255,.03)" stroke-width="0.5"/>
-        <rect x="228" y="48" width="10" height="7" fill="rgba(59,130,246,.06)"/>
-        <rect x="244" y="48" width="10" height="7" fill="rgba(245,130,11,.06)"/>
-        <rect x="228" y="60" width="10" height="7" fill="rgba(245,130,11,.05)"/>
-        <rect x="244" y="60" width="10" height="7" fill="rgba(59,130,246,.05)"/>
-        <!-- Ground -->
-        <line x1="0" y1="90" x2="280" y2="90" stroke="rgba(255,255,255,.04)" stroke-width="0.5"/>
-      </svg>
-      <div style="font-family:var(--font-head);font-size:1rem;letter-spacing:.12em;color:var(--orange);opacity:.7;">ACS ENGINEERING HQ</div>
-      <div style="font-size:.68rem;color:var(--white-dim);margin-top:.15rem;">Where your software is forged.</div>
-    </div>
-
-    <!-- Module 1: The Forge -->
-    <div class="pipe-module" data-module="0">
-      <div class="pipe-info">
-        <h3>THE FORGE</h3>
-        <p>Your project spins up on dedicated servers purpose-built for performance. Bare metal. No shared resources. Full power from day one.</p>
-      </div>
-      <div class="pipe-dot-wrap"><div class="pipe-dot">01</div></div>
-      <div class="pipe-visual">
-        <div class="scan-line"></div>
-        <div class="server-rack" id="server-rack"></div>
-      </div>
-    </div>
-
-    <!-- Module 2: In Transit -->
-    <div class="pipe-module reverse" data-module="1">
-      <div class="pipe-info">
-        <h3>IN TRANSIT</h3>
-        <p>Code moves through automated pipelines — built, tested, and validated at every stage before it ever reaches production.</p>
-      </div>
-      <div class="pipe-dot-wrap"><div class="pipe-dot">02</div></div>
-      <div class="pipe-visual">
-        <div class="pipeline-flow">
-          <div class="hex-node">
-            <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          </div>
-          <div class="flow-line"><div class="flow-dot"></div></div>
-          <div class="hex-node">
-            <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-          </div>
-          <div class="flow-line"><div class="flow-dot" style="animation-delay:0.5s"></div></div>
-          <div class="hex-node">
-            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Module 3: Ready to Deploy -->
-    <div class="pipe-module" data-module="2">
-      <div class="pipe-info">
-        <h3>READY TO DEPLOY</h3>
-        <p>Performance metrics verified. Load-tested. Optimized. Your application is cleared for launch with zero guesswork.</p>
-      </div>
-      <div class="pipe-dot-wrap"><div class="pipe-dot">03</div></div>
-      <div class="pipe-visual">
-        <div class="bar-chart" id="bar-chart"></div>
-        <div class="bar-label">Standby</div>
-      </div>
-    </div>
-
-    <!-- Module 4: Ongoing Support -->
-    <div class="pipe-module reverse" data-module="3">
-      <div class="pipe-info">
-        <h3>ONGOING SUPPORT</h3>
-        <p>24/7 monitoring, rapid incident response, and continuous optimization. We don't just launch — we stand watch.</p>
-      </div>
-      <div class="pipe-dot-wrap"><div class="pipe-dot">04</div></div>
-      <div class="pipe-visual">
-        <div class="radar-wrap">
-          <div class="radar-ring"></div>
-          <div class="radar-ring"></div>
-          <div class="radar-ring"></div>
-          <div class="radar-sweep"></div>
-          <div class="radar-center"></div>
-          <div class="radar-label">Standby</div>
-        </div>
-      </div>
-    </div>
-    <!-- Truck Destination — Client Facility -->
-    <div class="truck-destination gr" style="margin-top:2rem;padding:2.5rem 1rem;border-top:1px solid rgba(245,130,11,.06);text-align:center;">
-      <!-- Building silhouette -->
-      <svg width="240" height="80" viewBox="0 0 240 80" fill="none" aria-hidden="true" style="margin:0 auto 1rem;display:block;opacity:.6;">
-        <!-- Main building -->
-        <rect x="70" y="15" width="100" height="65" fill="#0a0f1e" stroke="rgba(245,130,11,.12)" stroke-width="1"/>
-        <!-- Windows (lit up) -->
-        <rect x="82" y="25" width="12" height="8" fill="rgba(245,130,11,.15)"/><rect x="100" y="25" width="12" height="8" fill="rgba(59,130,246,.1)"/>
-        <rect x="118" y="25" width="12" height="8" fill="rgba(245,130,11,.1)"/><rect x="136" y="25" width="12" height="8" fill="rgba(59,130,246,.15)"/>
-        <rect x="82" y="40" width="12" height="8" fill="rgba(59,130,246,.12)"/><rect x="100" y="40" width="12" height="8" fill="rgba(245,130,11,.12)"/>
-        <rect x="118" y="40" width="12" height="8" fill="rgba(245,130,11,.15)"/><rect x="136" y="40" width="12" height="8" fill="rgba(59,130,246,.1)"/>
-        <rect x="82" y="55" width="12" height="8" fill="rgba(245,130,11,.1)"/><rect x="100" y="55" width="12" height="8" fill="rgba(59,130,246,.12)"/>
-        <rect x="118" y="55" width="12" height="8" fill="rgba(59,130,246,.1)"/><rect x="136" y="55" width="12" height="8" fill="rgba(245,130,11,.12)"/>
-        <!-- Door -->
-        <rect x="108" y="60" width="24" height="20" fill="rgba(245,130,11,.08)" stroke="rgba(245,130,11,.15)" stroke-width="0.5"/>
-        <!-- Left wing -->
-        <rect x="30" y="35" width="40" height="45" fill="#080d18" stroke="rgba(255,255,255,.03)" stroke-width="0.5"/>
-        <rect x="38" y="42" width="8" height="6" fill="rgba(59,130,246,.08)"/><rect x="52" y="42" width="8" height="6" fill="rgba(245,130,11,.08)"/>
-        <rect x="38" y="54" width="8" height="6" fill="rgba(245,130,11,.06)"/><rect x="52" y="54" width="8" height="6" fill="rgba(59,130,246,.06)"/>
-        <!-- Right wing -->
-        <rect x="170" y="35" width="40" height="45" fill="#080d18" stroke="rgba(255,255,255,.03)" stroke-width="0.5"/>
-        <rect x="178" y="42" width="8" height="6" fill="rgba(245,130,11,.08)"/><rect x="192" y="42" width="8" height="6" fill="rgba(59,130,246,.08)"/>
-        <rect x="178" y="54" width="8" height="6" fill="rgba(59,130,246,.06)"/><rect x="192" y="54" width="8" height="6" fill="rgba(245,130,11,.06)"/>
-        <!-- Antenna -->
-        <line x1="120" y1="15" x2="120" y2="4" stroke="rgba(255,255,255,.1)" stroke-width="0.8"/>
-        <circle cx="120" cy="3" r="2" fill="rgba(245,130,11,.3)"/>
-        <!-- Ground line -->
-        <line x1="10" y1="80" x2="230" y2="80" stroke="rgba(255,255,255,.04)" stroke-width="0.5"/>
-      </svg>
-      <div style="font-family:var(--font-head);font-size:1.2rem;letter-spacing:.12em;color:var(--orange);margin-bottom:.3rem;">DELIVERED TO CLIENT</div>
-      <div style="font-size:.75rem;color:var(--white-dim);">Your custom software — live, monitored, and performing.</div>
-    </div>
+  <!-- step cards: HUD overlays in GSAP mode, stacked flow otherwise -->
+  <div class="cards">
+    <article class="card" data-step="1">
+      <div class="c-rule"></div><div class="c-num">01</div>
+      <h3><span class="c-tag">THE FORGE</span></h3>
+      <p>Your project spins up on dedicated servers purpose-built for performance. Bare metal. No shared resources. Full power from day one.</p>
+    </article>
+    <article class="card" data-step="2">
+      <div class="c-rule"></div><div class="c-num">02</div>
+      <h3><span class="c-tag">IN TRANSIT</span></h3>
+      <p>Code moves through automated pipelines — built, tested, and validated at every stage before it ever reaches production.</p>
+    </article>
+    <article class="card" data-step="3">
+      <div class="c-rule"></div><div class="c-num">03</div>
+      <h3><span class="c-tag">READY TO DEPLOY</span></h3>
+      <p>Performance metrics verified. Load-tested. Optimized. Your application is cleared for launch with zero guesswork.</p>
+    </article>
+    <article class="card" data-step="4">
+      <div class="c-rule"></div><div class="c-num">04</div>
+      <h3><span class="c-tag">ONGOING SUPPORT</span></h3>
+      <p>24/7 monitoring, rapid incident response, and continuous optimization. We don't just launch — we stand watch.</p>
+    </article>
+    <article class="card arrival-card" data-step="5">
+      <div class="a-title">YOUR PROJECT. <span class="accent">DELIVERED.</span></div>
+      <p>We build it, ship it, and stay on call.</p>
+      <a class="btn-primary" href="#contact">START YOUR BUILD</a>
+    </article>
   </div>
 </section>
 
@@ -1343,7 +1649,6 @@ footer {
 
   function revealAll() {
     document.querySelectorAll('.gr').forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
-    document.querySelectorAll('.pipe-info, .pipe-visual, .pipe-dot').forEach(el => el.classList.add('on'));
   }
 
   if (hasGSAP) {
@@ -1383,102 +1688,6 @@ footer {
     });
   } else {
     revealAll();
-  }
-
-  // ===== SERVER RACK BUILDER =====
-  const rackEl = document.getElementById('server-rack');
-  if (rackEl) {
-    for (let i = 0; i < 64; i++) {
-      const unit = document.createElement('div');
-      unit.className = 'rack-unit';
-      const led1 = document.createElement('div');
-      led1.className = 'rack-led dim';
-      const led2 = document.createElement('div');
-      led2.className = 'rack-led dim';
-      unit.appendChild(led1);
-      unit.appendChild(led2);
-      rackEl.appendChild(unit);
-    }
-  }
-
-  // Blink LEDs when powered on
-  let rackInterval = null;
-  function startRackBlink() {
-    if (rackInterval || prefersReduced) return;
-    const leds = rackEl.querySelectorAll('.rack-led');
-    rackInterval = setInterval(() => {
-      leds.forEach(led => {
-        if (Math.random() < 0.08) {
-          const r = Math.random();
-          led.className = 'rack-led ' + (r < 0.4 ? 'blink-orange' : r < 0.75 ? 'blink-blue' : 'dim');
-        }
-      });
-    }, 150);
-  }
-
-  // ===== BAR CHART BUILDER =====
-  const barChart = document.getElementById('bar-chart');
-  if (barChart) {
-    const heights = [15, 25, 30, 40, 50, 62, 78, 95];
-    heights.forEach(h => {
-      const bar = document.createElement('div');
-      bar.className = 'bar';
-      bar.style.height = h + '%';
-      barChart.appendChild(bar);
-    });
-  }
-
-  // ===== TRUCK PATH + MODULE POWER =====
-  const pipelineSection = document.querySelector('.pipeline');
-  const acsTruck = document.getElementById('acs-truck');
-  const trackFill = document.getElementById('road-glow');
-  const modules = document.querySelectorAll('.pipe-module');
-  const moduleThresholds = [0.08, 0.30, 0.52, 0.74];
-  const poweredOn = [false, false, false, false];
-
-  function powerModule(index) {
-    if (poweredOn[index]) return;
-    poweredOn[index] = true;
-    const mod = modules[index];
-    if (!mod) return;
-    const info = mod.querySelector('.pipe-info');
-    const dot = mod.querySelector('.pipe-dot');
-    const visual = mod.querySelector('.pipe-visual');
-    if (info) info.classList.add('on');
-    if (dot) dot.classList.add('on');
-    if (visual) visual.classList.add('on');
-
-    if (index === 0) startRackBlink();
-    if (index === 2) {
-      const label = mod.querySelector('.bar-label');
-      if (label) label.textContent = 'Optimal';
-    }
-    if (index === 3) {
-      const label = mod.querySelector('.radar-label');
-      if (label) label.textContent = 'All Systems Go';
-    }
-  }
-
-  if (pipelineSection && hasGSAP && !prefersReduced) {
-    let pipeH = pipelineSection.scrollHeight; // cached — read once, not on every scroll tick
-    ScrollTrigger.create({
-      trigger: pipelineSection,
-      start: 'top 90%',
-      end: 'bottom 10%',
-      scrub: 0.6,
-      onRefresh: () => { pipeH = pipelineSection.scrollHeight; },
-      onUpdate: (self) => {
-        const p = self.progress;
-        if (acsTruck) { acsTruck.style.top = (p * pipeH) + 'px'; }
-        if (trackFill) { trackFill.style.height = (p * 100) + '%'; }
-        moduleThresholds.forEach((thresh, i) => {
-          if (p >= thresh) powerModule(i);
-        });
-      }
-    });
-  } else {
-    // Reduced motion / no GSAP — just power every module on, no scrub.
-    moduleThresholds.forEach((_, i) => powerModule(i));
   }
 
   // ===== SERVICE MODALS =====
@@ -1649,6 +1858,514 @@ footer {
   document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
   document.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; trail.length = 0; });
 
+})();
+</script>
+
+<script>
+/* ============================================================
+   SWITCHBACK RUN — the truck drives a piecewise descent path;
+   the camera chases it. Sections: [0] guard [1] route logic
+   (pure, sim-testable) [2] refs [3] layout [4] engine
+   [5] timeline [6] matchMedia
+   ============================================================ */
+(function () {
+  'use strict';
+
+  /* ---------- [0] PROGRESSIVE-ENHANCEMENT GUARD ---------- */
+  var root = document.documentElement;
+  if (!window.gsap || !window.ScrollTrigger) {
+    root.classList.remove('gsap-on');   // CSS default = static parked scene
+    return;
+  }
+  gsap.registerPlugin(ScrollTrigger);
+  if (ScrollTrigger.isTouch === 1) ScrollTrigger.normalizeScroll({ allowNestedScroll: true });
+
+/*ROUTE-LOGIC-START*/
+  /* Pure geometry: no DOM, no gsap. d = path distance in vw-ish units.
+     Facing flips are a pure function of d (hairpin midpoints), so scrub
+     jumps can never strand the wrong orientation. */
+  var CFG_DESK = {
+    mob: false, pin: '+=560%', stageW: 150, startX: 16, startY: 74,
+    bulge: 15, camY: 0.56, cliffInset: 8, cliffW: 40, chevW: 15,
+    cardAxis: 'x',
+    roadIds: ['r-t1a', 'r-t1b', 'r-t2', 'r-t3', 'r-t4a', 'r-t4b'],
+    archRoad: 'r-t2', scaleRoad: 'r-t3', barrierRoad: 'r-t3', overhang: 12,
+    route: [
+      { road: 48,  rise: 0,   marks: [{ k: 'st1', x: 44 }] },
+      { road: 118, rise: 7.5, k: 'T1e' },
+      { hair: 30,  bulge: 1,  len: 24, k: 'H1e' },
+      { road: 18,  rise: 9,   marks: [{ k: 'st2', x: 70 }], k: 'T2e' },
+      { hair: 30,  bulge: -1, len: 24, k: 'H2e' },
+      { road: 118, rise: 9,   marks: [{ k: 'st3', x: 82 }], k: 'T3e' },
+      { hair: 30,  bulge: 1,  len: 24, k: 'H3e' },
+      { road: 56,  rise: 4.5, marks: [{ k: 'st4', x: 88 }] },
+      { road: 26,  rise: 0,   marks: [{ k: 'dock', x: 26 }] }
+    ],
+    beats: function (M) { return [
+      [4, 7, M.st1 - 11, 0.35, 'power2.in'], [7, 9, M.st1, 0, 'power2.out'],
+      [15, 19, M.st1 + 30, 1, 'power2.in'],
+      [19, 24, M.T1e - 8, 1, 'none'], [24, 26, M.T1e, 0.5, 'power2.out'],
+      [26, 31, M.H1e, 0.5, 'none'],
+      [31, 33, M.H1e + 14, 0.9, 'power2.in'], [33, 36, M.st2 - 14, 0.9, 'none'],
+      [36, 38, M.st2 - 8, 0.4, 'power2.out'], [38, 44, M.st2 + 12, 0.4, 'none'],
+      [44, 46, M.st2 + 28, 1, 'power2.in'], [46, 49, M.T2e, 1, 'none'],
+      [49, 54, M.H2e, 0.5, 'none'],
+      [54, 56, M.H2e + 18, 0.9, 'power2.in'], [56, 58, M.st3 - 22, 1, 'none'],
+      [58, 61, M.st3, 0, 'power2.out'],
+      [70, 74, M.T3e, 1, 'power2.in'],
+      [74, 78, M.H3e, 0.5, 'none'],
+      [78, 80, M.H3e + 12, 0.6, 'power1.inOut'], [80, 85, M.st4 + 10, 0.6, 'none'],
+      [85, 87.5, M.dock - 20, 0.55, 'power1.inOut'], [87.5, 91, M.dock, 0, 'power2.out']
+    ]; }
+  };
+  var CFG_MOB = {
+    mob: true, pin: '+=380%', stageW: 130, startX: 18, startY: 62,
+    bulge: 14, camY: 0.56, cliffInset: 26, cliffW: 44, chevW: 30,
+    cardAxis: 'y',
+    roadIds: ['r-t1a', 'r-m-t1b', 'r-m-t2a', 'r-m-t2b'],
+    archRoad: 'r-m-t1b', scaleRoad: 'r-m-t2a', barrierRoad: 'r-m-t2b', overhang: 20,
+    route: [
+      { road: 40,  rise: 0, marks: [{ k: 'st1', x: 34 }] },
+      { road: 124, rise: 7, marks: [{ k: 'st2', x: 84 }], k: 'T1e' },
+      { hair: 22,  bulge: 1, len: 22, k: 'H1e' },
+      { road: 40,  rise: 7, marks: [{ k: 'st3', x: 64 }, { k: 'st4', x: 48 }], k: 'T2ae' },
+      { road: 26,  rise: 0, marks: [{ k: 'dock', x: 26 }] }
+    ],
+    beats: function (M) { return [
+      [4, 7, M.st1 - 6, 0.35, 'power2.in'], [7, 9, M.st1, 0, 'power2.out'],
+      [15, 19, M.st1 + 16, 1, 'power2.in'],
+      [19, 36, M.st2 - 12, 0.9, 'none'], [36, 38, M.st2 - 6, 0.4, 'power2.out'],
+      [38, 44, M.st2 + 14, 0.4, 'none'],
+      [44, 46, M.st2 + 28, 0.9, 'power2.in'], [46, 49, M.T1e, 0.7, 'none'],
+      [49, 54, M.H1e, 0.5, 'none'],
+      [54, 58, M.st3 - 10, 0.9, 'power2.in'], [58, 61, M.st3, 0, 'power2.out'],
+      [70, 78, M.st3 + 10, 1, 'power2.in'], [78, 85, M.st4 + 8, 0.6, 'power2.out'],
+      [85, 87, M.dock - 6, 0.5, 'none'], [87, 91, M.dock, 0, 'power2.out']
+    ]; }
+  };
+
+  function makeRoute(cfg, VW, VH) {
+    var segs = [], marks = {}, flips = [];
+    var x = cfg.startX, y = cfg.startY * VH, d = 0, facing = 1;
+    cfg.route.forEach(function (r) {
+      if (r.road !== undefined) {
+        var x1 = r.road, len = Math.abs(x1 - x), rise = (r.rise || 0) * VW;
+        var rot = Math.atan2(rise, len * VW) * 180 / Math.PI * facing;
+        segs.push({ kind: 'road', d0: d, d1: d + len, x0: x, y0: y, x1: x1, y1: y + rise, rot: rot });
+        if (r.marks) r.marks.forEach(function (m) { marks[m.k] = d + Math.abs(m.x - x); });
+        x = x1; y += rise; d += len;
+      } else {
+        var L = r.len, drop = r.hair * VH;
+        segs.push({ kind: 'hair', d0: d, d1: d + L, x0: x, y0: y, y1: y + drop,
+                    bulge: r.bulge * cfg.bulge, side: r.bulge });
+        flips.push(d + L / 2);
+        facing = -facing; y += drop; d += L;
+      }
+      if (r.k) marks[r.k] = d;
+    });
+    segs.forEach(function (s, i) { // hairpin tilt eases prev-rot -> level -> next-rot
+      if (s.kind === 'hair') {
+        s.rot0 = i > 0 ? segs[i - 1].rot : 0;
+        s.rot1 = i < segs.length - 1 ? segs[i + 1].rot : 0;
+      }
+    });
+    return { segs: segs, marks: marks, total: d, flips: flips, valleyY: y };
+  }
+
+  function routeAt(R, d) {
+    d = Math.max(0, Math.min(R.total, d));
+    var facing = 1, f;
+    for (f = 0; f < R.flips.length; f++) if (d >= R.flips[f]) facing = -facing;
+    var i = 0;
+    while (i < R.segs.length - 1 && d > R.segs[i].d1) i++;
+    var s = R.segs[i];
+    var t = s.d1 > s.d0 ? (d - s.d0) / (s.d1 - s.d0) : 0;
+    if (s.kind === 'road') {
+      return { x: s.x0 + (s.x1 - s.x0) * t, y: s.y0 + (s.y1 - s.y0) * t,
+               rot: s.rot, facing: facing, hidden: false };
+    }
+    return { x: s.x0 + Math.sin(Math.PI * t) * s.bulge,
+             y: s.y0 + (s.y1 - s.y0) * t,
+             rot: t < 0.5 ? s.rot0 * (1 - 2 * t) : s.rot1 * (2 * t - 1),
+             facing: facing, hidden: true };
+  }
+/*ROUTE-LOGIC-END*/
+
+  /* ---------- [2] REFS ---------- */
+  var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+
+  var stage = $('.stage'), section = document.getElementById('pipeline'),
+      mountain = $('.mountain'), ridges = $('.l-ridges'),
+      truckPos = $('.truck-pos'), flipEl = $('.t-flip'), pitchEl = $('.t-pitch'), bobEl = $('.t-bob'),
+      beamEl = $('.beam'), beamSrc = $('.beam-src'), lightPool = $('.light-pool'),
+      brakeGlow = $('.brake-glow'), antenna = $('.antenna'),
+      hubs = $$('.hub'), puffs = $$('.puff'), vapors = $$('.vapor'),
+      scanTrace = $('.scan-trace'), shade = $('.shade'),
+      worldTitle = $('.world-title'),
+      odometer = $('.odometer'), odMi = $('.od-mi'), odStep = $('.od-step'),
+      progFill = $('.prog-fill'), delivered = $('.delivered'),
+      st1El = $('.stn.st1'), archEl = $('#scan-arch'), st3El = $('.stn.st3'), st4El = $('.stn.st4'),
+      weighReadout = $('.weigh-readout'), wbBars = $$('.wb-bars .bar'), wbIdle = $('.wb-idle'),
+      passStamp = $('.pass-stamp'), barrierEl = $('#barrier'), barrierArm = $('.barrier-arm'),
+      weighScale = $('#weigh-scale'), clientEl = $('.client'),
+      dockAmber = $('.dock-glow.amber'), dockBlue = $('.dock-glow.blue'),
+      cards = { 1: $('.card[data-step="1"]'), 2: $('.card[data-step="2"]'),
+                3: $('.card[data-step="3"]'), 4: $('.card[data-step="4"]'),
+                5: $('.card[data-step="5"]') };
+
+  var proxy = { d: 0, v: 0, b: 0 };
+
+  /* ---------- [3] LAYOUT: place roads/stations/cliffs from the route ---------- */
+  function layout(cfg, R) {
+    var VW = window.innerWidth / 100, VH = window.innerHeight / 100;
+    var ri = 0, hi = 0;
+    var hairIds = [['cliff1', 'chev1'], ['cliff2', 'chev2'], ['cliff3', 'chev3']];
+    ['cliff1', 'chev1', 'cliff2', 'chev2', 'cliff3', 'chev3'].forEach(function (id) {
+      document.getElementById(id).style.display = 'none';
+    });
+    var roadInfo = {};
+    R.segs.forEach(function (s) {
+      if (s.kind === 'road') {
+        var id = cfg.roadIds[ri++], el = document.getElementById(id);
+        var xL = Math.min(s.x0, s.x1), yL = (s.x0 < s.x1 ? s.y0 : s.y1);
+        var yR = (s.x0 < s.x1 ? s.y1 : s.y0);
+        var len = Math.hypot((s.d1 - s.d0) * VW, s.y1 - s.y0);
+        var oh = (cfg.overhang || 12) * VW;                 // tarmac extends past the geometry
+        var ux = (s.d1 - s.d0) * VW / len, uy = (yR - yL) / len;
+        el.style.left = (xL * VW - ux * oh) + 'px';
+        el.style.top = (yL - uy * oh) + 'px';
+        el.style.width = (len + 2 * oh) + 'px';
+        gsap.set(el, { rotation: s.rot });
+        roadInfo[id] = { el: el, xL: xL, spanX: Math.abs(s.x1 - s.x0), len: len, oh: oh,
+                         dir: s.x1 > s.x0 ? 1 : -1 };
+      } else {
+        var ids = hairIds[hi++], cliff = document.getElementById(ids[0]), chev = document.getElementById(ids[1]);
+        cliff.style.display = 'block'; chev.style.display = 'block';
+        var cw = cfg.cliffW * VW;
+        cliff.style.left = (s.side > 0 ? (s.x0 - cfg.cliffInset) * VW : (s.x0 + cfg.cliffInset) * VW - cw) + 'px';
+        cliff.style.top = (s.y0 - 13 * VH) + 'px';
+        cliff.style.height = (s.y1 - s.y0 + 26 * VH) + 'px';
+        chev.style.left = (s.side > 0 ? (s.x0 - 1) * VW : (s.x0 + 1) * VW - cfg.chevW * VW) + 'px';
+        chev.style.top = ((s.y0 + s.y1) / 2 - 3.6 * VH) + 'px';
+      }
+    });
+    /* stations sit plumb on the road surface at their marks */
+    function place(el, d) {
+      var p = routeAt(R, d);
+      el.style.left = (p.x * VW) + 'px';
+      el.style.top = p.y + 'px';
+    }
+    place(st1El, R.marks.st1); place(st3El, R.marks.st3); place(st4El, R.marks.st4);
+    /* arch + scale slab + barrier ride their road bar (inherit its tilt);
+       fractions account for the overhang extension */
+    function mountOnRoad(el, roadId, x) {
+      var info = roadInfo[roadId];
+      var frac = ((x - info.xL) / info.spanX * info.len + info.oh) / (info.len + 2 * info.oh);
+      info.el.appendChild(el);
+      el.style.left = (frac * 100) + '%';
+    }
+    mountOnRoad(archEl, cfg.archRoad, routeAt(R, R.marks.st2).x);
+    var st3P = routeAt(R, R.marks.st3);
+    var dir = roadInfo[cfg.scaleRoad].dir;
+    var twVw = truckPos.offsetWidth / VW;
+    mountOnRoad(weighScale, cfg.scaleRoad, st3P.x);
+    mountOnRoad(barrierEl, cfg.barrierRoad, st3P.x + dir * (twVw * 0.46 + 2.5));
+    gsap.set(barrierEl, { scaleX: dir });
+    /* client tower on the valley floor */
+    clientEl.style.top = (R.valleyY - clientEl.offsetHeight) + 'px';
+    mountain.style.height = (R.valleyY + 0.55 * window.innerHeight) + 'px';
+  }
+
+  /* ---------- [4] PER-TICK ENGINE (truck-led; camera chases) ---------- */
+  function makeEngine(cfg, R) {
+    var VW = window.innerWidth / 100, W = window.innerWidth, H = window.innerHeight;
+    var tw = truckPos.offsetWidth, th = truckPos.offsetHeight;
+    var mtnW = cfg.stageW * VW, mtnH = parseFloat(mountain.style.height) || mountain.offsetHeight;
+    gsap.set(truckPos, { left: 0, top: 0 });        // ticker drives absolute x/y
+
+    var setTX = gsap.quickSetter(truckPos, 'x', 'px'),
+        setTY = gsap.quickSetter(truckPos, 'y', 'px'),
+        setTR = gsap.quickSetter(truckPos, 'rotation', 'deg'),
+        setBob = gsap.quickSetter(bobEl, 'y', 'px'),
+        setAnt = gsap.quickSetter(antenna, 'skewX', 'deg'),
+        setBeamSx = gsap.quickSetter(beamEl, 'scaleX'),
+        setHub = hubs.map(function (h) { return gsap.quickSetter(h, 'rotation', 'deg'); });
+    var camQX = gsap.quickTo(mountain, 'x', { duration: 0.3, ease: 'power2' }),
+        camQY = gsap.quickTo(mountain, 'y', { duration: 0.3, ease: 'power2' }),
+        ridQX = gsap.quickTo(ridges, 'x', { duration: 0.3, ease: 'power2' }),
+        ridQY = gsap.quickTo(ridges, 'y', { duration: 0.3, ease: 'power2' });
+
+    /* wheel spin exactly proportional to road distance: tire dia = 5.53% of image width */
+    var degPer = (VW / (Math.PI * tw * 0.05534)) * 360;
+    var rotC = 0, rotV = 0, facingCur = 1, lastD = -1, act = 0, emitClock = 0, puffIdx = 0;
+    function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+
+    function camTargets(tx, ty) {
+      return [-clamp(tx - 0.5 * W, 0, Math.max(0, mtnW - W)),
+              -clamp(ty - cfg.camY * H, 0, Math.max(0, mtnH - H))];
+    }
+    function emitPuff(v) {
+      var p = puffs[puffIdx = (puffIdx + 1) % puffs.length];
+      gsap.fromTo(p,
+        { x: 0, y: 0, scale: 0.3 + Math.random() * 0.15, autoAlpha: 0.45 },
+        { x: -(14 + v * 70 + Math.random() * 14), y: -(30 + v * 26),
+          scale: 1.1 + v * 0.6, autoAlpha: 0, duration: 1.4 + Math.random() * 0.5,
+          ease: 'power1.out', overwrite: true });
+    }
+
+    function tick(time, dt) {
+      var d = proxy.d, v = proxy.v;
+      var P = routeAt(R, d);
+      var tx = P.x * VW, ty = P.y;
+      setTX(tx - tw / 2);
+      setTY(ty - th * 0.6348);
+      /* grade tilt with a small lagged overshoot (suspension), clamped +-12deg */
+      rotV += (clamp(P.rot, -12, 12) - rotC) * 0.16; rotV *= 0.72; rotC += rotV;
+      setTR(rotC);
+      /* facing: pure function of d — flips only while cliff-occluded */
+      if (P.facing !== facingCur) {
+        facingCur = P.facing;
+        gsap.set(flipEl, { scaleX: facingCur });
+        truckPos.classList.toggle('flipped', facingCur < 0); // upright-logo cover patch
+      }
+      /* chase camera (0.3s smoothing) + far ridges at 0.18x */
+      var c = camTargets(tx, ty);
+      camQX(c[0]); camQY(c[1]); ridQX(c[0] * 0.18); ridQY(c[1] * 0.18);
+      /* wheels stop the instant scroll stops */
+      var rot = d * degPer;
+      for (var i = 0; i < setHub.length; i++) setHub[i](rot);
+      act += (Math.min(1, Math.abs(d - (lastD < 0 ? d : lastD)) * 30) - act) * 0.12;
+      lastD = d;
+      var amp = v * 2.2;
+      setBob(Math.sin(d * 1.7) * amp + Math.sin(d * 3.6) * amp * 0.35);
+      setAnt(-(v * 10) + Math.sin(d * 2.1) * 2 * v);
+      /* beam length follows velocity: full cone at cruise, short pool at stops */
+      setBeamSx(0.18 + 0.82 * Math.max(v, proxy.b));
+      emitClock += dt / 1000;
+      var interval = 1 / (0.35 + v * 5 * (0.25 + 0.75 * act));
+      if (emitClock > interval) { emitClock = 0; emitPuff(v * act); }
+    }
+
+    /* set the opening frame exactly (no camera glide-in on pin engage) */
+    var P0 = routeAt(R, 0), c0 = camTargets(P0.x * VW, P0.y);
+    gsap.set(truckPos, { x: P0.x * VW - tw / 2, y: P0.y - th * 0.6348, rotation: 0 });
+    gsap.set(mountain, { x: c0[0], y: c0[1] });
+    gsap.set(ridges, { x: c0[0] * 0.18, y: c0[1] * 0.18 });
+
+    return {
+      start: function () { gsap.ticker.add(tick); },
+      stop: function () { gsap.ticker.remove(tick); }
+    };
+  }
+
+  /* ---------- [5] MASTER TIMELINE (100 beats; station windows are fixed t) ---------- */
+  function buildTimeline(cfg, R, eng) {
+    var VW = window.innerWidth / 100;
+    var M = R.marks;
+
+    proxy.d = 0; proxy.v = 0; proxy.b = 0;
+    gsap.set(shade, { opacity: 0.96 });
+    gsap.set([beamEl, beamSrc, lightPool], { autoAlpha: 0 });
+    gsap.set(worldTitle, { autoAlpha: 0, clipPath: 'inset(0 100% 0 0)' });
+    gsap.set(odometer, { autoAlpha: 0 });
+    [1, 2, 3, 4].forEach(function (n) {
+      gsap.set(cards[n], cfg.cardAxis === 'y' ? { autoAlpha: 0, yPercent: 110 } : { autoAlpha: 0, x: 9 * VW });
+    });
+    gsap.set(cards[5], { autoAlpha: 0, y: 40 });
+
+    var progSet = gsap.quickSetter(progFill, 'scaleX');
+    var lastStep = '';
+    /* HUD reads the SMOOTHED playhead (matches the scene), never raw scroll */
+    function hudUpdate() {
+      var p = tl.progress(), t = p * 100;
+      progSet(p);
+      odMi.textContent = 'MI ' + (proxy.d / R.total * 4.2).toFixed(1);
+      var step = t >= 92 ? 'ON SITE' : t >= 78 ? '04/04' : t >= 61 ? '03/04' : t >= 38 ? '02/04' : '01/04';
+      if (step !== lastStep) { odStep.textContent = step; lastStep = step; }
+      gate(st1El, p, 0.05, 0.17); gate(archEl, p, 0.36, 0.46);
+      gate(st3El, p, 0.58, 0.71); gate(st4El, p, 0.76, 0.87);
+    }
+    function gate(el, p, a, b) { el.classList.toggle('st-on', p >= a && p <= b); }
+
+    function onPinToggle(self) {
+      stage.classList.toggle('pinned', self.isActive);
+      if (self.isActive) eng.start(); else eng.stop();
+    }
+
+    var tl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: section, start: 'top top', end: cfg.pin,
+        pin: true, scrub: 0.5, anticipatePin: 1, onToggle: onPinToggle
+      }
+    });
+    tl.eventCallback('onUpdate', hudUpdate);
+    tl.to({ z: 0 }, { z: 1, duration: 0.5 }, 99.5);   // pad duration to 100
+
+    /* -- distance + velocity profile from the config's beat table -- */
+    cfg.beats(M).forEach(function (b) {
+      tl.to(proxy, { d: b[2], v: b[3], duration: b[1] - b[0], ease: b[4] }, b[0]);
+    });
+
+    /* -- IGNITION cold open -- */
+    var flicker = { keyframes: [
+      { autoAlpha: 0.9, duration: 0.10 }, { autoAlpha: 0.08, duration: 0.08 },
+      { autoAlpha: 1,   duration: 0.12 }, { autoAlpha: 0.35, duration: 0.08 },
+      { autoAlpha: 1,   duration: 0.25 } ] };
+    tl.to([beamEl, beamSrc], flicker, 2.3);
+    tl.to(proxy, { b: 1, duration: 0.9, ease: 'power4.out' }, 2.35); // cone punches out
+    tl.to(proxy, { b: 0, duration: 2, ease: 'power1.inOut' }, 8);    // v owns length from here
+    tl.to(lightPool, { autoAlpha: 1, duration: 0.6 }, 2.7);
+    tl.to(shade, { opacity: 0.5, duration: 0.8, ease: 'power2.in' }, 2.3);
+    tl.to(shade, { opacity: 0, duration: 2.2, ease: 'power1.out' }, 3.2);
+    tl.to(worldTitle, { autoAlpha: 1, clipPath: 'inset(0 0% 0 0)', duration: 1.5, ease: 'power2.out' }, 2.8);
+    tl.to(worldTitle, { autoAlpha: 0, duration: 1.2, ease: 'power1.in' }, 6.6); // clear of the stop-1 pad by p=.08
+    tl.to(odometer, { autoAlpha: 1, duration: 1 }, 5.5);
+
+    /* -- chassis pitch (inside flip wrapper: mirrors automatically) -- */
+    function pitch(t0, t1, deg, ease) { tl.to(pitchEl, { rotation: deg, duration: t1 - t0, ease: ease }, t0); }
+    pitch(4, 6, -0.6, 'power2.in');   pitch(6, 7.5, 0, 'power1.out');
+    pitch(7.5, 9, 1.2, 'power2.out'); pitch(9, 11.5, 0, 'back.out(1.6)');
+    pitch(15, 18, -1.4, 'power2.in'); pitch(18, 22, 0, 'back.out(1.2)');
+    pitch(24, 26, 0.9, 'power2.out'); pitch(26, 28, 0, 'power1.out');
+    pitch(31, 33, -1, 'power2.in');   pitch(33, 35, 0, 'back.out(1.2)');
+    pitch(36, 38, 0.8, 'power2.out'); pitch(38, 40, 0, 'power1.out');
+    pitch(44, 46, -1, 'power2.in');   pitch(46, 48, 0, 'back.out(1.2)');
+    pitch(49, 51, 0.8, 'power2.out'); pitch(51, 53, 0, 'power1.out');
+    pitch(54, 56, -1, 'power2.in');   pitch(56, 58, 0, 'back.out(1.2)');
+    pitch(58, 61, 1.9, 'power3.out'); pitch(61, 64, 0, 'back.out(1.7)');
+    pitch(70, 73, -1.3, 'power2.in'); pitch(73, 75, 0, 'back.out(1.2)');
+    pitch(78, 80, -0.6, 'power2.in'); pitch(80, 82, 0, 'back.out(1.2)');
+    pitch(87, 90.5, 1.1, 'power2.out'); pitch(90.5, 93.5, 0, 'back.out(1.4)');
+
+    /* -- brake glow on every decel -- */
+    function glow(t0, t1, o) { tl.to(brakeGlow, { opacity: o, duration: t1 - t0, ease: 'power2.out' }, t0); }
+    glow(7, 8.5, 0.8);   glow(9.5, 11.5, 0);
+    glow(24, 25.5, 0.6); glow(26.5, 28, 0);
+    glow(36, 37.5, 0.6); glow(38.5, 40, 0);
+    glow(49, 50.5, 0.6); glow(51.5, 53, 0);
+    glow(58, 59.5, 1);   glow(61.5, 63, 0.25); glow(70, 71.5, 0);
+    glow(87, 89, 0.85);  glow(91.5, 93, 0.2);
+
+    /* -- beam opacity eases down at stops, full on relaunch -- */
+    tl.to(beamEl, { autoAlpha: 0.75, duration: 2 }, 7);
+    tl.to(beamEl, { autoAlpha: 1, duration: 2 }, 15);
+    tl.to(beamEl, { autoAlpha: 0.75, duration: 2.5 }, 58);
+    tl.to(beamEl, { autoAlpha: 1, duration: 2 }, 70);
+    tl.to(beamEl, { autoAlpha: 0.8, duration: 2 }, 87);
+
+    /* -- air-brake vapor -- */
+    function vap(t, el, big) {
+      tl.fromTo(el, { autoAlpha: big ? 0.8 : 0.55, scale: 0.35, x: 0 },
+        { autoAlpha: 0, scale: big ? 1.7 : 1.2, x: -1.4 * VW, duration: 1.8, ease: 'power1.out', immediateRender: false }, t);
+    }
+    vap(8.8, vapors[0]); vap(9.05, vapors[1]);              // creep stop at the dock
+    vap(15.1, vapors[0], true); vap(15.7, vapors[1], true); // departure double blast
+    vap(60.8, vapors[0], true); vap(61.05, vapors[1]);      // hard stop on the scale
+    vap(90.3, vapors[0]); vap(90.55, vapors[1]);            // parked at the client dock
+
+    /* -- station beats -- */
+    var wt = { n: 0 };
+    tl.to(wbIdle, { autoAlpha: 0, duration: 0.8 }, 61.5);
+    tl.to(wt, { n: 34.7, duration: 4, ease: 'power1.inOut', onUpdate: function () {
+      weighReadout.textContent = wt.n.toFixed(1) + ' T';
+    } }, 62);
+    tl.to(wbBars, { scaleY: 1, duration: 2.4, stagger: 0.45, ease: 'power2.out' }, 62.3);
+    tl.fromTo(passStamp, { autoAlpha: 0, scale: 2.2 }, { autoAlpha: 1, scale: 1, duration: 1, ease: 'back.out(1.4)', immediateRender: false }, 66.6);
+    tl.to(barrierArm, { rotation: -78, duration: 1.6, ease: 'power2.inOut' }, 68);
+    tl.fromTo(scanTrace, { autoAlpha: 0 }, { autoAlpha: 0.9, duration: 0.5, repeat: 1, yoyo: true, immediateRender: false }, 82.6);
+    tl.fromTo(scanTrace, { autoAlpha: 0 }, { autoAlpha: 0.9, duration: 0.5, repeat: 1, yoyo: true, immediateRender: false }, 84.2);
+
+    /* -- step cards -- */
+    function cardIn(n, t) {
+      tl.to(cards[n], cfg.cardAxis === 'y'
+        ? { autoAlpha: 1, yPercent: 0, duration: 1.5, ease: 'power3.out' }
+        : { autoAlpha: 1, x: 0, duration: 1.5, ease: 'power3.out' }, t);
+    }
+    function cardOut(n, t) {
+      tl.to(cards[n], cfg.cardAxis === 'y'
+        ? { autoAlpha: 0, yPercent: 60, duration: 1.1, ease: 'power2.in' }
+        : { autoAlpha: 0, x: -5 * VW, duration: 1.1, ease: 'power2.in' }, t);
+    }
+    cardIn(1, 9.3);  cardOut(1, 14.4);
+    cardIn(2, 38.5); cardOut(2, 43.6);
+    cardIn(3, 61.3); cardOut(3, 69);
+    cardIn(4, 79);   cardOut(4, 84.4);
+
+    /* -- ARRIVAL: completes by t~95 so the final beats are always seen
+          before unpin, even with scrub catch-up lag at scroll speed -- */
+    tl.to(dockAmber, { opacity: 0, duration: 2.2 }, 89.5);
+    tl.fromTo(dockBlue, { opacity: 0 }, { opacity: 0.9, duration: 2.2, immediateRender: false }, 89.5);
+    tl.to([beamEl, beamSrc, lightPool], { autoAlpha: 0.12, duration: 1.8 }, 91);
+    tl.fromTo(delivered, { autoAlpha: 0, scale: 1.8 }, { autoAlpha: 1, scale: 1, duration: 1.2, ease: 'back.out(1.3)', immediateRender: false }, 92.2);
+    tl.to(cards[5], { autoAlpha: 1, y: 0, duration: 1.5, ease: 'power3.out' }, 93.6);
+
+    hudUpdate();
+    return tl;
+  }
+
+  /* ---------- [6] BREAKPOINT + MOTION BRANCHES ---------- */
+  var mm = gsap.matchMedia();
+  mm.add({
+    desk: '(min-width: 769px)',
+    mob: '(max-width: 768px)',
+    reduce: '(prefers-reduced-motion: reduce)'
+  }, function (ctx) {
+    if (ctx.conditions.reduce) {
+      root.classList.remove('gsap-on');   // static composed scene, cards stacked
+      ScrollTrigger.refresh();
+      return function () { root.classList.add('gsap-on'); };
+    }
+    root.classList.add('gsap-on');
+    var cfg = ctx.conditions.mob ? CFG_MOB : CFG_DESK;
+    var VW = window.innerWidth / 100, VH = window.innerHeight / 100;
+    var R = makeRoute(cfg, VW, VH);
+    layout(cfg, R);
+    var eng = makeEngine(cfg, R);
+    var tl = buildTimeline(cfg, R, eng);
+    /* runtime debug hook: __NH.tl.progress(), __NH.proxy.d, __NH.routeAt(__NH.R, d) */
+    window.__NH = { cfg: cfg, R: R, proxy: proxy, routeAt: routeAt, tl: tl };
+    return function () {
+      eng.stop();
+      proxy.d = 0; proxy.v = 0; proxy.b = 0;
+      stage.classList.remove('pinned');
+      truckPos.classList.remove('flipped');
+      [st1El, archEl, st3El, st4El].forEach(function (el) { el.classList.remove('st-on'); });
+      gsap.set([mountain, ridges, flipEl, pitchEl, bobEl, antenna].concat(hubs),
+        { clearProps: 'transform' });
+      gsap.set(truckPos, { clearProps: 'left,top,transform' });
+    };
+  });
+})();
+
+/* ============================================================
+   HERO -> JOURNEY TRANSITION BRIDGE
+   One scrubbed trigger: dim the hero video toward the journey's
+   night sky, scrub the bridge line out, raise the far ridge, and
+   warm the horizon so the cold-open shade is the ambient state
+   when the pin engages. Transform/opacity only; no-JS = plain band.
+   ============================================================ */
+(function () {
+  'use strict';
+  if (!window.gsap || !window.ScrollTrigger) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var tz = document.querySelector('.transition-zone');
+  var heroDim = document.querySelector('.hero-dim');
+  var ridge = document.querySelector('.tz-ridge');
+  var glow = document.querySelector('.tz-glow');
+  var content = document.querySelector('.transition-content');
+  if (!tz || !heroDim) return;
+  var tl = gsap.timeline({
+    scrollTrigger: { trigger: tz, start: 'top 88%', end: 'bottom top', scrub: 0.5 }
+  });
+  /* 0-55%: hero eases to dusk (veil caps at .55 — video stays readable)
+     35-65%: bridge line scrubs out while the hero is still in frame above
+     20-75%: ridge profile rises      30-90%: sodium horizon warms up   */
+  tl.fromTo(heroDim, { opacity: 0 }, { opacity: 0.55, duration: 5.5, ease: 'none' }, 0)
+    .to(content, { autoAlpha: 0, y: -18, duration: 3, ease: 'power1.in' }, 3.5)
+    .fromTo(ridge, { y: 36, autoAlpha: 0.35 }, { y: 0, autoAlpha: 1, duration: 5.5, ease: 'none' }, 2)
+    .fromTo(glow, { autoAlpha: 0.2, scaleY: 0.8 }, { autoAlpha: 1, scaleY: 1, duration: 7, ease: 'none' }, 3);
 })();
 </script>
 </body>
