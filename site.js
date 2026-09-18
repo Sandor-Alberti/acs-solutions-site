@@ -46,54 +46,22 @@ dialog.addEventListener('click', event => {
 });
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// The shared motion control stops both the project rotation and background signals.
+// Pause decorative motion when requested, off-screen, or in a hidden tab.
 const heroScene = document.querySelector('.hero-scene');
-const showcase = document.querySelector('.hero-showcase');
-const slides = [...document.querySelectorAll('[data-slide]')];
-const selectors = [...document.querySelectorAll('[data-showcase]')];
 const motionToggle = document.querySelector('.motion-toggle');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-let activeSlide = 0;
 let motionPaused = false;
 let heroVisible = true;
-let showcaseEngaged = false;
-let rotationTimer;
 document.documentElement.classList.add('js-motion');
-
-function showSlide(index) {
-  activeSlide = index;
-  slides.forEach((slide, i) => {
-    slide.classList.toggle('is-active', i === index);
-    slide.setAttribute('aria-hidden', String(i !== index));
-  });
-  selectors.forEach((button, i) => button.setAttribute('aria-pressed', String(i === index)));
-}
 function syncHeroMotion() {
-  clearInterval(rotationTimer);
-  const idle = !heroVisible || document.hidden;
   heroScene.classList.toggle('motion-paused', motionPaused || reducedMotion.matches);
-  heroScene.classList.toggle('motion-idle', idle);
+  heroScene.classList.toggle('motion-idle', !heroVisible || document.hidden);
   motionToggle.setAttribute('aria-pressed', String(motionPaused));
   motionToggle.setAttribute('aria-label', motionPaused ? 'Resume hero motion' : 'Pause hero motion');
   motionToggle.querySelector('span:first-child').textContent = motionPaused ? '▷' : 'Ⅱ';
   motionToggle.querySelector('.motion-label').textContent = motionPaused ? 'Resume motion' : 'Pause motion';
-  if (!motionPaused && !reducedMotion.matches && !idle && !showcaseEngaged) {
-    rotationTimer = setInterval(() => showSlide((activeSlide + 1) % slides.length), 6500);
-  }
 }
-selectors.forEach(button => button.addEventListener('click', () => {
-  showSlide(Number(button.dataset.showcase));
-  syncHeroMotion();
-}));
 motionToggle.addEventListener('click', () => { motionPaused = !motionPaused; syncHeroMotion(); });
-function updateEngagement() {
-  showcaseEngaged = showcase.matches(':hover') || showcase.contains(document.activeElement);
-  syncHeroMotion();
-}
-showcase.addEventListener('mouseenter', updateEngagement);
-showcase.addEventListener('mouseleave', updateEngagement);
-showcase.addEventListener('focusin', updateEngagement);
-showcase.addEventListener('focusout', () => setTimeout(updateEngagement, 0));
 reducedMotion.addEventListener('change', syncHeroMotion);
 document.addEventListener('visibilitychange', syncHeroMotion);
 new IntersectionObserver(entries => {
