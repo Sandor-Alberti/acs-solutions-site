@@ -46,3 +46,8 @@ dialog{border:1px solid var(--line);border-radius:10px;padding:20px;width:min(11
 @media(max-width:1000px){.footer-circuit{width:250px;height:200px}.footer-brand{height:230px}.footer-wordmark{margin-right:150px}}
 @media(max-width:760px){.project-image{padding:18px 15px 43px}.browser-chrome{height:23px;font-size:8px;padding-inline:9px}.project-image .preview-label{bottom:12px;left:16px;right:16px;font-size:10px}.footer-brand{height:215px;justify-content:flex-start;padding:32px 20px;align-items:flex-start}.footer-wordmark{margin:0}.footer-wordmark>p{font-size:38px;letter-spacing:-1.8px}.footer-wordmark>span{font-size:10px;margin-top:7px}.footer-wordmark b{font-size:16px;margin-right:5px}.footer-circuit{height:125px;width:156.25px}.footer-wordmark i{margin-inline:4px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}.preview-desktop{display:none}.preview-touch{display:inline}}
+
+/* Crux uses a single-screen landing preview. */
+.crux-preview{background:linear-gradient(140deg,#e3e5e8,#cbd1d7)}
+.crux-preview .browser-viewport{display:flex;align-items:center;background:#08090a}
+.crux-preview .browser-viewport img{height:auto;object-fit:contain;transition:none}

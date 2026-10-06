@@ -27,6 +27,7 @@ function setPeriod(key) {
 document.querySelectorAll('[data-period]').forEach(button => button.addEventListener('click', () => setPeriod(button.dataset.period)));
 setPeriod('week');
 const projects = {
+  crux: {title:'Crux AI', image:'assets/crux-website.png', description:'A custom website and team knowledge platform that answers questions from approved guides, notes, and meeting transcripts with source references.'},
   ben: {title:'Ben Lammers Studio', image:'assets/ben-lammers-full.png', description:'Photography and film portfolio with a cinematic visual direction. The related client portal is a demo.'},
   tfin: {title:'T.FIN Building Solutions', image:'assets/tfin-full.png', description:'Website for a glass and glazing manufacturers’ representative, including product lines, projects, quote requests, and content editing.'}
 };
