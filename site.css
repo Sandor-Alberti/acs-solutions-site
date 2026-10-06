@@ -70,3 +70,11 @@ dialog{border:1px solid var(--line);border-radius:10px;padding:20px;width:min(11
 .showcase-controls #showcase-motion{border-radius:5px;width:auto;padding-inline:15px;font-size:12px}
 @media(max-width:1100px){.projects{height:570px}}
 @media(max-width:760px){.projects{height:550px;margin-inline:-12px}.projects .project{width:82%;top:10px}.projects .project[data-position="left"]{transform:translateX(-130%) scale(.78) rotateY(10deg)}.projects .project[data-position="right"]{transform:translateX(30%) scale(.78) rotateY(-10deg)}.projects .project-image{aspect-ratio:1.45;padding:8px 8px 32px}.projects .project-heading{flex-direction:column;gap:6px;align-items:start}.projects .project>p{font-size:14px}.showcase-controls{gap:10px}.showcase-controls p{min-width:180px;font-size:11px}}
+
+/* Transparent Crux portrait sits directly on the About section. */
+.about-layout .portrait{background:transparent;border-radius:0}
+.about-layout .portrait:before{display:none}
+.about-layout .portrait>img{height:auto;width:100%;object-fit:contain;border-radius:0}
+.about-layout .portrait figcaption{position:static;background:none;color:var(--ink);padding:20px 0 0;border-radius:0;align-items:center}
+.about-layout .portrait figcaption span span{color:var(--muted)}
+.about-layout .portrait-symbol{color:var(--orange)}
