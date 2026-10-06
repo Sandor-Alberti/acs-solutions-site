@@ -64,10 +64,15 @@ function syncShowcase() {
   });
   const key = slides[selected].querySelector('[data-preview]').dataset.preview;
   document.getElementById('showcase-status').textContent = `${projects[key].title} · ${selected + 1} / ${slides.length}`;
-  const toggle = document.getElementById('showcase-motion');
-  toggle.textContent = previewPaused ? 'Play preview' : 'Pause preview';
-  toggle.setAttribute('aria-pressed', String(previewPaused));
+  sizeShowcase();
 }
+function sizeShowcase() {
+  const active = slides[selected];
+  showcase.style.height = `${active.offsetHeight + 40}px`;
+  showcase.parentElement.style.setProperty('--preview-mid', `${active.querySelector('.project-image').offsetHeight / 2 + 20}px`);
+}
+const showcaseSizer = new ResizeObserver(sizeShowcase);
+slides.forEach(slide => showcaseSizer.observe(slide));
 function selectSlide(index) { selected = (index + slides.length) % slides.length; syncShowcase(); }
 slides.forEach((slide, index) => slide.querySelector('[data-preview]').addEventListener('click', () => {
   if (index !== selected) { selectSlide(index); return; }
@@ -93,7 +98,6 @@ showcase.addEventListener('touchend', event => {
   if (touchStart !== null && Math.abs(distance) > 45) selectSlide(selected + (distance < 0 ? 1 : -1));
   touchStart = null;
 }, {passive:true});
-document.getElementById('showcase-motion').addEventListener('click', () => { previewPaused = !previewPaused; syncShowcase(); });
 dialog.addEventListener('close', syncShowcase);
 document.addEventListener('visibilitychange', syncShowcase);
 window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', event => { previewPaused = event.matches; syncShowcase(); });
@@ -106,22 +110,15 @@ dialog.addEventListener('click', event => {
 });
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// Pause decorative motion when requested, off-screen, or in a hidden tab.
+// Respect reduced motion and suspend decorative motion off-screen or in hidden tabs.
 const heroScene = document.querySelector('.hero-scene');
-const motionToggle = document.querySelector('.motion-toggle');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-let motionPaused = false;
 let heroVisible = true;
 document.documentElement.classList.add('js-motion');
 function syncHeroMotion() {
-  heroScene.classList.toggle('motion-paused', motionPaused || reducedMotion.matches);
+  heroScene.classList.toggle('motion-paused', reducedMotion.matches);
   heroScene.classList.toggle('motion-idle', !heroVisible || document.hidden);
-  motionToggle.setAttribute('aria-pressed', String(motionPaused));
-  motionToggle.setAttribute('aria-label', motionPaused ? 'Resume hero motion' : 'Pause hero motion');
-  motionToggle.querySelector('span:first-child').textContent = motionPaused ? '▷' : 'Ⅱ';
-  motionToggle.querySelector('.motion-label').textContent = motionPaused ? 'Resume motion' : 'Pause motion';
 }
-motionToggle.addEventListener('click', () => { motionPaused = !motionPaused; syncHeroMotion(); });
 reducedMotion.addEventListener('change', syncHeroMotion);
 document.addEventListener('visibilitychange', syncHeroMotion);
 new IntersectionObserver(entries => {

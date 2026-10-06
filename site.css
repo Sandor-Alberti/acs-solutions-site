@@ -78,3 +78,33 @@ dialog{border:1px solid var(--line);border-radius:10px;padding:20px;width:min(11
 .about-layout .portrait figcaption{position:static;background:none;color:var(--ink);padding:20px 0 0;border-radius:0;align-items:center}
 .about-layout .portrait figcaption span span{color:var(--muted)}
 .about-layout .portrait-symbol{color:var(--orange)}
+
+/* Let the selected project's full description determine the stage height. */
+.showcase-shell{position:relative}
+.showcase-shell .projects{height:auto;min-height:0;transition:height .4s ease}
+.projects .project-heading{flex-wrap:wrap;align-items:baseline}
+.projects .project-heading>span{white-space:normal;text-align:right}
+.projects .project>p{max-width:none}
+.showcase-shell .showcase-controls{display:block;margin-top:14px;text-align:center}
+.showcase-controls [data-carousel]{position:absolute;top:var(--preview-mid,180px);transform:translateY(-50%);z-index:5;width:48px;height:48px;box-shadow:0 4px 16px #202a311c;background:#fff;border-color:#ccd2d2;transition:background .2s,box-shadow .2s}
+.showcase-controls [data-carousel]:hover{background:#fff0e6;box-shadow:0 5px 20px #202a312b}
+.showcase-controls [data-carousel="previous"]{left:10%}
+.showcase-controls [data-carousel="next"]{right:10%}
+.showcase-controls p{min-width:0;color:var(--muted)}
+/* Larger independent travel and brighter signals make the ACS machine feel alive. */
+.hero-circuit{opacity:.7;mask-image:linear-gradient(to bottom,#000,transparent 46%,transparent 58%,#000)}
+.circuit-traces{stroke:#dfb194;stroke-width:1.5}
+.circuit-signals{stroke-width:3;stroke-dasharray:70 450;animation-duration:5s;filter:drop-shadow(0 0 4px #f76318)}
+.circuit-signals path:nth-child(2){stroke-dasharray:45 280}
+.circuit-signals path:nth-child(3){stroke-dasharray:28 200}
+.circuit-signals path:nth-child(4){stroke-dasharray:60 380}
+.sculpture-cube{transform-box:fill-box;transform-origin:center;animation:acs-float-a 5s ease-in-out infinite;filter:drop-shadow(0 15px 9px #b44b1720)}
+.sculpture-c{animation-name:acs-float-c;animation-duration:5.8s;animation-delay:-1.4s}
+.sculpture-s{animation-name:acs-float-s;animation-duration:6.2s;animation-delay:-3s}
+@keyframes acs-float-a{0%,100%{transform:translate(-8px,10px) rotate(-3deg)}50%{transform:translate(8px,-35px) rotate(4deg)}}
+@keyframes acs-float-c{0%,100%{transform:translate(9px,18px) rotate(3deg)}50%{transform:translate(-12px,-24px) rotate(-4deg)}}
+@keyframes acs-float-s{0%,100%{transform:translate(-5px,24px) rotate(-3deg)}50%{transform:translate(10px,-24px) rotate(4deg)}}
+.sculpture-points{animation:acs-points 2s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+@keyframes acs-points{from{opacity:.3}to{opacity:1;filter:drop-shadow(0 0 5px #f76318)}}
+.hero-scene.motion-idle .sculpture-points,.hero-scene.motion-paused .sculpture-points{animation-play-state:paused}
+@media(max-width:760px){.showcase-controls [data-carousel]{width:40px;height:40px}.showcase-controls [data-carousel="previous"]{left:0}.showcase-controls [data-carousel="next"]{right:0}.projects .project-heading>span{text-align:left}.hero-circuit{opacity:.55}}
