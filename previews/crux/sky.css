@@ -1,0 +1,21 @@
+/* Slow compositor-only star drift. No full-page canvas. */
+.galaxy { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.galaxy > div { position: absolute; will-change: transform, opacity; }
+.g-band { left: -30%; top: -30%; width: 160%; height: 160%; background: radial-gradient(ellipse 34% 9% at 50% 50%, rgba(214, 222, 228, .060), transparent 72%),
+    radial-gradient(ellipse 22% 14% at 36% 44%, rgba(197, 204, 209, .045), transparent 70%),
+    radial-gradient(ellipse 26% 12% at 66% 57%, rgba(176, 186, 194, .040), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 50%, rgba(120, 132, 142, .035), transparent 75%); transform: rotate(-24deg); animation: band-turn 420s linear infinite, band-breathe 18s ease-in-out infinite alternate; }
+.g-far { left: 0; top: 0; width: calc(100% + 1600px); height: calc(100% + 1600px); background: url(stars-far.svg) 0 0 / 1600px 1600px repeat; animation: drift-far 900s linear infinite, breathe-far 14s ease-in-out infinite alternate; }
+.g-near { left: 0; top: 0; width: calc(100% + 1200px); height: calc(100% + 1200px); background: url(stars-near.svg) 0 0 / 1200px 1200px repeat; animation: drift-near 520s linear infinite, breathe-near 11s ease-in-out -5s infinite alternate; }
+@keyframes drift-far { to { transform: translate3d(-1600px, -1600px, 0); } }
+@keyframes drift-near { to { transform: translate3d(-1200px, -1200px, 0); } }
+@keyframes breathe-far { from { opacity: .55; } to { opacity: .9; } }
+@keyframes breathe-near { from { opacity: .35; } to { opacity: .85; } }
+@keyframes band-turn { from { transform: rotate(-24deg) scale(1); } 50% { transform: rotate(156deg) scale(1.06); } to { transform: rotate(336deg) scale(1); } }
+@keyframes band-breathe { from { opacity: .65; } to { opacity: 1; } }
+[data-motion="static"] .galaxy > div { animation-play-state: paused; }
+html:not([data-motion="animated"]) .galaxy > div { animation-play-state: paused; }
+html[data-page-visible="false"] .galaxy > div { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .galaxy > div { animation: none; }
+}

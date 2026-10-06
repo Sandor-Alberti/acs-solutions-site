@@ -1,0 +1,15 @@
+/* Shared, restrained silver edge treatment for the public example and Ask composer. */
+@property --led { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.led { position: relative; }
+.led-ring { position: absolute; inset: -1px; z-index: 1; border-radius: inherit; pointer-events: none; filter: drop-shadow(0 0 5px rgba(244, 244, 242, var(--led-glow, .55))); }
+.led-ring::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; background: conic-gradient(from var(--led), transparent 0deg 240deg, rgba(197, 204, 209, .25) 282deg, #f4f4f2 326deg, rgba(197, 204, 209, .3) 348deg, transparent 360deg); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); animation: led-spin var(--led-speed, 6s) linear infinite; }
+@keyframes led-spin { to { --led: 360deg; } }
+[data-motion="static"] .led-ring::before { animation-play-state: paused; }
+.led--slow { --led-speed: 7s; --led-glow: .32; }
+html[data-motion="static"] .led-ring::before { animation: none; --led: 300deg; }
+html.no-js .led-ring::before { animation: none; --led: 300deg; }
+html[data-page-visible="false"] .led-ring::before,
+[data-motion-visible="false"] .led-ring::before { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .led-ring::before { animation: none; --led: 300deg; }
+}

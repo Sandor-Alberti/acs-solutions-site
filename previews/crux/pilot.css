@@ -1,0 +1,27 @@
+/* Pilot invitation and persistent request form. */
+.pilot { position: relative; overflow: hidden; padding: 150px 0 160px; border-top: 1px solid var(--line); text-align: center; }
+.pilot-inner { position: relative; width: min(720px, calc(100% - 48px)); margin: 0 auto; }
+.pilot .mark { width: 40px; height: 40px; margin: 0 auto 28px; color: var(--silver); }
+.pilot .h2 { font-size: clamp(2rem, 3.6vw, 3.25rem); margin-bottom: 24px; }
+.pilot-lead { max-width: 31em; margin: 0 auto 14px; font-size: 1.1875rem; line-height: 1.55; }
+.pilot-detail { max-width: 36em; margin: 0 auto 38px; font-size: 1rem; color: var(--body); }
+.pilot-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 28px; }
+.button { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 30px; border-radius: 999px; background: var(--ink); color: var(--night); font-size: 1rem; font-weight: 500; text-decoration: none; }
+.button:hover { background: #fff; }
+.placeholder { margin: 26px 0 0; font-size: .8125rem; color: var(--muted); }
+@media (max-width: 760px) {
+  .pilot { padding: 104px 0 112px; }
+  .pilot-lead { font-size: 1.0625rem; }
+  .button { width: 100%; }
+}
+.intake { margin: 38px auto 0; text-align: left; max-width: 620px; }
+.intake label { display: block; font-size: .9375rem; color: var(--silver); margin-bottom: 18px; }
+.intake input,.intake textarea { display: block; width: 100%; margin-top: 7px; padding: 13px 15px; background: var(--surface); border: 1px solid var(--edge); border-radius: 9px; color: var(--ink); font: inherit; }
+.intake textarea { resize: vertical; }
+.intake-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.intake-detail { color: var(--muted); font-size: .875rem; }
+.intake button { border: 0; cursor: pointer; }
+.intake button:disabled { opacity: .6; }
+.trap { position: absolute; left: -10000px; }
+#pilot-result { margin-top: 20px; }
+@media(max-width:600px) { .intake-pair { grid-template-columns: 1fr; gap: 0; } }

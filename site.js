@@ -32,14 +32,73 @@ const projects = {
   tfin: {title:'T.FIN Building Solutions', image:'assets/tfin-full.png', description:'Website for a glass and glazing manufacturers’ representative, including product lines, projects, quote requests, and content editing.'}
 };
 const dialog = document.getElementById('project-dialog');
-document.querySelectorAll('[data-preview]').forEach(button => button.addEventListener('click', () => {
-  const project = projects[button.dataset.preview];
+const showcase = document.querySelector('.projects');
+const slides = [...showcase.querySelectorAll('.project')];
+const previewURLs = {ben:'https://benlammersmarketing.com/', tfin:null, crux:'previews/crux/index.html'};
+let selected = 0;
+let previewPaused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let showcaseVisible = false;
+function syncShowcase() {
+  slides.forEach((slide, index) => {
+    const position = (index - selected + slides.length) % slides.length;
+    slide.dataset.position = position === 0 ? 'center' : position === 1 ? 'right' : 'left';
+    const button = slide.querySelector('[data-preview]');
+    const key = button.dataset.preview;
+    button.setAttribute('aria-label', index === selected ? `Enlarge ${projects[key].title} preview` : `Show ${projects[key].title}`);
+    slide.querySelectorAll('.project-tags a').forEach(link => link.tabIndex = index === selected ? 0 : -1);
+    const viewport = slide.querySelector('.browser-viewport');
+    const existing = viewport.querySelector('iframe');
+    const shouldPlay = Boolean(previewURLs[key]) && index === selected && showcaseVisible && !previewPaused && !document.hidden && !dialog.open;
+    if (!shouldPlay) existing?.remove();
+    if (shouldPlay && !existing) {
+      const frame = document.createElement('iframe');
+      frame.src = previewURLs[key];
+      frame.title = `${projects[key].title} animated website preview`;
+      frame.tabIndex = -1;
+      frame.setAttribute('aria-hidden', 'true');
+      frame.setAttribute('inert', '');
+      frame.allow = 'autoplay';
+      frame.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+      viewport.append(frame);
+    }
+  });
+  const key = slides[selected].querySelector('[data-preview]').dataset.preview;
+  document.getElementById('showcase-status').textContent = `${projects[key].title} · ${selected + 1} / ${slides.length}`;
+  const toggle = document.getElementById('showcase-motion');
+  toggle.textContent = previewPaused ? 'Play preview' : 'Pause preview';
+  toggle.setAttribute('aria-pressed', String(previewPaused));
+}
+function selectSlide(index) { selected = (index + slides.length) % slides.length; syncShowcase(); }
+slides.forEach((slide, index) => slide.querySelector('[data-preview]').addEventListener('click', () => {
+  if (index !== selected) { selectSlide(index); return; }
+  const project = projects[slide.querySelector('[data-preview]').dataset.preview];
   document.getElementById('preview-title').textContent = project.title;
   document.getElementById('preview-image').src = project.image;
   document.getElementById('preview-image').alt = `${project.title} website preview`;
   document.getElementById('preview-description').textContent = project.description;
   dialog.showModal();
+  syncShowcase();
 }));
+document.querySelector('[data-carousel="previous"]').addEventListener('click', () => selectSlide(selected - 1));
+document.querySelector('[data-carousel="next"]').addEventListener('click', () => selectSlide(selected + 1));
+showcase.addEventListener('keydown', event => {
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    event.preventDefault(); selectSlide(selected + (event.key === 'ArrowRight' ? 1 : -1));
+  }
+});
+let touchStart = null;
+showcase.addEventListener('touchstart', event => { touchStart = event.changedTouches[0].clientX; }, {passive:true});
+showcase.addEventListener('touchend', event => {
+  const distance = event.changedTouches[0].clientX - touchStart;
+  if (touchStart !== null && Math.abs(distance) > 45) selectSlide(selected + (distance < 0 ? 1 : -1));
+  touchStart = null;
+}, {passive:true});
+document.getElementById('showcase-motion').addEventListener('click', () => { previewPaused = !previewPaused; syncShowcase(); });
+dialog.addEventListener('close', syncShowcase);
+document.addEventListener('visibilitychange', syncShowcase);
+window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', event => { previewPaused = event.matches; syncShowcase(); });
+new IntersectionObserver(entries => { showcaseVisible = entries[0].isIntersecting; syncShowcase(); }, {threshold:.15}).observe(showcase);
+syncShowcase();
 document.querySelector('.close-dialog').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', event => {
   const bounds = dialog.getBoundingClientRect();
@@ -70,3 +129,6 @@ new IntersectionObserver(entries => {
   syncHeroMotion();
 }, {threshold:0.1}).observe(heroScene);
 syncHeroMotion();
+
+const previewSizer = new ResizeObserver(entries => entries.forEach(entry => entry.target.style.setProperty('--preview-scale', entry.contentRect.width / 1440)));
+showcase.querySelectorAll('.browser-viewport').forEach(viewport => previewSizer.observe(viewport));
